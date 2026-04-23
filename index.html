@@ -19,12 +19,11 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 .soon-box { margin:20px 16px; background:#111; border:1px solid #E74C3C33; border-radius:16px; padding:30px; text-align:center; }
 .soon-box h2 { color:#E74C3C; font-size:1.4rem; margin-bottom:10px; }
 .soon-box p { color:#666; font-size:0.95rem; line-height:1.6; }
-.features { padding:0 16px 20px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.features { padding:0 16px 100px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .feat { background:#111; border:1px solid #1A1A1A; border-radius:14px; padding:16px; text-align:center; }
 .feat-icon { font-size:2rem; margin-bottom:8px; }
 .feat-title { color:#fff; font-weight:700; font-size:0.9rem; margin-bottom:4px; }
 .feat-desc { color:#555; font-size:0.8rem; }
-/* AGENT */
 .agent-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; flex-direction:column; justify-content:flex-end; }
 .agent-overlay.open { display:flex; }
 .agent-panel { background:#0D0D0D; border-radius:24px 24px 0 0; height:85vh; display:flex; flex-direction:column; border:1px solid #1A1A1A; }
@@ -47,21 +46,17 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
-<img class="logo" src="https://i.imgur.com/placeholder.png" id="logoImg" alt="Le Marché Auto" onerror="this.style.display='none'; document.getElementById('logoText').style.display='block'"/>
-<span id="logoText" style="display:none; color:#E74C3C; font-weight:900; font-size:16px;">🚗 LE MARCHÉ AUTO</span>
+<img class="logo" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
 <button class="agent-btn" onclick="openAgent()">🛡️ Agent</button>
 </div>
 
-<!-- HERO -->
 <div class="hero">
 <h1>🚗 Le Marché Auto</h1>
 <p>Voitures · Motos · Vélos · Pièces détachées</p>
 <a class="coming" href="#">🔔 Bientôt disponible !</a>
 </div>
 
-<!-- CATEGORIES -->
 <div class="cats">
 <div class="cat">🔥 Tous</div>
 <div class="cat">🚗 Voitures</div>
@@ -70,14 +65,12 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 <div class="cat">🔧 Pièces</div>
 </div>
 
-<!-- COMING SOON -->
 <div class="soon-box">
 <h2>🚀 Lancement imminent !</h2>
 <p>La première marketplace 100% dédiée aux véhicules avec agent anti-fraude intégré.<br><br>
 <strong style="color:#E74C3C">Achetez et vendez en toute confiance.</strong></p>
 </div>
 
-<!-- FEATURES -->
 <div class="features">
 <div class="feat"><div class="feat-icon">🚗</div><div class="feat-title">Voitures</div><div class="feat-desc">Occasion & neuf</div></div>
 <div class="feat"><div class="feat-icon">🏍️</div><div class="feat-title">Motos</div><div class="feat-desc">Toutes marques</div></div>
@@ -87,7 +80,6 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 <div class="feat"><div class="feat-icon">✅</div><div class="feat-title">Gratuit</div><div class="feat-desc">Publication offerte</div></div>
 </div>
 
-<!-- AGENT MODAL -->
 <div class="agent-overlay" id="agentOverlay" onclick="if(event.target===this)closeAgent()">
 <div class="agent-panel">
 <div class="agent-header">
@@ -103,8 +95,8 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 <button class="sugg" onclick="askQuestion('Comment vendre sur Le Marché Auto ?')">Comment vendre ?</button>
 <button class="sugg" onclick="askQuestion('Comment payer en sécurité ?')">Payer en sécurité ?</button>
 <button class="sugg" onclick="askQuestion('Comment signaler une fraude ?')">Signaler une fraude ?</button>
-<button class="sugg" onclick="askQuestion('Combien coûte la publication ?')">C\'est gratuit ?</button>
-<button class="sugg" onclick="askQuestion('Quand sera disponible l\'application ?')">Disponible quand ?</button>
+<button class="sugg" onclick="askQuestion('Combien coûte la publication ?')">C'est gratuit ?</button>
+<button class="sugg" onclick="askQuestion('Quand sera disponible l application ?')">Disponible quand ?</button>
 </div>
 <div class="input-row">
 <input class="msg-input" id="msgInput" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
@@ -115,23 +107,19 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 
 <script>
 const FAQ = [
-{ q: ["vendre","publier","annonce","mettre en vente"], r: "📋 Pour vendre sur Le Marché Auto :\n\n1️⃣ Créez votre compte gratuitement\n2️⃣ Cliquez sur '+ Publier'\n3️⃣ Remplissez le formulaire\n4️⃣ Notre agent IA vérifie votre annonce\n5️⃣ Votre annonce est en ligne !\n\nC'est 100% gratuit pour les particuliers ✅" },
-{ q: ["payer","paiement","sécurité","sécurisé","virement"], r: "💳 Conseils de paiement sécurisé :\n\n✅ Virement bancaire standard\n✅ Espèces en main propre\n✅ Chèque de banque\n\n🚨 Ne jamais payer par :\n❌ Western Union\n❌ Bitcoin / Crypto\n❌ PayPal Amis/Famille\n❌ Mandat postal\n\nEn cas de doute, contactez notre agent ! 🛡️" },
-{ q: ["fraude","arnaque","signaler","suspect","faux"], r: "🚨 Comment signaler une fraude :\n\n1️⃣ Cliquez sur 'Signaler' sur l'annonce\n2️⃣ Notre agent IA analyse immédiatement\n3️⃣ L'annonce est suspendue si fraude confirmée\n4️⃣ L'utilisateur est bloqué\n\nNotre agent surveille 24h/24 toutes les annonces automatiquement ! 🛡️" },
-{ q: ["gratuit","coût","prix","combien","payer pour"], r: "✅ Le Marché Auto est GRATUIT !\n\n🆓 Publication d'annonces : Gratuit\n🆓 Contacter un vendeur : Gratuit\n🆓 Recherche : Gratuite\n🆓 Agent anti-fraude : Gratuit\n\nDes options premium seront disponibles prochainement pour booster vos annonces 🚀" },
-{ q: ["quand","disponible","lancement","bientôt","ouvre"], r: "🚀 Le Marché Auto arrive très bientôt !\n\nNous finalisons les derniers détails pour vous offrir la meilleure expérience possible.\n\n📱 Disponible sur iPhone et Android\n🌐 Accessible via navigateur\n\nSuivez-nous sur les réseaux pour être informé du lancement ! 🔔" },
-{ q: ["contact","téléphone","email","joindre","support"], r: "📞 Nous contacter :\n\n📧 Via le formulaire de contact sur l'app\n💬 Via notre agent IA disponible 24h/24\n\nNotre équipe répond sous 24h ! ✅" },
-{ q: ["voiture","moto","vélo","pièce","catégorie"], r: "🚗 Les catégories disponibles :\n\n🚗 Voitures — Toutes marques, occasion & récent\n🏍️ Motos — Sportives, custom, scooters\n🚲 Vélos — VTT, route, électrique, enfant\n🔧 Pièces détachées — Auto, moto, vélo\n\nToutes les annonces sont vérifiées par notre agent IA ! 🛡️" },
+{ q: ["vendre","publier","annonce","mettre en vente"], r: "📋 Pour vendre sur Le Marché Auto :\n\n1️⃣ Créez votre compte gratuitement\n2️⃣ Cliquez sur + Publier\n3️⃣ Remplissez le formulaire\n4️⃣ Notre agent IA vérifie votre annonce\n5️⃣ Votre annonce est en ligne !\n\nC'est 100% gratuit pour les particuliers ✅" },
+{ q: ["payer","paiement","sécurité","sécurisé","virement"], r: "💳 Conseils de paiement sécurisé :\n\n✅ Virement bancaire standard\n✅ Espèces en main propre\n✅ Chèque de banque\n\n🚨 Ne jamais payer par :\n❌ Western Union\n❌ Bitcoin / Crypto\n❌ PayPal Amis/Famille\n\nEn cas de doute, contactez notre agent ! 🛡️" },
+{ q: ["fraude","arnaque","signaler","suspect","faux"], r: "🚨 Comment signaler une fraude :\n\n1️⃣ Cliquez sur Signaler sur l'annonce\n2️⃣ Notre agent IA analyse immédiatement\n3️⃣ L'annonce est suspendue si fraude confirmée\n4️⃣ L'utilisateur est bloqué\n\nNotre agent surveille 24h/24 ! 🛡️" },
+{ q: ["gratuit","coût","prix","combien"], r: "✅ Le Marché Auto est GRATUIT !\n\n🆓 Publication d'annonces : Gratuit\n🆓 Contacter un vendeur : Gratuit\n🆓 Agent anti-fraude : Gratuit\n\nDes options premium arrivent bientôt 🚀" },
+{ q: ["quand","disponible","lancement","bientôt"], r: "🚀 Le Marché Auto arrive très bientôt !\n\n📱 Disponible sur iPhone et Android\n🌐 Accessible via navigateur\n\nSuivez-nous sur les réseaux ! 🔔" },
+{ q: ["contact","téléphone","email","joindre"], r: "📞 Nous contacter :\n\n💬 Via notre agent IA disponible 24h/24\n📧 Via le formulaire de contact\n\nNotre équipe répond sous 24h ! ✅" },
+{ q: ["voiture","moto","vélo","pièce","catégorie"], r: "🚗 Les catégories disponibles :\n\n🚗 Voitures\n🏍️ Motos\n🚲 Vélos\n🔧 Pièces détachées\n\nToutes vérifiées par notre agent IA ! 🛡️" },
 ];
 
 let msgs = [];
 
 function addMsg(role, text) {
 msgs.push({ role, text });
-render();
-}
-
-function render() {
 const el = document.getElementById('messages');
 el.innerHTML = msgs.map(m => `
 <div class="bubble ${m.role}">
@@ -154,8 +142,19 @@ document.getElementById('agentOverlay').classList.remove('open');
 }
 
 function askQuestion(q) {
-document.getElementById('msgInput').value = q;
-sendMsg();
+addMsg('user', q);
+document.getElementById('typing').style.display = 'block';
+const lower = q.toLowerCase();
+let faqReply = null;
+for (const f of FAQ) {
+if (f.q.some(k => lower.includes(k))) { faqReply = f.r; break; }
+}
+if (faqReply) {
+setTimeout(() => {
+document.getElementById('typing').style.display = 'none';
+addMsg('agent', faqReply);
+}, 800);
+}
 }
 
 async function sendMsg() {
@@ -165,14 +164,11 @@ if (!txt) return;
 addMsg('user', txt);
 input.value = '';
 document.getElementById('typing').style.display = 'block';
-
-// Vérifier FAQ locale d'abord
 const lower = txt.toLowerCase();
 let faqReply = null;
 for (const f of FAQ) {
 if (f.q.some(k => lower.includes(k))) { faqReply = f.r; break; }
 }
-
 if (faqReply) {
 setTimeout(() => {
 document.getElementById('typing').style.display = 'none';
@@ -180,8 +176,6 @@ addMsg('agent', faqReply);
 }, 800);
 return;
 }
-
-// Sinon appel IA Claude
 try {
 const res = await fetch('https://api.anthropic.com/v1/messages', {
 method: 'POST',
@@ -189,18 +183,20 @@ headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({
 model: 'claude-sonnet-4-20250514',
 max_tokens: 600,
-system: `Tu es l'Agent Marché Auto, l'assistant officiel de la marketplace automobile "Le Marché Auto" (voitures, motos, vélos, pièces détachées). Tu réponds aux questions des utilisateurs en français. Sois chaleureux, concis et utilise des emojis. La plateforme est gratuite, sécurisée avec un agent anti-fraude IA, bientôt disponible sur iPhone et Android.`,
+system: 'Tu es l\'Agent Marché Auto, assistant officiel de la marketplace automobile "Le Marché Auto". Réponds en français, sois chaleureux et utilise des emojis.',
 messages: [{ role: 'user', content: txt }]
 })
 });
 const data = await res.json();
 document.getElementById('typing').style.display = 'none';
-addMsg('agent', data.content?.[0]?.text || 'Désolé, je n\'ai pas pu répondre. Réessayez !');
+addMsg('agent', data.content?.[0]?.text || 'Désolé, réessayez !');
 } catch {
 document.getElementById('typing').style.display = 'none';
-addMsg('agent', '❌ Connexion impossible. Vérifiez votre réseau et réessayez.');
+addMsg('agent', '❌ Connexion impossible. Réessayez !');
 }
 }
 </script>
 </body>
 </html>
+
+
