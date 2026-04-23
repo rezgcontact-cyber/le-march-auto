@@ -8,10 +8,10 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 .header { background:#0D0D0D; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #222; position:sticky; top:0; z-index:50; }
-.logo { height:50px; object-fit:contain; }
+.logo-header { height:50px; object-fit:contain; border-radius:50%; }
 .agent-btn { background:linear-gradient(135deg,#C0392B,#E74C3C); border:none; border-radius:20px; padding:8px 14px; color:#fff; font-size:12px; font-weight:700; cursor:pointer; }
 .hero { background:linear-gradient(180deg,#1A0000,#080808); padding:30px 16px; text-align:center; }
-.hero h1 { color:#E74C3C; font-size:1.8rem; font-weight:900; margin-bottom:8px; }
+.logo-hero { height:150px; object-fit:contain; border-radius:50%; margin-bottom:16px; }
 .hero p { color:#888; font-size:1rem; margin-bottom:20px; }
 .coming { display:inline-block; background:#E74C3C; color:#fff; padding:14px 32px; border-radius:12px; font-size:1.1rem; font-weight:800; text-decoration:none; }
 .cats { display:flex; gap:10px; overflow-x:auto; padding:16px; scrollbar-width:none; }
@@ -47,12 +47,12 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 <body>
 
 <div class="header">
-<img class="logo" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<img class="logo-header" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
 <button class="agent-btn" onclick="openAgent()">🛡️ Agent</button>
 </div>
 
 <div class="hero">
-<img src="https://i.imgur.com/iLRREdx.png" style="height:120px; object-fit:contain; margin-bottom:10px;"/>
+<img class="logo-hero" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
 <p>Voitures · Motos · Vélos · Pièces détachées</p>
 <a class="coming" href="#">🔔 Bientôt disponible !</a>
 </div>
@@ -95,8 +95,8 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 <button class="sugg" onclick="askQuestion('Comment vendre sur Le Marché Auto ?')">Comment vendre ?</button>
 <button class="sugg" onclick="askQuestion('Comment payer en sécurité ?')">Payer en sécurité ?</button>
 <button class="sugg" onclick="askQuestion('Comment signaler une fraude ?')">Signaler une fraude ?</button>
-<button class="sugg" onclick="askQuestion('Combien coûte la publication ?')">C'est gratuit ?</button>
-<button class="sugg" onclick="askQuestion('Quand sera disponible l application ?')">Disponible quand ?</button>
+<button class="sugg" onclick="askQuestion('Combien coute la publication ?')">C'est gratuit ?</button>
+<button class="sugg" onclick="askQuestion('Quand sera disponible application ?')">Disponible quand ?</button>
 </div>
 <div class="input-row">
 <input class="msg-input" id="msgInput" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
@@ -108,12 +108,12 @@ body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; }
 <script>
 const FAQ = [
 { q: ["vendre","publier","annonce","mettre en vente"], r: "📋 Pour vendre sur Le Marché Auto :\n\n1️⃣ Créez votre compte gratuitement\n2️⃣ Cliquez sur + Publier\n3️⃣ Remplissez le formulaire\n4️⃣ Notre agent IA vérifie votre annonce\n5️⃣ Votre annonce est en ligne !\n\nC'est 100% gratuit pour les particuliers ✅" },
-{ q: ["payer","paiement","sécurité","sécurisé","virement"], r: "💳 Conseils de paiement sécurisé :\n\n✅ Virement bancaire standard\n✅ Espèces en main propre\n✅ Chèque de banque\n\n🚨 Ne jamais payer par :\n❌ Western Union\n❌ Bitcoin / Crypto\n❌ PayPal Amis/Famille\n\nEn cas de doute, contactez notre agent ! 🛡️" },
-{ q: ["fraude","arnaque","signaler","suspect","faux"], r: "🚨 Comment signaler une fraude :\n\n1️⃣ Cliquez sur Signaler sur l'annonce\n2️⃣ Notre agent IA analyse immédiatement\n3️⃣ L'annonce est suspendue si fraude confirmée\n4️⃣ L'utilisateur est bloqué\n\nNotre agent surveille 24h/24 ! 🛡️" },
-{ q: ["gratuit","coût","prix","combien"], r: "✅ Le Marché Auto est GRATUIT !\n\n🆓 Publication d'annonces : Gratuit\n🆓 Contacter un vendeur : Gratuit\n🆓 Agent anti-fraude : Gratuit\n\nDes options premium arrivent bientôt 🚀" },
-{ q: ["quand","disponible","lancement","bientôt"], r: "🚀 Le Marché Auto arrive très bientôt !\n\n📱 Disponible sur iPhone et Android\n🌐 Accessible via navigateur\n\nSuivez-nous sur les réseaux ! 🔔" },
-{ q: ["contact","téléphone","email","joindre"], r: "📞 Nous contacter :\n\n💬 Via notre agent IA disponible 24h/24\n📧 Via le formulaire de contact\n\nNotre équipe répond sous 24h ! ✅" },
-{ q: ["voiture","moto","vélo","pièce","catégorie"], r: "🚗 Les catégories disponibles :\n\n🚗 Voitures\n🏍️ Motos\n🚲 Vélos\n🔧 Pièces détachées\n\nToutes vérifiées par notre agent IA ! 🛡️" },
+{ q: ["payer","paiement","sécurité","sécurisé","virement"], r: "💳 Conseils de paiement sécurisé :\n\n✅ Virement bancaire standard\n✅ Espèces en main propre\n✅ Chèque de banque\n\n🚨 Ne jamais payer par :\n❌ Western Union\n❌ Bitcoin / Crypto\n❌ PayPal Amis/Famille\n\nEn cas de doute contactez notre agent ! 🛡️" },
+{ q: ["fraude","arnaque","signaler","suspect","faux"], r: "🚨 Comment signaler une fraude :\n\n1️⃣ Cliquez sur Signaler sur l'annonce\n2️⃣ Notre agent IA analyse immédiatement\n3️⃣ L'annonce est suspendue si fraude confirmée\n\nNotre agent surveille 24h/24 ! 🛡️" },
+{ q: ["gratuit","cout","prix","combien"], r: "✅ Le Marché Auto est GRATUIT !\n\n🆓 Publication d'annonces : Gratuit\n🆓 Contacter un vendeur : Gratuit\n🆓 Agent anti-fraude : Gratuit\n\nDes options premium arrivent bientôt 🚀" },
+{ q: ["quand","disponible","lancement","bientot"], r: "🚀 Le Marché Auto arrive très bientôt !\n\n📱 Disponible sur iPhone et Android\n🌐 Accessible via navigateur\n\nSuivez-nous sur les réseaux ! 🔔" },
+{ q: ["contact","telephone","email","joindre"], r: "📞 Nous contacter :\n\n💬 Via notre agent IA disponible 24h/24\n📧 Via le formulaire de contact\n\nNotre équipe répond sous 24h ! ✅" },
+{ q: ["voiture","moto","velo","piece","categorie"], r: "🚗 Les catégories disponibles :\n\n🚗 Voitures\n🏍️ Motos\n🚲 Vélos\n🔧 Pièces détachées\n\nToutes vérifiées par notre agent IA ! 🛡️" },
 ];
 
 let msgs = [];
@@ -121,20 +121,13 @@ let msgs = [];
 function addMsg(role, text) {
 msgs.push({ role, text });
 const el = document.getElementById('messages');
-el.innerHTML = msgs.map(m => `
-<div class="bubble ${m.role}">
-${m.role === 'agent' ? '<div class="bubble-label">AGENT MARCHÉ AUTO</div>' : ''}
-${m.text}
-</div>
-`).join('');
+el.innerHTML = msgs.map(m => `<div class="bubble ${m.role}">${m.role==='agent'?'<div class="bubble-label">AGENT MARCHÉ AUTO</div>':''}${m.text}</div>`).join('');
 el.scrollTop = el.scrollHeight;
 }
 
 function openAgent() {
 document.getElementById('agentOverlay').classList.add('open');
-if (msgs.length === 0) {
-addMsg('agent', '👋 Bonjour ! Je suis l\'Agent Marché Auto 🛡️\n\nJe réponds à toutes vos questions sur la plateforme, la sécurité et les annonces.\n\nComment puis-je vous aider ?');
-}
+if (msgs.length === 0) addMsg('agent', "👋 Bonjour ! Je suis l'Agent Marché Auto 🛡️\n\nComment puis-je vous aider ?");
 }
 
 function closeAgent() {
@@ -145,16 +138,13 @@ function askQuestion(q) {
 addMsg('user', q);
 document.getElementById('typing').style.display = 'block';
 const lower = q.toLowerCase();
-let faqReply = null;
 for (const f of FAQ) {
-if (f.q.some(k => lower.includes(k))) { faqReply = f.r; break; }
+if (f.q.some(k => lower.includes(k))) {
+setTimeout(() => { document.getElementById('typing').style.display='none'; addMsg('agent', f.r); }, 800);
+return;
 }
-if (faqReply) {
-setTimeout(() => {
-document.getElementById('typing').style.display = 'none';
-addMsg('agent', faqReply);
-}, 800);
 }
+setTimeout(() => { document.getElementById('typing').style.display='none'; addMsg('agent', "Je n'ai pas compris. Reformulez votre question !"); }, 800);
 }
 
 async function sendMsg() {
@@ -165,25 +155,19 @@ addMsg('user', txt);
 input.value = '';
 document.getElementById('typing').style.display = 'block';
 const lower = txt.toLowerCase();
-let faqReply = null;
 for (const f of FAQ) {
-if (f.q.some(k => lower.includes(k))) { faqReply = f.r; break; }
-}
-if (faqReply) {
-setTimeout(() => {
-document.getElementById('typing').style.display = 'none';
-addMsg('agent', faqReply);
-}, 800);
+if (f.q.some(k => lower.includes(k))) {
+setTimeout(() => { document.getElementById('typing').style.display='none'; addMsg('agent', f.r); }, 800);
 return;
+}
 }
 try {
 const res = await fetch('https://api.anthropic.com/v1/messages', {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({
-model: 'claude-sonnet-4-20250514',
-max_tokens: 600,
-system: 'Tu es l\'Agent Marché Auto, assistant officiel de la marketplace automobile "Le Marché Auto". Réponds en français, sois chaleureux et utilise des emojis.',
+model: 'claude-sonnet-4-20250514', max_tokens: 600,
+system: "Tu es l'Agent Marché Auto, assistant officiel de la marketplace automobile Le Marché Auto. Réponds en français, sois chaleureux et utilise des emojis.",
 messages: [{ role: 'user', content: txt }]
 })
 });
@@ -198,5 +182,3 @@ addMsg('agent', '❌ Connexion impossible. Réessayez !');
 </script>
 </body>
 </html>
-
-
