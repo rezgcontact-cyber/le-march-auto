@@ -1,87 +1,42 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Test Marché Auto</title>
-
-<style>
-body { font-family: Arial; padding:20px; }
-.card { border:1px solid #ccc; padding:10px; margin:10px; cursor:pointer; }
-.modal {
-position: fixed;
-top:0; left:0;
-width:100%; height:100%;
-background: rgba(0,0,0,0.5);
-display:flex;
-justify-content:center;
-align-items:center;
-}
-.modal-content {
-background:white;
-padding:20px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>🚗 Le Marché Auto</h1>
-
-<input id="searchInput" placeholder="Rechercher..." oninput="filterAnnonces()">
-
-<div id="grid"></div>
 
 <script>
-const ANNONCES = [
-{ titre:"Peugeot 308", prix:14000, ville:"Lyon", region:"ARA", desc:"Très bon état", icon:"🚗" },
-{ titre:"Yamaha MT07", prix:6000, ville:"Paris", region:"IDF", desc:"Parfait état", icon:"🏍️" }
-];
+/* 🔥 FIX GLOBAL */
 
-function filterAnnonces() {
-const search = document.getElementById("searchInput").value.toLowerCase();
+(function(){
 
-const filtered = ANNONCES.filter(a =>
-a.titre.toLowerCase().includes(search)
-);
+// Sécurise si fonctions déjà existantes
+if (typeof filterAnnonces !== "function") return;
 
-render(filtered);
+// Attendre que tout soit chargé
+document.addEventListener("DOMContentLoaded", function () {
+try {
+filterAnnonces();
+} catch(e) {
+console.log("Init erreur:", e);
 }
+});
 
-function render(list) {
-const grid = document.getElementById("grid");
-grid.innerHTML = "";
+// Rend les fonctions accessibles au HTML (onclick etc)
+if (typeof setCat === "function") window.setCat = setCat;
+if (typeof updateKm === "function") window.updateKm = updateKm;
+if (typeof openAgent === "function") window.openAgent = openAgent;
+if (typeof sendMsg === "function") window.sendMsg = sendMsg;
 
-list.forEach(a => {
-const div = document.createElement("div");
-div.className = "card";
+// Sécurise erreurs fréquentes
+window.onerror = function(msg, url, line) {
+console.log("Erreur JS détectée:", msg, "ligne:", line);
+};
 
-div.innerHTML = a.icon + " " + a.titre + " - " + a.prix + "€";
-
-div.onclick = () => openModal(a);
-
-grid.appendChild(div);
+// Fix bouton ENTER agent
+const agentInput = document.getElementById("agentInp");
+if (agentInput) {
+agentInput.addEventListener("keypress", function(e){
+if (e.key === "Enter") {
+e.preventDefault();
+if (typeof sendMsg === "function") sendMsg();
+}
 });
 }
 
-function openModal(a) {
-const modal = document.createElement("div");
-modal.className = "modal";
-
-modal.innerHTML = `
-<div class="modal-content">
-<h2>${a.titre}</h2>
-<p>${a.prix} €</p>
-<p>${a.desc}</p>
-<button onclick="this.closest('.modal').remove()">Fermer</button>
-</div>
-`;
-
-document.body.appendChild(modal);
-}
-
-filterAnnonces();
+})();
 </script>
-
-</body>
-</html>
-
