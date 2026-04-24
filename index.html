@@ -1,439 +1,293 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Le Marché Auto</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+:root {
+--primary: #007bff;
+--secondary: #6c757d;
+--success: #28a745;
+--warning: #ffc107;
+--danger: #dc3545;
+--light: #f8f9fa;
+--dark: #343a40;
+--bg-light: #f5f5f5;
+--bg-dark: #121212;
+--text-light: #212529;
+--text-dark: #f8f9fa;
+}
+
 body {
-font-family: Arial, sans-serif;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 margin: 0;
 padding: 0;
-background-color: #f5f5f5;
+background-color: var(--bg-light);
+color: var(--text-light);
+transition: background-color 0.3s, color 0.3s;
 }
+
+body.dark-mode {
+background-color: var(--bg-dark);
+color: var(--text-dark);
+}
+
 .header {
-background-color: #007bff;
+background-color: var(--primary);
 color: white;
 padding: 12px 20px;
 display: flex;
 justify-content: space-between;
 align-items: center;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+position: sticky;
+top: 0;
+z-index: 100;
 }
+
 .logo {
 font-size: 20px;
 font-weight: bold;
+display: flex;
+align-items: center;
+gap: 8px;
 }
+
 .search-bar {
 display: flex;
 gap: 8px;
 margin: 12px 20px;
+flex-wrap: wrap;
 }
+
 #searchInput, #villeInput {
-padding: 8px;
+padding: 10px 15px;
 border: 1px solid #ddd;
-border-radius: 4px;
+border-radius: 20px;
 flex: 1;
+min-width: 150px;
+transition: border-color 0.3s;
 }
+
+#searchInput:focus, #villeInput:focus {
+border-color: var(--primary);
+outline: none;
+}
+
 #regionSelect {
-padding: 8px;
+padding: 10px;
 border: 1px solid #ddd;
-border-radius: 4px;
-width: 200px;
+border-radius: 20px;
+background-color: white;
+min-width: 180px;
+transition: border-color 0.3s;
 }
+
+#regionSelect:focus {
+border-color: var(--primary);
+outline: none;
+}
+
 .categories {
 display: flex;
 gap: 8px;
 margin: 12px 20px;
 overflow-x: auto;
+padding-bottom: 8px;
 }
+
 .cat {
-padding: 6px 12px;
-border: 1px solid #ddd;
+padding: 8px 16px;
+border: none;
 border-radius: 20px;
-background-color: white;
+background-color: var(--light);
 cursor: pointer;
+white-space: nowrap;
+transition: all 0.3s;
+color: var(--text-light);
 }
+
+body.dark-mode .cat {
+background-color: var(--dark);
+color: var(--text-dark);
+}
+
 .cat.active {
-background-color: #007bff;
+background-color: var(--primary);
 color: white;
 }
-.km-filter {
+
+.filters {
+display: flex;
+gap: 12px;
 margin: 12px 20px;
+flex-wrap: wrap;
+align-items: center;
+}
+
+.filter-group {
+display: flex;
+align-items: center;
+gap: 6px;
+background-color: white;
+padding: 8px 12px;
+border-radius: 20px;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .filter-group {
+background-color: var(--dark);
+color: var(--text-dark);
+}
+
+.filter-group select, .filter-group input {
+border: none;
+background: transparent;
+outline: none;
+padding: 4px;
+}
+
+#sortSelect {
+min-width: 120px;
+}
+
+.km-filter {
 display: flex;
 align-items: center;
 gap: 12px;
+margin: 0 20px 12px;
 }
+
 #kmSlider {
 flex: 1;
+height: 6px;
+border-radius: 3px;
+-webkit-appearance: none;
+background: #ddd;
 }
-#grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-gap: 12px;
-padding: 12px 20px;
-}
-.card {
-background-color: white;
-border-radius: 8px;
-padding: 12px;
-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+#kmSlider::-webkit-slider-thumb {
+-webkit-appearance: none;
+width: 16px;
+height: 16px;
+border-radius: 50%;
+background: var(--primary);
 cursor: pointer;
 }
-.card-wrap {
+
+#kmValue {
+min-width: 60px;
+text-align: center;
+font-weight: bold;
+color: var(--primary);
+}
+
+#grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 16px;
+padding: 16px 20px;
+}
+
+.card {
+background-color: white;
+border-radius: 12px;
+padding: 16px;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s;
+position: relative;
+overflow: hidden;
+border: 1px solid #eee;
+}
+
+body.dark-mode .card {
+background-color: var(--dark);
+border-color: #444;
+}
+
+.card:hover {
+transform: translateY(-4px);
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card.favorite {
+border-color: var(--danger);
+}
+
+.card-img-container {
+height: 120px;
 display: flex;
-justify-content: space-between;
 align-items: center;
-margin-bottom: 8px;
+justify-content: center;
+margin-bottom: 12px;
+position: relative;
+overflow: hidden;
+background-color: var(--light);
+border-radius: 8px;
 }
+
 .card-img {
-font-size: 32px;
+font-size: 48px;
+color: var(--primary);
 }
+
 .card-badge {
+position: absolute;
+top: 8px;
+right: 8px;
 font-size: 10px;
-padding: 2px 6px;
-border-radius: 10px;
+padding: 4px 8px;
+border-radius: 12px;
 color: white;
-background-color: #28a745;
+background-color: var(--success);
 }
+
 .card-badge.new {
-background-color: #ffc107;
+background-color: var(--warning);
 color: black;
 }
+
 .card-title {
-font-weight: bold;
-margin-bottom: 4px;
+font-weight: 600;
+margin-bottom: 6px;
+font-size: 16px;
 }
+
 .card-price {
-color: #007bff;
+color: var(--primary);
 font-weight: bold;
-margin-bottom: 4px;
+font-size: 18px;
+margin-bottom: 8px;
 }
+
 .card-meta {
 display: flex;
 gap: 8px;
 font-size: 12px;
-color: #666;
+color: var(--secondary);
+flex-wrap: wrap;
 }
-.no-results {
-text-align: center;
-padding: 40px;
-color: #666;
-}
-.agent-btn {
-position: fixed;
-bottom: 20px;
-right: 20px;
-width: 60px;
-height: 60px;
-background-color: #007bff;
-color: white;
-border-radius: 50%;
-border: none;
-font-size: 24px;
-cursor: pointer;
-box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-#agentOverlay {
-position: fixed;
-bottom: 90px;
-right: 20px;
-width: 300px;
-background-color: white;
-border-radius: 12px;
-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-display: none;
-flex-direction: column;
-max-height: 400px;
-overflow-y: auto;
-}
-#agentOverlay.open {
+
+.card-meta span {
 display: flex;
+align-items: center;
+gap: 3px;
 }
-#agentMsgs {
-padding: 12px;
-flex: 1;
-overflow-y: auto;
+
+.card-actions {
+display: flex;
+gap: 8px;
+margin-top: 12px;
+justify-content: flex-end;
 }
-.bubble {
-padding: 8px 12px;
-margin-bottom: 8px;
-border-radius: 12px;
-max-width: 80%;
-}
-.bubble.user {
-background-color: #007bff;
-color: white;
-margin-left: auto;
-}
-.bubble.agent {
-background-color: #f0f0f0;
-margin-right: auto;
-}
-.bubble-lbl {
-font-size: 10px;
-color: #666;
-margin-bottom: 2px;
-}
-#agentInp {
-padding: 8px 12px;
-border: 1px solid #ddd;
+
+.btn {
+padding: 6px 12px;
+border: none;
 border-radius: 20px;
-margin: 12px;
-width: calc(100% - 24px);
-}
-#typingInd {
-display: none;
-padding: 8px;
-text-align: center;
+cursor: pointer;
 font-size: 12px;
-color: #666;
-}
-@media (max-width: 600px) {
-.search-bar, .categories {
-flex-direction: column;
-}
-#grid {
-grid-template-columns: 1fr;
-}
-}
-</style>
-</head>
-<body>
-<div class="header">
-<div class="logo">🚗 Le Marché Auto</div>
-<button class="agent-btn" onclick="openAgent()">💬</button>
-</div>
-
-<div class="search-bar">
-<input type="text" id="searchInput" placeholder="Rechercher..." oninput="filterAnnonces()">
-<input type="text" id="villeInput" placeholder="Ville..." oninput="filterAnnonces()">
-<select id="regionSelect" onchange="filterAnnonces()">
-<option value="">Toutes les régions</option>
-<option value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</option>
-<option value="Bretagne">Bretagne</option>
-<option value="Grand Est">Grand Est</option>
-<option value="Hauts-de-France">Hauts-de-France</option>
-<option value="Île-de-France">Île-de-France</option>
-<option value="Normandie">Normandie</option>
-<option value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</option>
-<option value="Occitanie">Occitanie</option>
-<option value="Pays de la Loire">Pays de la Loire</option>
-<option value="Provence-Alpes-Côte d'Azur">Provence-Alpes-Côte d'Azur</option>
-</select>
-</div>
-
-<div class="categories">
-<div class="cat active" onclick="setCat('tous', this)">Tous</div>
-<div class="cat" onclick="setCat('voiture', this)">Voitures</div>
-<div class="cat" onclick="setCat('moto', this)">Motos</div>
-<div class="cat" onclick="setCat('velo', this)">Vélos</div>
-<div class="cat" onclick="setCat('pieces', this)">Pièces</div>
-</div>
-
-<div class="km-filter">
-<span>Rayon :</span>
-<span id="kmValue">100 km</span>
-<input type="range" id="kmSlider" min="0" max="500" step="10" value="100" oninput="updateKm()">
-<button onclick="getLocation()">📍 Ma position</button>
-</div>
-
-<div id="resultsCount" style="margin: 0 20px; font-size: 14px; color: #666;"></div>
-
-<div id="grid"></div>
-
-<div id="agentOverlay">
-<div id="agentMsgs"></div>
-<input type="text" id="agentInp" placeholder="Posez votre question..." onkeypress="if(event.key==='Enter') sendMsg()">
-<div id="typingInd">L'Agent tape...</div>
-</div>
-
-<script>
-const ANNONCES = [
-{ id:1, titre:"Peugeot 308 SW 2019", prix:14500, cat:"voiture", ville:"Lyon", region:"Auvergne-Rhône-Alpes", km:78000, icon:"🚗", verified:true, desc:"Très bon état, CT ok, révision faite." },
-{ id:2, titre:"Yamaha MT-07 2021", prix:6800, cat:"moto", ville:"Paris", region:"Île-de-France", km:15000, icon:"🏍️", verified:true, desc:"Parfait état, entretien régulier." },
-{ id:3, titre:"Jantes BMW Série 3 17p", prix:320, cat:"pieces", ville:"Marseille", region:"Provence-Alpes-Côte d'Azur", km:null, icon:"🔧", verified:true, desc:"4 jantes alliage originales BMW." },
-{ id:4, titre:"VTT Trek Marlin 7 2022", prix:750, cat:"velo", ville:"Bordeaux", region:"Nouvelle-Aquitaine", km:null, icon:"🚲", verified:false, desc:"Quasi neuf, utilisé une saison." },
-{ id:5, titre:"Renault Clio V 2022", prix:17900, cat:"voiture", ville:"Toulouse", region:"Occitanie", km:22000, icon:"🚗", verified:true, desc:"Full options, garantie constructeur." },
-{ id:6, titre:"Honda CB650R 2023", prix:8200, cat:"moto", ville:"Nice", region:"Provence-Alpes-Côte d'Azur", km:5000, icon:"🏍️", verified:true, desc:"Zéro chute, entretien Honda." },
-{ id:7, titre:"Turbo Golf 6 GTI", prix:180, cat:"pieces", ville:"Lille", region:"Hauts-de-France", km:null, icon:"🔧", verified:false, desc:"Turbo original testé avant dépose." },
-{ id:8, titre:"Vélo route Specialized", prix:1200, cat:"velo", ville:"Strasbourg", region:"Grand Est", km:null, icon:"🚲", verified:true, desc:"Cadre alu, Shimano 105, taille 54." },
-{ id:9, titre:"Volkswagen Golf 7 2018", prix:12500, cat:"voiture", ville:"Paris", region:"Île-de-France", km:65000, icon:"🚗", verified:true, desc:"DSG7, full LED, excellent état." },
-{ id:10, titre:"Kawasaki Z900 2022", prix:9500, cat:"moto", ville:"Lyon", region:"Auvergne-Rhône-Alpes", km:8000, icon:"🏍️", verified:true, desc:"Pneus neufs, garantie 1 an." },
-{ id:11, titre:"Amortisseurs Renault Clio", prix:90, cat:"pieces", ville:"Nantes", region:"Pays de la Loire", km:null, icon:"🔧", verified:false, desc:"Paire avant, très bon état." },
-{ id:12, titre:"BMX Freestyle 2023", prix:350, cat:"velo", ville:"Rennes", region:"Bretagne", km:null, icon:"🚲", verified:true, desc:"Neuf, jamais utilisé en compet." },
-];
-
-let currentCat = "tous";
-let agentMsgs = [];
-
-function filterAnnonces() {
-const search = document.getElementById("searchInput").value.toLowerCase();
-const region = document.getElementById("regionSelect").value.toLowerCase();
-const ville = document.getElementById("villeInput").value.toLowerCase();
-const kmMax = parseInt(document.getElementById("kmSlider").value);
-
-let filtered = ANNONCES.filter(a => {
-const catOk = currentCat === "tous" || a.cat === currentCat;
-const searchOk = !search || a.titre.toLowerCase().includes(search) || a.ville.toLowerCase().includes(search);
-const regionOk = !region || a.region.toLowerCase().includes(region);
-const villeOk = !ville || a.ville.toLowerCase().includes(ville);
-const kmOk = !a.km || a.km <= kmMax;
-return catOk && searchOk && regionOk && villeOk && kmOk;
-});
-
-renderAnnonces(filtered);
-}
-
-function renderAnnonces(list) {
-const grid = document.getElementById("grid");
-const count = document.getElementById("resultsCount");
-count.textContent = list.length + " annonce" + (list.length > 1 ? "s" : "");
-
-if (list.length === 0) {
-grid.innerHTML = `
-<div class="no-results">
-<div style="font-size:40px;margin-bottom:12px;">🔍</div>
-<div>Aucune annonce trouvée</div>
-<div style="font-size:12px;margin-top:6px;">Essayez une autre ville ou région</div>
-</div>
-`;
-return;
-}
-
-grid.innerHTML = list.map(a => `
-<div class="card" onclick="alert('${a.titre}\n💰 ${a.prix.toLocaleString("fr-FR")} €\n📍 ${a.ville} — ${a.region}\n${a.km ? "⏱ " + a.km.toLocaleString() + " km" : ""}\n\n${a.desc}')">
-<div class="card-wrap">
-<div class="card-img">${a.icon}</div>
-<div class="card-badge ${!a.verified ? 'new' : ''}">${a.verified ? "✓ Vérifié" : "⚡ Nouveau"}</div>
-</div>
-<div class="card-body">
-<div class="card-title">${a.titre}</div>
-<div class="card-price">${a.prix.toLocaleString("fr-FR")} €</div>
-<div class="card-meta">
-<span>📍 ${a.ville}</span>
-${a.km ? "<span>⏱ " + a.km.toLocaleString() + " km</span>" : ""}
-<span style="color:#444;font-size:9px;">${a.region}</span>
-</div>
-</div>
-</div>
-`).join("");
-}
-
-function setCat(cat, el) {
-currentCat = cat;
-document.querySelectorAll(".cat").forEach(c => c.classList.remove("active"));
-el.classList.add("active");
-filterAnnonces();
-}
-
-function updateKm() {
-const val = document.getElementById("kmSlider").value;
-document.getElementById("kmValue").textContent = val + " km";
-filterAnnonces();
-}
-
-function getLocation() {
-if (!navigator.geolocation) {
-alert("Géolocalisation non disponible.");
-return;
-}
-navigator.geolocation.getCurrentPosition(
-pos => {
-alert("📍 Position détectée !\nRecherche des annonces autour de vous...");
-// Ici, vous pourriez utiliser pos.coords.latitude et pos.coords.longitude pour filtrer les annonces.
-},
-() => alert("❌ Position non disponible.\nEntrez votre ville manuellement.")
-);
-}
-
-const FAQ = [
-{ q:["vendre","publier","annonce"], r:"📋 Pour vendre :\n\n1️⃣ Cliquez sur + Publier\n2️⃣ Remplissez le formulaire\n3️⃣ L'agent IA vérifie l'annonce\n4️⃣ En ligne en quelques minutes !\n\n✅ 100% gratuit !" },
-{ q:["payer","paiement","sécurité","virement"], r:"💳 Paiements sécurisés :\n\n✅ Virement bancaire\n✅ Espèces en main propre\n\n🚨 Jamais par :\n❌ Western Union\n❌ Bitcoin\n❌ PayPal Amis" },
-{ q:["fraude","arnaque","signaler","suspect"], r:"🚨 Signaler une fraude :\n\n1️⃣ Cliquez Signaler sur l'annonce\n2️⃣ L'IA analyse immédiatement\n3️⃣ Annonce suspendue si fraude\n\n🛡️ Surveillance 24h/24 !" },
-{ q:["gratuit","cout","prix","combien"], r:"✅ Le Marché Auto est GRATUIT !\n\n🆓 Publication : Gratuit\n🆓 Contact vendeur : Gratuit\n🆓 Agent anti-fraude : Gratuit" },
-{ q:["ville","region","km","localisation","recherche","distance"], r:"📍 Recherche géographique :\n\n🏙️ Filtrez par ville\n🗺️ Filtrez par région\n📏 Choisissez un rayon en km\n📡 Utilisez votre position GPS\n\nCombinez les filtres !" },
-{ q:["quand","disponible","lancement"], r:"🚀 Lancement imminent !\n\n📱 iPhone et Android bientôt\n🌐 Déjà accessible sur navigateur !\n\nSuivez-nous ! 🔔" },
-];
-
-function addMsg(role, text) {
-agentMsgs.push({ role, text });
-const el = document.getElementById("agentMsgs");
-el.innerHTML = agentMsgs.map(m => `
-<div class="bubble ${m.role}">
-${m.role==="agent" ? '<div class="bubble-lbl">AGENT MARCHÉ AUTO</div>' : ''}
-${m.text.replace(/\n/g, '<br>')}
-</div>
-`).join("");
-el.scrollTop = el.scrollHeight;
-}
-
-function openAgent() {
-document.getElementById("agentOverlay").classList.add("open");
-if (agentMsgs.length === 0) {
-addMsg("agent", "👋 Bonjour ! Je suis l'Agent Marché Auto 🛡️\n\nComment puis-je vous aider ?");
-}
-}
-
-function closeAgent() {
-document.getElementById("agentOverlay").classList.remove("open");
-}
-
-function askQ(q) {
-addMsg("user", q);
-document.getElementById("typingInd").style.display = "block";
-const lower = q.toLowerCase();
-for (const f of FAQ) {
-if (f.q.some(k => lower.includes(k))) {
-setTimeout(() => {
-document.getElementById("typingInd").style.display = "none";
-addMsg("agent", f.r);
-}, 700);
-return;
-}
-}
-callClaude(q);
-}
-
-async function sendMsg() {
-const inp = document.getElementById("agentInp");
-const txt = inp.value.trim();
-if (!txt) return;
-addMsg("user", txt);
-inp.value = "";
-document.getElementById("typingInd").style.display = "block";
-const lower = txt.toLowerCase();
-for (const f of FAQ) {
-if (f.q.some(k => lower.includes(k))) {
-setTimeout(() => {
-document.getElementById("typingInd").style.display = "none";
-addMsg("agent", f.r);
-}, 700);
-return;
-}
-}
-await callClaude(txt);
-}
-
-async function callClaude(txt) {
-try {
-// Remplacez cette URL par votre vraie endpoint API
-const res = await fetch("https://votre-api-ici.com/agent", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ message: txt })
-});
-const data = await res.json();
-document.getElementById("typingInd").style.display = "none";
-addMsg("agent", data.response || "Désolé, réessayez plus tard !");
-} catch (e) {
-document.getElementById("typingInd").style.display = "none";
-addMsg("agent", "❌ Connexion impossible. Réessayez plus tard !");
-}
-}
-
-// Initialisation
-filterAnnonces();
-</script>
-</body>
-</html>
+trans
