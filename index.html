@@ -1,25 +1,19 @@
 <script>
-const $ = (id) => document.getElementById(id);
-
 let currentCat = "tous";
 let agentMsgs = [];
 
-function normalize(str) {
-return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
 function filterAnnonces() {
-const search = normalize($("searchInput").value);
-const region = normalize($("regionSelect").value);
-const ville = normalize($("villeInput").value);
-const kmMax = +$("kmSlider").value;
+const search = document.getElementById("searchInput").value.toLowerCase();
+const region = document.getElementById("regionSelect").value.toLowerCase();
+const ville = document.getElementById("villeInput").value.toLowerCase();
+const kmMax = parseInt(document.getElementById("kmSlider").value);
 
 const filtered = ANNONCES.filter(a => {
 return (
 (currentCat === "tous" || a.cat === currentCat) &&
-(!search || normalize(a.titre).includes(search) || normalize(a.ville).includes(search)) &&
-(!region || normalize(a.region).includes(region)) &&
-(!ville || normalize(a.ville).includes(ville)) &&
+(!search || a.titre.toLowerCase().includes(search)) &&
+(!region || a.region.toLowerCase().includes(region)) &&
+(!ville || a.ville.toLowerCase().includes(ville)) &&
 (!a.km || a.km <= kmMax)
 );
 });
@@ -28,14 +22,14 @@ renderAnnonces(filtered);
 }
 
 function renderAnnonces(list) {
-const grid = $("grid");
-const count = $("resultsCount");
+const grid = document.getElementById("grid");
+const count = document.getElementById("resultsCount");
 
 count.textContent = list.length + " annonce" + (list.length > 1 ? "s" : "");
 grid.innerHTML = "";
 
-if (!list.length) {
-grid.innerHTML = `<div class="no-results">Aucune annonce</div>`;
+if (list.length === 0) {
+grid.innerHTML = "<div class='no-results'>Aucune annonce trouvée</div>";
 return;
 }
 
@@ -60,7 +54,9 @@ ${a.km ? `<span>⏱ ${a.km} km</span>` : ""}
 </div>
 `;
 
-card.onclick = () => openModal(a);
+card.onclick = function() {
+openModal(a);
+};
 
 grid.appendChild(card);
 });
@@ -74,7 +70,8 @@ filterAnnonces();
 }
 
 function updateKm() {
-$("kmValue").textContent = $("kmSlider").value + " km";
+const val = document.getElementById("kmSlider").value;
+document.getElementById("kmValue").textContent = val + " km";
 filterAnnonces();
 }
 
@@ -85,8 +82,9 @@ modal.className = "modal";
 modal.innerHTML = `
 <div class="modal-content">
 <h2>${a.titre}</h2>
-<p><strong>${a.prix} €</strong></p>
-<p>${a.ville} - ${a.region}</p>
+<p><strong>${a.prix.toLocaleString()} €</strong></p>
+<p>📍 ${a.ville} - ${a.region}</p>
+${a.km ? `<p>⏱ ${a.km} km</p>` : ""}
 <p>${a.desc}</p>
 <button onclick="this.closest('.modal').remove()">Fermer</button>
 </div>
@@ -95,30 +93,27 @@ modal.innerHTML = `
 document.body.appendChild(modal);
 }
 
-/* AGENT */
-
-function addMsg(role, text) {
-agentMsgs.push({ role, text });
-
-$("agentMsgs").innerHTML = agentMsgs.map(m => `
-<div class="bubble ${m.role}">
-${m.text}
-</div>
-`).join("");
-
-$("agentMsgs").scrollTop = 9999;
-}
-
 function openAgent() {
-$("agentOverlay").classList.add("open");
+document.getElementById("agentOverlay").classList.add("open");
 
-if (!agentMsgs.length) {
+if (agentMsgs.length === 0) {
 addMsg("agent", "👋 Bonjour !");
 }
 }
 
+function addMsg(role, text) {
+agentMsgs.push({ role, text });
+
+const el = document.getElementById("agentMsgs");
+el.innerHTML = agentMsgs.map(m => `
+<div class="bubble ${m.role}">${m.text}</div>
+`).join("");
+
+el.scrollTop = el.scrollHeight;
+}
+
 function sendMsg() {
-const inp = $("agentInp");
+const inp = document.getElementById("agentInp");
 const txt = inp.value.trim();
 if (!txt) return;
 
@@ -126,13 +121,15 @@ addMsg("user", txt);
 inp.value = "";
 }
 
-/* rendre global (IMPORTANT) */
+/* IMPORTANT : rendre accessible au HTML */
 window.setCat = setCat;
 window.updateKm = updateKm;
 window.openAgent = openAgent;
 window.sendMsg = sendMsg;
 
-/* INIT */
+/* LANCEMENT */
+window.onload = function() {
 filterAnnonces();
+};
 </script>
 
