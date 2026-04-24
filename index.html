@@ -1,42 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Le Marché Auto</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; max-width:480px; margin:0 auto; }
+.header { background:#0D0D0D; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #1A1A1A; position:sticky; top:0; z-index:50; }
+.logo-h { height:46px; border-radius:50%; object-fit:contain; background:#fff; border:2px solid #C0392B; box-shadow:0 0 15px rgba(192,57,43,0.4); }
+.agent-btn { background:linear-gradient(135deg,#C0392B,#E74C3C); border:none; border-radius:20px; padding:8px 14px; color:#fff; font-size:12px; font-weight:700; cursor:pointer; }
+.hero { background:linear-gradient(180deg,#1A0000,#080808); padding:20px 16px 16px; text-align:center; }
+.hero-logo { height:110px; border-radius:50%; object-fit:contain; background:#fff; border:3px solid #C0392B; box-shadow:0 0 30px rgba(192,57,43,0.5); margin-bottom:12px; }
+.hero p { color:#888; font-size:13px; margin-bottom:6px; }
+.soon-badge { display:inline-block; background:linear-gradient(135deg,#C0392B,#E74C3C); color:#fff; padding:10px 24px; border-radius:12px; font-size:14px; font-weight:800; margin-bottom:16px; }
+.search-box { background:#111; border:1px solid #222; border-radius:16px; padding:14px 16px; margin:0 16px 16px; }
+.search-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.search-input { flex:1; background:#1A1A1A; border:1px solid #2A2A2A; border-radius:10px; padding:10px 14px; color:#fff; font-size:13px; outline:none; font-family:inherit; }
+.search-btn { background:#E74C3C; border:none; border-radius:10px; padding:10px 16px; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; }
+.filters-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.filter-select { background:#1A1A1A; border:1px solid #2A2A2A; border-radius:10px; padding:10px 12px; color:#fff; font-size:12px; outline:none; font-family:inherit; cursor:pointer; width:100%; }
+.km-row { display:flex; align-items:center; gap:10px; }
+.km-label { font-size:12px; color:#888; white-space:nowrap; min-width:90px; }
+.km-slider { flex:1; accent-color:#E74C3C; cursor:pointer; }
+.km-value { font-size:13px; font-weight:700; color:#E74C3C; min-width:60px; text-align:right; }
+.location-btn { width:100%; background:#1A1A1A; border:1px solid #C0392B33; border-radius:10px; padding:10px; color:#E74C3C; font-size:12px; font-weight:700; cursor:pointer; margin-top:10px; display:flex; align-items:center; justify-content:center; gap:8px; }
+.cats { display:flex; gap:8px; overflow-x:auto; padding:0 16px 14px; scrollbar-width:none; }
+.cat { background:#141414; border:1px solid #222; border-radius:20px; padding:7px 14px; color:#777; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; }
+.cat.active { background:#C0392B; border-color:#C0392B; color:#fff; }
+.results-info { padding:0 16px 10px; }
+.results-count { font-size:12px; color:#555; font-weight:600; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 16px 100px; }
+.card { background:#111; border-radius:14px; overflow:hidden; border:1px solid #1A1A1A; cursor:pointer; }
+.card-img { width:100%; height:115px; background:#1A1A1A; display:flex; align-items:center; justify-content:center; font-size:40px; }
+.card-body { padding:9px 11px 11px; }
+.card-title { color:#fff; font-size:12px; font-weight:700; margin-bottom:3px; line-height:1.3; }
+.card-price { color:#E74C3C; font-size:16px; font-weight:900; margin-bottom:4px; }
+.card-meta { color:#555; font-size:10px; display:flex; flex-direction:column; gap:2px; }
+.card-badge { position:absolute; top:8px; right:8px; background:#27AE60; border-radius:8px; padding:2px 7px; font-size:9px; color:#fff; font-weight:700; }
+.card-wrap { position:relative; }
+.no-results { text-align:center; padding:40px 20px; color:#555; grid-column:1/-1; }
+.tab-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#0A0A0A; border-top:1px solid #1A1A1A; display:flex; z-index:40; }
+.tab { flex:1; padding:9px 0; background:none; border:none; color:#444; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; font-weight:500; }
+.tab.active { color:#E74C3C; font-weight:700; }
+.tab-icon { font-size:18px; }
+.tab-add { background:#E74C3C; border-radius:12px; width:40px; height:26px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; flex-direction:column; justify-content:flex-end; }
+.overlay.open { display:flex; }
+.agent-panel { background:#0D0D0D; border-radius:24px 24px 0 0; height:85vh; display:flex; flex-direction:column; border:1px solid #1A1A1A; }
+.agent-header { background:linear-gradient(135deg,#C0392B,#8B0000); padding:14px 20px; border-radius:24px 24px 0 0; display:flex; align-items:center; justify-content:space-between; }
+.close-x { background:rgba(255,255,255,0.15); border:none; border-radius:50%; width:28px; height:28px; color:#fff; cursor:pointer; font-size:15px; }
+.msgs { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; scrollbar-width:none; }
+.bubble { max-width:85%; padding:10px 14px; border-radius:16px; font-size:12px; line-height:1.5; white-space:pre-wrap; }
+.bubble.agent { align-self:flex-start; background:#141414; border:1px solid #222; color:#fff; border-radius:16px 16px 16px 4px; }
+.bubble.user { align-self:flex-end; background:#C0392B; color:#fff; border-radius:16px 16px 4px 16px; }
+.bubble-lbl { font-size:9px; color:#E74C3C; font-weight:700; margin-bottom:3px; }
+.suggs { display:flex; gap:7px; overflow-x:auto; padding:0 14px 8px; scrollbar-width:none; }
+.sugg { background:#141414; border:1px solid #222; border-radius:11px; padding:5px 11px; color:#888; font-size:11px; cursor:pointer; white-space:nowrap; }
+.inp-row { padding:10px 14px; border-top:1px solid #1A1A1A; display:flex; gap:8px; }
+.msg-inp { flex:1; background:#141414; border:1px solid #222; border-radius:10px; padding:9px 12px; color:#fff; font-size:12px; outline:none; font-family:inherit; }
+.send { background:#E74C3C; border:none; border-radius:10px; padding:9px 14px; color:#fff; font-size:12px; font-weight:700; cursor:pointer; }
+.typing-ind { color:#E74C3C; font-size:11px; padding:0 14px 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+<img class="logo-h" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<button class="agent-btn" onclick="openAgent()">🛡️ Agent Anti-Fraude</button>
+</div>
+
+<div class="hero">
+<img class="hero-logo" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<p>Voitures · Motos · Vélos · Pièces détachées</p>
+<div class="soon-badge">🔔 Bientôt disponible !</div>
+</div>
+
+<div class="search-box">
+<div class="search-row">
+<input class="search-input" id="searchInput" placeholder="🔍 Rechercher (ex: Golf, BMW...)" oninput="filterAnnonces()"/>
+<button class="search-btn" onclick="filterAnnonces()">Chercher</button>
+</div>
+<div class="filters-row">
+<select class="filter-select" id="regionSelect" onchange="filterAnnonces()">
+<option value="">🗺️ Toutes les régions</option>
+<option>Île-de-France</option>
+<option>Auvergne-Rhône-Alpes</option>
+<option>Provence-Alpes-Côte d'Azur</option>
+<option>Nouvelle-Aquitaine</option>
+<option>Occitanie</option>
+<option>Hauts-de-France</option>
+<option>Grand Est</option>
+<option>Normandie</option>
+<option>Bretagne</option>
+<option>Pays de la Loire</option>
+<option>Bourgogne-Franche-Comté</option>
+<option>Centre-Val de Loire</option>
+</select>
+<input class="filter-select" id="villeInput" placeholder="📍 Ville (ex: Lyon)" oninput="filterAnnonces()"/>
+</div>
+<div class="km-row">
+<span class="km-label">📏 Rayon :</span>
+<input type="range" class="km-slider" id="kmSlider" min="5" max="500" value="50" step="5" oninput="updateKm()"/>
+<span class="km-value" id="kmValue">50 km</span>
+</div>
+<button class="location-btn" onclick="getLocation()">📍 Utiliser ma position automatiquement</button>
+</div>
+
+<div class="cats">
+<div class="cat active" onclick="setCat('tous',this)">🔥 Tous</div>
+<div class="cat" onclick="setCat('voiture',this)">🚗 Voitures</div>
+<div class="cat" onclick="setCat('moto',this)">🏍️ Motos</div>
+<div class="cat" onclick="setCat('velo',this)">🚲 Vélos</div>
+<div class="cat" onclick="setCat('pieces',this)">🔧 Pièces</div>
+</div>
+
+<div class="results-info">
+<span class="results-count" id="resultsCount">0 annonce</span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="tab-bar">
+<button class="tab active"><span class="tab-icon">🏠</span>Accueil</button>
+<button class="tab"><span class="tab-icon">🔍</span>Recherche</button>
+<button class="tab" onclick="alert('Publication bientot disponible !')">
+<div class="tab-add">+</div>
+<span style="color:#E74C3C;font-weight:700;font-size:10px;">Vendre</span>
+</button>
+<button class="tab" onclick="openAgent()"><span class="tab-icon">🛡️</span>Agent</button>
+<button class="tab"><span class="tab-icon">👤</span>Profil</button>
+</div>
+
+<div class="overlay" id="agentOverlay" onclick="if(event.target===this)closeAgent()">
+<div class="agent-panel">
+<div class="agent-header">
+<div style="display:flex;align-items:center;gap:10px;">
+<img src="https://i.imgur.com/iLRREdx.png" style="height:32px;width:32px;border-radius:50%;background:#fff;object-fit:contain;"/>
+<div>
+<div style="color:#fff;font-weight:800;font-size:14px;">🛡️ Agent Marché Auto</div>
+<div style="color:rgba(255,255,255,0.6);font-size:10px;">Anti-fraude 24h/24</div>
+</div>
+</div>
+<button class="close-x" onclick="closeAgent()">X</button>
+</div>
+<div class="msgs" id="agentMsgs"></div>
+<div class="typing-ind" id="typingInd" style="display:none">Agent en train d ecrire...</div>
+<div class="suggs">
+<button class="sugg" onclick="askQ('Comment vendre ?')">Comment vendre ?</button>
+<button class="sugg" onclick="askQ('Paiement securise ?')">Paiement securise ?</button>
+<button class="sugg" onclick="askQ('Signaler une fraude ?')">Signaler fraude ?</button>
+<button class="sugg" onclick="askQ('Recherche par ville ?')">Recherche par ville ?</button>
+<button class="sugg" onclick="askQ('C est gratuit ?')">C est gratuit ?</button>
+</div>
+<div class="inp-row">
+<input class="msg-inp" id="agentInp" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+<button class="send" onclick="sendMsg()">Envoyer</button>
+</div>
+</div>
+</div>
 
 <script>
-/* 🔥 FIX GLOBAL */
+var ANNONCES = [
+{ id:1, titre:"Peugeot 308 SW 2019", prix:14500, cat:"voiture", ville:"Lyon", region:"Auvergne-Rhone-Alpes", km:78000, icon:"🚗", verified:true, desc:"Tres bon etat, CT ok, revision faite." },
+{ id:2, titre:"Yamaha MT-07 2021", prix:6800, cat:"moto", ville:"Paris", region:"Ile-de-France", km:15000, icon:"🏍️", verified:true, desc:"Parfait etat, entretien regulier." },
+{ id:3, titre:"Jantes BMW Serie 3", prix:320, cat:"pieces", ville:"Marseille", region:"Provence-Alpes-Cote d Azur", km:0, icon:"🔧", verified:true, desc:"4 jantes alliage originales BMW." },
+{ id:4, titre:"VTT Trek Marlin 7 2022", prix:750, cat:"velo", ville:"Bordeaux", region:"Nouvelle-Aquitaine", km:0, icon:"🚲", verified:false, desc:"Quasi neuf, utilise une saison." },
+{ id:5, titre:"Renault Clio V 2022", prix:17900, cat:"voiture", ville:"Toulouse", region:"Occitanie", km:22000, icon:"🚗", verified:true, desc:"Full options, garantie constructeur." },
+{ id:6, titre:"Honda CB650R 2023", prix:8200, cat:"moto", ville:"Nice", region:"Provence-Alpes-Cote d Azur", km:5000, icon:"🏍️", verified:true, desc:"Zero chute, entretien Honda." },
+{ id:7, titre:"Turbo Golf 6 GTI", prix:180, cat:"pieces", ville:"Lille", region:"Hauts-de-France", km:0, icon:"🔧", verified:false, desc:"Turbo original teste avant depose." },
+{ id:8, titre:"Velo route Specialized", prix:1200, cat:"velo", ville:"Strasbourg", region:"Grand Est", km:0, icon:"🚲", verified:true, desc:"Cadre alu, Shimano 105, taille 54." },
+{ id:9, titre:"Volkswagen Golf 7 2018", prix:12500, cat:"voiture", ville:"Paris", region:"Ile-de-France", km:65000, icon:"🚗", verified:true, desc:"DSG7, full LED, excellent etat." },
+{ id:10, titre:"Kawasaki Z900 2022", prix:9500, cat:"moto", ville:"Lyon", region:"Auvergne-Rhone-Alpes", km:8000, icon:"🏍️", verified:true, desc:"Pneus neufs, garantie 1 an." },
+{ id:11, titre:"Amortisseurs Renault Clio", prix:90, cat:"pieces", ville:"Nantes", region:"Pays de la Loire", km:0, icon:"🔧", verified:false, desc:"Paire avant, tres bon etat." },
+{ id:12, titre:"BMX Freestyle 2023", prix:350, cat:"velo", ville:"Rennes", region:"Bretagne", km:0, icon:"🚲", verified:true, desc:"Neuf, jamais utilise en compet." }
+];
 
-(function(){
+var currentCat = "tous";
+var agentMsgs = [];
 
-// Sécurise si fonctions déjà existantes
-if (typeof filterAnnonces !== "function") return;
+function filterAnnonces() {
+var search = document.getElementById("searchInput").value.toLowerCase();
+var region = document.getElementById("regionSelect").value.toLowerCase();
+var ville = document.getElementById("villeInput").value.toLowerCase();
+var filtered = ANNONCES.filter(function(a) {
+var catOk = currentCat === "tous" || a.cat === currentCat;
+var searchOk = !search || a.titre.toLowerCase().indexOf(search) >= 0 || a.ville.toLowerCase().indexOf(search) >= 0;
+var regionOk = !region || a.region.toLowerCase().indexOf(region) >= 0;
+var villeOk = !ville || a.ville.toLowerCase().indexOf(ville) >= 0;
+return catOk && searchOk && regionOk && villeOk;
+});
+renderAnnonces(filtered);
+}
 
-// Attendre que tout soit chargé
-document.addEventListener("DOMContentLoaded", function () {
-try {
+function renderAnnonces(list) {
+var grid = document.getElementById("grid");
+var count = document.getElementById("resultsCount");
+count.textContent = list.length + " annonce" + (list.length > 1 ? "s" : "");
+if (list.length === 0) {
+grid.innerHTML = '<div class="no-results"><div style="font-size:40px;margin-bottom:12px;">🔍</div><div>Aucune annonce trouvee</div><div style="font-size:12px;margin-top:6px;">Essayez une autre ville ou region</div></div>';
+return;
+}
+var html = "";
+for (var i = 0; i < list.length; i++) {
+var a = list[i];
+var km = a.km > 0 ? a.km.toString() + " km" : "";
+html += '<div class="card" onclick="showDetail(' + a.id + ')">';
+html += '<div class="card-wrap">';
+html += '<div class="card-img">' + a.icon + '</div>';
+html += '<div class="card-badge">' + (a.verified ? "Verifie" : "Nouveau") + '</div>';
+html += '</div>';
+html += '<div class="card-body">';
+html += '<div class="card-title">' + a.titre + '</div>';
+html += '<div class="card-price">' + a.prix.toLocaleString() + " EUR" + '</div>';
+html += '<div class="card-meta">';
+html += '<span>📍 ' + a.ville + '</span>';
+if (km) html += '<span>' + km + '</span>';
+html += '<span style="color:#444;font-size:9px;">' + a.region + '</span>';
+html += '</div></div></div>';
+}
+grid.innerHTML = html;
+}
+
+function showDetail(id) {
+var a = ANNONCES.find(function(x) { return x.id === id; });
+if (a) alert(a.titre + "\n\nPrix: " + a.prix.toLocaleString() + " EUR\nVille: " + a.ville + "\nRegion: " + a.region + "\n\n" + a.desc);
+}
+
+function setCat(cat, el) {
+currentCat = cat;
+var cats = document.querySelectorAll(".cat");
+for (var i = 0; i < cats.length; i++) cats[i].classList.remove("active");
+el.classList.add("active");
 filterAnnonces();
-} catch(e) {
-console.log("Init erreur:", e);
 }
+
+function updateKm() {
+var val = document.getElementById("kmSlider").value;
+document.getElementById("kmValue").textContent = val + " km";
+filterAnnonces();
+}
+
+function getLocation() {
+if (!navigator.geolocation) { alert("Geolocalisation non disponible."); return; }
+navigator.geolocation.getCurrentPosition(
+function(pos) { alert("📍 Position detectee !\nRecherche des annonces autour de vous..."); },
+function() { alert("Position non disponible. Entrez votre ville manuellement."); }
+);
+}
+
+var FAQ = [
+{ q:["vendre","publier","annonce"], r:"📋 Pour vendre :\n\n1 Cliquez sur + Publier\n2 Remplissez le formulaire\n3 L agent IA verifie l annonce\n4 En ligne en quelques minutes !\n\nGratuit pour les particuliers !" },
+{ q:["payer","paiement","securite","virement"], r:"Paiements securises :\n\nVirement bancaire\nEspeces en main propre\n\nJamais par Western Union, Bitcoin ou PayPal Amis !" },
+{ q:["fraude","arnaque","signaler","suspect"], r:"Signaler une fraude :\n\n1 Cliquez Signaler sur l annonce\n2 L IA analyse immediatement\n3 Annonce suspendue si fraude\n\nSurveillance 24h/24 !" },
+{ q:["gratuit","cout","prix","combien"], r:"Le Marche Auto est GRATUIT !\n\nPublication : Gratuit\nContact vendeur : Gratuit\nAgent anti-fraude : Gratuit" },
+{ q:["ville","region","km","localisation","recherche","distance"], r:"Recherche geographique :\n\nFiltrez par ville\nFiltrez par region\nChoisissez un rayon en km\nUtilisez votre position GPS\n\nCombinez les filtres !" },
+{ q:["quand","disponible","lancement"], r:"Lancement imminent !\n\niPhone et Android bientot\nDeja accessible sur navigateur !\n\nSuivez-nous !" }
+];
+
+function addMsg(role, text) {
+agentMsgs.push({ role: role, text: text });
+var el = document.getElementById("agentMsgs");
+var html = "";
+for (var i = 0; i < agentMsgs.length; i++) {
+var m = agentMsgs[i];
+html += '<div class="bubble ' + m.role + '">';
+if (m.role === "agent") html += '<div class="bubble-lbl">AGENT MARCHE AUTO</div>';
+html += m.text + '</div>';
+}
+el.innerHTML = html;
+el.scrollTop = el.scrollHeight;
+}
+
+function openAgent() {
+document.getElementById("agentOverlay").classList.add("open");
+if (agentMsgs.length === 0) addMsg("agent", "Bonjour ! Je suis l Agent Marche Auto.\n\nComment puis-je vous aider ?");
+}
+
+function closeAgent() { document.getElementById("agentOverlay").classList.remove("open"); }
+
+function askQ(q) {
+addMsg("user", q);
+document.getElementById("typingInd").style.display = "block";
+var lower = q.toLowerCase();
+for (var i = 0; i < FAQ.length; i++) {
+var f = FAQ[i];
+var found = false;
+for (var j = 0; j < f.q.length; j++) {
+if (lower.indexOf(f.q[j]) >= 0) { found = true; break; }
+}
+if (found) {
+(function(reply) {
+setTimeout(function() {
+document.getElementById("typingInd").style.display = "none";
+addMsg("agent", reply);
+}, 700);
+})(f.r);
+return;
+}
+}
+callClaude(q);
+}
+
+function sendMsg() {
+var inp = document.getElementById("agentInp");
+var txt = inp.value.trim();
+if (!txt) return;
+addMsg("user", txt);
+inp.value = "";
+document.getElementById("typingInd").style.display = "block";
+var lower = txt.toLowerCase();
+for (var i = 0; i < FAQ.length; i++) {
+var f = FAQ[i];
+var found = false;
+for (var j = 0; j < f.q.length; j++) {
+if (lower.indexOf(f.q[j]) >= 0) { found = true; break; }
+}
+if (found) {
+(function(reply) {
+setTimeout(function() {
+document.getElementById("typingInd").style.display = "none";
+addMsg("agent", reply);
+}, 700);
+})(f.r);
+return;
+}
+}
+callClaude(txt);
+}
+
+function callClaude(txt) {
+fetch("https://api.anthropic.com/v1/messages", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+model: "claude-sonnet-4-20250514",
+max_tokens: 600,
+system: "Tu es l Agent Marche Auto, assistant anti-fraude de la marketplace automobile Le Marche Auto. Reponds en francais, sois chaleureux, utilise des emojis.",
+messages: [{ role: "user", content: txt }]
+})
+}).then(function(res) {
+return res.json();
+}).then(function(data) {
+document.getElementById("typingInd").style.display = "none";
+addMsg("agent", data.content && data.content[0] ? data.content[0].text : "Desole, reessayez !");
+}).catch(function() {
+document.getElementById("typingInd").style.display = "none";
+addMsg("agent", "Connexion impossible. Reessayez !");
 });
-
-// Rend les fonctions accessibles au HTML (onclick etc)
-if (typeof setCat === "function") window.setCat = setCat;
-if (typeof updateKm === "function") window.updateKm = updateKm;
-if (typeof openAgent === "function") window.openAgent = openAgent;
-if (typeof sendMsg === "function") window.sendMsg = sendMsg;
-
-// Sécurise erreurs fréquentes
-window.onerror = function(msg, url, line) {
-console.log("Erreur JS détectée:", msg, "ligne:", line);
-};
-
-// Fix bouton ENTER agent
-const agentInput = document.getElementById("agentInp");
-if (agentInput) {
-agentInput.addEventListener("keypress", function(e){
-if (e.key === "Enter") {
-e.preventDefault();
-if (typeof sendMsg === "function") sendMsg();
-}
-});
 }
 
-})();
+filterAnnonces();
 </script>
+</body>
+</html>
+
