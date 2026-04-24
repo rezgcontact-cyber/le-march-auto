@@ -1,135 +1,20 @@
-<script>
-let currentCat = "tous";
-let agentMsgs = [];
-
-function filterAnnonces() {
-const search = document.getElementById("searchInput").value.toLowerCase();
-const region = document.getElementById("regionSelect").value.toLowerCase();
-const ville = document.getElementById("villeInput").value.toLowerCase();
-const kmMax = parseInt(document.getElementById("kmSlider").value);
-
-const filtered = ANNONCES.filter(a => {
-return (
-(currentCat === "tous" || a.cat === currentCat) &&
-(!search || a.titre.toLowerCase().includes(search)) &&
-(!region || a.region.toLowerCase().includes(region)) &&
-(!ville || a.ville.toLowerCase().includes(ville)) &&
-(!a.km || a.km <= kmMax)
-);
-});
-
-renderAnnonces(filtered);
+.modal {
+position: fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background: rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
 }
 
-function renderAnnonces(list) {
-const grid = document.getElementById("grid");
-const count = document.getElementById("resultsCount");
-
-count.textContent = list.length + " annonce" + (list.length > 1 ? "s" : "");
-grid.innerHTML = "";
-
-if (list.length === 0) {
-grid.innerHTML = "<div class='no-results'>Aucune annonce trouvée</div>";
-return;
+.modal-content {
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:400px;
+width:90%;
 }
-
-list.forEach(a => {
-const card = document.createElement("div");
-card.className = "card";
-
-card.innerHTML = `
-<div class="card-wrap">
-<div class="card-img">${a.icon}</div>
-<div class="card-badge ${!a.verified ? 'new' : ''}">
-${a.verified ? "✓ Vérifié" : "⚡ Nouveau"}
-</div>
-</div>
-<div class="card-body">
-<div class="card-title">${a.titre}</div>
-<div class="card-price">${a.prix.toLocaleString("fr-FR")} €</div>
-<div class="card-meta">
-<span>📍 ${a.ville}</span>
-${a.km ? `<span>⏱ ${a.km} km</span>` : ""}
-</div>
-</div>
-`;
-
-card.onclick = function() {
-openModal(a);
-};
-
-grid.appendChild(card);
-});
-}
-
-function setCat(cat, el) {
-currentCat = cat;
-document.querySelectorAll(".cat").forEach(c => c.classList.remove("active"));
-el.classList.add("active");
-filterAnnonces();
-}
-
-function updateKm() {
-const val = document.getElementById("kmSlider").value;
-document.getElementById("kmValue").textContent = val + " km";
-filterAnnonces();
-}
-
-function openModal(a) {
-const modal = document.createElement("div");
-modal.className = "modal";
-
-modal.innerHTML = `
-<div class="modal-content">
-<h2>${a.titre}</h2>
-<p><strong>${a.prix.toLocaleString()} €</strong></p>
-<p>📍 ${a.ville} - ${a.region}</p>
-${a.km ? `<p>⏱ ${a.km} km</p>` : ""}
-<p>${a.desc}</p>
-<button onclick="this.closest('.modal').remove()">Fermer</button>
-</div>
-`;
-
-document.body.appendChild(modal);
-}
-
-function openAgent() {
-document.getElementById("agentOverlay").classList.add("open");
-
-if (agentMsgs.length === 0) {
-addMsg("agent", "👋 Bonjour !");
-}
-}
-
-function addMsg(role, text) {
-agentMsgs.push({ role, text });
-
-const el = document.getElementById("agentMsgs");
-el.innerHTML = agentMsgs.map(m => `
-<div class="bubble ${m.role}">${m.text}</div>
-`).join("");
-
-el.scrollTop = el.scrollHeight;
-}
-
-function sendMsg() {
-const inp = document.getElementById("agentInp");
-const txt = inp.value.trim();
-if (!txt) return;
-
-addMsg("user", txt);
-inp.value = "";
-}
-
-/* IMPORTANT : rendre accessible au HTML */
-window.setCat = setCat;
-window.updateKm = updateKm;
-window.openAgent = openAgent;
-window.sendMsg = sendMsg;
-
-/* LANCEMENT */
-window.onload = function() {
-filterAnnonces();
-};
-</script>
-
