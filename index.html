@@ -1,13 +1,8 @@
 <script>
 const $ = (id) => document.getElementById(id);
 
-const state = {
-cat: "tous",
-annonces: [],
-agentMsgs: []
-};
-
-state.annonces = [...ANNONCES];
+let currentCat = "tous";
+let agentMsgs = [];
 
 function normalize(str) {
 return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -19,9 +14,9 @@ const region = normalize($("regionSelect").value);
 const ville = normalize($("villeInput").value);
 const kmMax = +$("kmSlider").value;
 
-const filtered = state.annonces.filter(a => {
+const filtered = ANNONCES.filter(a => {
 return (
-(state.cat === "tous" || a.cat === state.cat) &&
+(currentCat === "tous" || a.cat === currentCat) &&
 (!search || normalize(a.titre).includes(search) || normalize(a.ville).includes(search)) &&
 (!region || normalize(a.region).includes(region)) &&
 (!ville || normalize(a.ville).includes(ville)) &&
@@ -32,7 +27,19 @@ return (
 renderAnnonces(filtered);
 }
 
-function createCard(a) {
+function renderAnnonces(list) {
+const grid = $("grid");
+const count = $("resultsCount");
+
+count.textContent = list.length + " annonce" + (list.length > 1 ? "s" : "");
+grid.innerHTML = "";
+
+if (!list.length) {
+grid.innerHTML = `<div class="no-results">Aucune annonce</div>`;
+return;
+}
+
+list.forEach(a => {
 const card = document.createElement("div");
 card.className = "card";
 
@@ -48,39 +55,19 @@ ${a.verified ? "✓ Vérifié" : "⚡ Nouveau"}
 <div class="card-price">${a.prix.toLocaleString("fr-FR")} €</div>
 <div class="card-meta">
 <span>📍 ${a.ville}</span>
-${a.km ? `<span>⏱ ${a.km.toLocaleString()} km</span>` : ""}
-<span style="font-size:10px;">${a.region}</span>
+${a.km ? `<span>⏱ ${a.km} km</span>` : ""}
 </div>
 </div>
 `;
 
-card.addEventListener("click", () => openModal(a));
-return card;
-}
+card.onclick = () => openModal(a);
 
-function renderAnnonces(list) {
-const grid = $("grid");
-const count = $("resultsCount");
-
-count.textContent = `${list.length} annonce${list.length > 1 ? "s" : ""}`;
-grid.innerHTML = "";
-
-if (!list.length) {
-grid.innerHTML = `
-<div class="no-results">
-<div style="font-size:40px;">🔍</div>
-<div>Aucune annonce trouvée</div>
-</div>`;
-return;
-}
-
-const fragment = document.createDocumentFragment();
-list.forEach(a => fragment.appendChild(createCard(a)));
-grid.appendChild(fragment);
+grid.appendChild(card);
+});
 }
 
 function setCat(cat, el) {
-state.cat = cat;
+currentCat = cat;
 document.querySelectorAll(".cat").forEach(c => c.classList.remove("active"));
 el.classList.add("active");
 filterAnnonces();
@@ -91,32 +78,31 @@ $("kmValue").textContent = $("kmSlider").value + " km";
 filterAnnonces();
 }
 
-/* 🔥 MODAL (remplace alert) */
 function openModal(a) {
 const modal = document.createElement("div");
 modal.className = "modal";
+
 modal.innerHTML = `
 <div class="modal-content">
 <h2>${a.titre}</h2>
-<p><strong>💰 ${a.prix.toLocaleString()} €</strong></p>
-<p>📍 ${a.ville} - ${a.region}</p>
-${a.km ? `<p>⏱ ${a.km} km</p>` : ""}
+<p><strong>${a.prix} €</strong></p>
+<p>${a.ville} - ${a.region}</p>
 <p>${a.desc}</p>
 <button onclick="this.closest('.modal').remove()">Fermer</button>
 </div>
 `;
+
 document.body.appendChild(modal);
 }
 
-/* 💬 AGENT */
+/* AGENT */
 
 function addMsg(role, text) {
-state.agentMsgs.push({ role, text });
+agentMsgs.push({ role, text });
 
-$("agentMsgs").innerHTML = state.agentMsgs.map(m => `
+$("agentMsgs").innerHTML = agentMsgs.map(m => `
 <div class="bubble ${m.role}">
-${m.role === "agent" ? '<div class="bubble-lbl">AGENT</div>' : ""}
-${m.text.replace(/\n/g, "<br>")}
+${m.text}
 </div>
 `).join("");
 
@@ -126,48 +112,27 @@ $("agentMsgs").scrollTop = 9999;
 function openAgent() {
 $("agentOverlay").classList.add("open");
 
-if (!state.agentMsgs.length) {
-addMsg("agent", "👋 Bonjour ! Je peux vous aider à trouver une voiture 🚗");
+if (!agentMsgs.length) {
+addMsg("agent", "👋 Bonjour !");
 }
 }
 
-async function sendMsg() {
+function sendMsg() {
 const inp = $("agentInp");
 const txt = inp.value.trim();
 if (!txt) return;
 
 addMsg("user", txt);
 inp.value = "";
-$("typingInd").style.display = "block";
-
-const lower = txt.toLowerCase();
-
-const found = FAQ.find(f => f.q.some(k => lower.includes(k)));
-
-if (found) {
-setTimeout(() => {
-$("typingInd").style.display = "none";
-addMsg("agent", found.r);
-}, 600);
-return;
 }
 
-try {
-const res = await fetch("https://votre-api-ici.com/agent", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ message: txt })
-});
-
-const data = await res.json();
-addMsg("agent", data.response || "Réponse vide.");
-} catch {
-addMsg("agent", "❌ Erreur serveur.");
-}
-
-$("typingInd").style.display = "none";
-}
+/* rendre global (IMPORTANT) */
+window.setCat = setCat;
+window.updateKm = updateKm;
+window.openAgent = openAgent;
+window.sendMsg = sendMsg;
 
 /* INIT */
 filterAnnonces();
 </script>
+
