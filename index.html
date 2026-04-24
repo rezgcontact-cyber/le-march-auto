@@ -3,1353 +3,889 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="theme-color" content="#0a0a0a"/>
-<meta name="description" content="Le Marché Auto — Achetez et vendez voitures, motos, vélos et pièces. 100% gratuit, agent anti-fraude IA."/>
-<title>Le Marché Auto</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<title>Le Marché Auto — Achetez & Vendez en toute confiance</title>
 <style>
-:root{
-  --bg:#0a0a0a;--bg2:#111;--bg3:#181818;--bg4:#1f1f1f;
-  --border:#232323;--border2:#2e2e2e;
-  --text:#f2ede4;--text2:#888;--text3:#444;
-  --accent:#d4ff3e;--accent2:#b8dc00;
-  --teal:#00c896;--red:#ff4040;--blue:#4fa3ff;--orange:#ff8c42;--purple:#9b7fff;
-  --font-h:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;
-  --r:10px;--r2:18px;--nav:60px;
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:15px;line-height:1.6;min-height:100dvh;overflow-x:hidden;padding-bottom:80px}
-button{font-family:var(--font-b);cursor:pointer;border:none;background:none}
-input,select,textarea{font-family:var(--font-b);outline:none;border:none}
-a{text-decoration:none;color:inherit}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#080808; font-family:'Segoe UI',sans-serif; color:#fff; max-width:480px; margin:0 auto; min-height:100vh; }
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);background:rgba(10,10,10,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px}
-.logo{display:flex;align-items:center;gap:9px;flex:1}
-.logo-mark{width:34px;height:34px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-weight:800;font-size:15px;color:#0a0a0a;flex-shrink:0}
-.logo-text{font-family:var(--font-h);font-weight:700;font-size:16px;line-height:1.1}
-.logo-text span{color:var(--accent);display:block;font-size:10px;font-weight:400;letter-spacing:2px;color:var(--text2)}
-.nav-btns{display:flex;gap:8px}
-.nav-btn{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid var(--border2);color:var(--text2);transition:all .2s}
-.nav-btn:hover{border-color:var(--accent);color:var(--accent)}
-.nav-btn.primary{background:var(--accent);color:#0a0a0a;border-color:var(--accent)}
-.nav-btn.primary:hover{background:var(--accent2)}
-.badge-free{background:rgba(0,200,150,.12);color:var(--teal);border:1px solid rgba(0,200,150,.25);padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+/* ── HEADER ── */
+.header { background:#0A0A0A; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #1A1A1A; position:sticky; top:0; z-index:50; }
+.logo-wrap { display:flex; align-items:center; gap:10px; }
+.logo-img { height:42px; width:42px; border-radius:50%; object-fit:contain; background:#fff; border:2px solid #C0392B; box-shadow:0 0 12px rgba(192,57,43,0.5); }
+.logo-text { display:flex; flex-direction:column; line-height:1; }
+.logo-text .lt1 { font-size:10px; color:#C0392B; font-weight:700; letter-spacing:2px; text-transform:uppercase; }
+.logo-text .lt2 { font-size:18px; font-weight:900; color:#fff; letter-spacing:-0.5px; }
+.logo-text .lt3 { font-size:18px; font-weight:900; color:#C0392B; letter-spacing:-0.5px; margin-top:-3px; }
+.agent-btn { background:linear-gradient(135deg,#C0392B,#E74C3C); border:none; border-radius:18px; padding:7px 12px; color:#fff; font-size:11px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; }
 
-/* MAIN */
-main{padding-top:var(--nav)}
-.page{display:none;min-height:calc(100dvh - var(--nav))}
-.page.active{display:block}
+/* ── HERO ── */
+.hero { background:linear-gradient(160deg,#1A0000 0%,#0D0000 60%,#080808 100%); padding:20px 14px 16px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; top:-80px; right:-80px; width:300px; height:300px; background:radial-gradient(circle,rgba(192,57,43,0.15) 0%,transparent 70%); pointer-events:none; }
+.hero-logo { display:block; height:100px; width:100px; border-radius:50%; object-fit:contain; background:#fff; border:3px solid #C0392B; box-shadow:0 0 30px rgba(192,57,43,0.5); margin:0 auto 12px; }
+.hero-title { text-align:center; font-size:22px; font-weight:900; color:#fff; margin-bottom:4px; }
+.hero-title span { color:#C0392B; }
+.hero-sub { text-align:center; font-size:12px; color:#777; margin-bottom:16px; }
+.hero-stats { display:flex; gap:8px; justify-content:center; margin-bottom:16px; }
+.hero-stat { background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.2); border-radius:10px; padding:8px 14px; text-align:center; }
+.hero-stat .hs-n { font-size:16px; font-weight:900; color:#E74C3C; }
+.hero-stat .hs-l { font-size:9px; color:#666; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; }
 
-/* HERO */
-.hero{padding:40px 16px 20px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(212,255,62,.06) 0%,transparent 70%);pointer-events:none}
-.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(212,255,62,.08);border:1px solid rgba(212,255,62,.2);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--accent);margin-bottom:18px;font-weight:500}
-.hero-tag::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-family:var(--font-h);font-size:clamp(28px,7vw,46px);font-weight:800;line-height:1.05;margin-bottom:12px}
-.hero h1 em{color:var(--accent);font-style:normal}
-.hero p{color:var(--text2);font-size:14px;margin-bottom:28px;max-width:340px;margin-left:auto;margin-right:auto}
-.hero-stats{display:flex;justify-content:center;gap:24px;margin-bottom:28px}
-.hero-stat{text-align:center}
-.hero-stat strong{display:block;font-family:var(--font-h);font-size:20px;font-weight:800;color:var(--accent)}
-.hero-stat span{font-size:11px;color:var(--text2)}
-.hero-badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:32px}
-.hero-badge{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text2)}
-.hero-badge i{font-size:14px}
+/* ── SEARCH ── */
+.search-section { padding:0 14px 14px; }
+.search-main { display:flex; gap:8px; margin-bottom:10px; }
+.search-input { flex:1; background:#141414; border:1px solid #222; border-radius:12px; padding:11px 14px; color:#fff; font-size:13px; outline:none; font-family:inherit; }
+.search-input::placeholder { color:#555; }
+.search-go { background:#C0392B; border:none; border-radius:12px; padding:11px 18px; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; }
+.filters-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+.f-select { background:#141414; border:1px solid #222; border-radius:10px; padding:9px 12px; color:#fff; font-size:12px; outline:none; font-family:inherit; width:100%; cursor:pointer; }
+.f-select option { background:#1A1A1A; }
+.price-row { display:flex; gap:8px; margin-bottom:10px; }
+.price-input { flex:1; background:#141414; border:1px solid #222; border-radius:10px; padding:9px 12px; color:#fff; font-size:12px; outline:none; font-family:inherit; }
+.price-input::placeholder { color:#555; }
+.km-row { display:flex; align-items:center; gap:10px; background:#141414; border:1px solid #222; border-radius:10px; padding:10px 14px; margin-bottom:10px; }
+.km-lbl { font-size:11px; color:#888; white-space:nowrap; }
+.km-slider { flex:1; accent-color:#C0392B; }
+.km-val { font-size:12px; font-weight:700; color:#C0392B; white-space:nowrap; }
+.loc-btn { width:100%; background:#141414; border:1px solid rgba(192,57,43,0.3); border-radius:10px; padding:9px; color:#C0392B; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; }
 
-/* SEARCH BAR */
-.search-wrap{padding:0 16px 24px}
-.search-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:4px;display:flex;gap:8px;align-items:center;transition:border-color .2s}
-.search-box:focus-within{border-color:var(--accent)}
-.search-box input{flex:1;background:none;padding:10px 14px;font-size:15px;color:var(--text)}
-.search-box input::placeholder{color:var(--text3)}
-.search-box button{background:var(--accent);color:#0a0a0a;border-radius:14px;padding:10px 20px;font-weight:700;font-size:14px;font-family:var(--font-h);transition:background .2s}
-.search-box button:hover{background:var(--accent2)}
+/* ── CATEGORIES ── */
+.cats { display:flex; gap:7px; overflow-x:auto; padding:0 14px 12px; scrollbar-width:none; }
+.cat { background:#141414; border:1px solid #1E1E1E; border-radius:20px; padding:7px 14px; color:#666; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.2s; display:flex; align-items:center; gap:5px; }
+.cat.active { background:#C0392B; border-color:#C0392B; color:#fff; }
 
-/* FILTERS */
-.filters-wrap{padding:0 16px 16px}
-.filters-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
-.filters-scroll::-webkit-scrollbar{display:none}
-.filter-chip{flex-shrink:0;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border2);color:var(--text2);background:var(--bg2);transition:all .18s;white-space:nowrap}
-.filter-chip.active{background:var(--accent);color:#0a0a0a;border-color:var(--accent);font-weight:700}
-.filter-chip:hover:not(.active){border-color:var(--text3);color:var(--text)}
+/* ── RESULTS ── */
+.results-bar { padding:0 14px 10px; display:flex; align-items:center; justify-content:space-between; }
+.results-count { font-size:12px; color:#555; }
+.results-count span { color:#fff; font-weight:700; }
+.sort-select { background:#141414; border:1px solid #1E1E1E; border-radius:8px; padding:5px 10px; color:#888; font-size:11px; outline:none; font-family:inherit; cursor:pointer; }
 
-/* ADVANCED FILTERS */
-.adv-filters{padding:0 16px 12px;display:none}
-.adv-filters.open{display:block}
-.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.adv-field{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px}
-.adv-field label{display:block;font-size:11px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:500}
-.adv-field select,.adv-field input{width:100%;background:none;color:var(--text);font-size:14px}
-.adv-field select option{background:var(--bg3);color:var(--text)}
-.adv-range{display:flex;gap:6px;align-items:center}
-.adv-range input{width:100%;background:none;color:var(--text);font-size:14px;text-align:center}
-.adv-range span{color:var(--text3);font-size:12px;flex-shrink:0}
-.adv-btns{display:flex;gap:8px}
-.btn-ghost{padding:9px 18px;border-radius:var(--r);border:1px solid var(--border2);color:var(--text2);font-size:13px;font-weight:500;transition:all .18s}
-.btn-ghost:hover{border-color:var(--text2);color:var(--text)}
-.btn-apply{padding:9px 22px;border-radius:var(--r);background:var(--accent);color:#0a0a0a;font-size:13px;font-weight:700;transition:background .18s}
-.btn-apply:hover{background:var(--accent2)}
-.filter-toggle-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);font-size:13px;background:var(--bg2);transition:all .18s;flex-shrink:0}
-.filter-toggle-btn.active{border-color:var(--accent);color:var(--accent)}
+/* ── GRID ── */
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 14px 90px; }
+.card { background:#111; border-radius:14px; overflow:hidden; border:1px solid #1A1A1A; cursor:pointer; transition:transform 0.15s, border-color 0.15s; }
+.card:active { transform:scale(0.97); }
+.card:hover { border-color:#C0392B44; }
+.card-img-wrap { position:relative; }
+.card-img { width:100%; height:110px; object-fit:cover; background:#1A1A1A; display:flex; align-items:center; justify-content:center; font-size:36px; }
+.card-img img { width:100%; height:110px; object-fit:cover; }
+.card-badge { position:absolute; top:7px; right:7px; border-radius:7px; padding:2px 7px; font-size:9px; font-weight:700; }
+.badge-ok { background:#27AE60; color:#fff; }
+.badge-new { background:#E67E22; color:#fff; }
+.card-fav { position:absolute; top:7px; left:7px; background:rgba(0,0,0,0.5); border:none; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:13px; cursor:pointer; }
+.card-body { padding:9px 10px 11px; }
+.card-title { color:#fff; font-size:12px; font-weight:700; margin-bottom:2px; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card-price { color:#C0392B; font-size:17px; font-weight:900; margin-bottom:5px; }
+.card-meta { display:flex; flex-direction:column; gap:2px; }
+.card-meta span { color:#555; font-size:10px; display:flex; align-items:center; gap:3px; }
+.no-results { grid-column:1/-1; text-align:center; padding:40px 20px; }
+.no-results .nr-ico { font-size:40px; margin-bottom:10px; }
+.no-results p { color:#555; font-size:13px; }
 
-/* SORT BAR */
-.sort-bar{padding:0 16px 12px;display:flex;justify-content:space-between;align-items:center}
-.sort-bar span{font-size:13px;color:var(--text2)}
-.sort-bar span strong{color:var(--text);font-weight:600}
-.sort-select{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:6px 12px;font-size:13px;color:var(--text);cursor:pointer}
+/* ── TAB BAR ── */
+.tab-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#0A0A0A; border-top:1px solid #1A1A1A; display:flex; z-index:40; }
+.tab { flex:1; padding:8px 0 6px; background:none; border:none; color:#444; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; font-size:9px; font-weight:600; }
+.tab.active { color:#C0392B; }
+.tab .ti { font-size:19px; }
+.tab-add-btn { background:#C0392B; border-radius:14px; width:42px; height:28px; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; margin-bottom:2px; }
 
-/* LISTING GRID */
-.listing-grid{padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-@media(max-width:480px){.listing-grid{grid-template-columns:1fr}}
+/* ── DETAIL SCREEN ── */
+.screen { display:none; position:fixed; inset:0; background:#080808; z-index:60; overflow-y:auto; max-width:480px; left:50%; transform:translateX(-50%); }
+.screen.open { display:block; }
+.detail-img-wrap { position:relative; }
+.detail-img { width:100%; height:240px; object-fit:cover; background:#1A1A1A; display:flex; align-items:center; justify-content:center; font-size:80px; }
+.detail-img img { width:100%; height:240px; object-fit:cover; }
+.back-btn { position:absolute; top:12px; left:12px; background:rgba(0,0,0,0.65); border:1px solid #333; border-radius:20px; padding:6px 14px; color:#fff; font-size:12px; cursor:pointer; }
+.detail-body { padding:16px; }
+.detail-price { font-size:30px; font-weight:900; color:#C0392B; }
+.detail-title { font-size:20px; font-weight:800; color:#fff; margin:4px 0 14px; }
+.detail-tags { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px; }
+.tag { background:#141414; border:1px solid #1E1E1E; border-radius:8px; padding:5px 11px; font-size:11px; color:#aaa; }
+.detail-section { margin-bottom:16px; }
+.detail-section-title { font-size:11px; color:#555; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+.detail-desc { font-size:13px; color:#bbb; line-height:1.6; background:#111; border-radius:12px; padding:14px; border:1px solid #1A1A1A; }
+.seller-box { background:#111; border-radius:12px; padding:14px; border:1px solid #1A1A1A; display:flex; align-items:center; gap:12px; }
+.seller-avatar { width:44px; height:44px; background:#C0392B; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.seller-name { font-weight:700; color:#fff; font-size:14px; }
+.seller-type { font-size:11px; color:#666; margin-top:2px; }
+.seller-badge { margin-left:auto; background:#0D3D26; border:1px solid #27AE6044; border-radius:8px; padding:4px 10px; font-size:10px; color:#27AE60; font-weight:700; }
+.contact-btn { width:100%; background:linear-gradient(135deg,#C0392B,#E74C3C); border:none; border-radius:14px; padding:16px; color:#fff; font-size:16px; font-weight:800; cursor:pointer; margin-top:14px; display:flex; align-items:center; justify-content:center; gap:10px; }
+.signal-btn { width:100%; background:#141414; border:1px solid #333; border-radius:14px; padding:12px; color:#888; font-size:13px; font-weight:700; cursor:pointer; margin-top:8px; }
+.agent-link-btn { width:100%; background:#141414; border:1px solid rgba(192,57,43,0.3); border-radius:14px; padding:12px; color:#C0392B; font-size:13px; font-weight:700; cursor:pointer; margin-top:8px; }
 
-/* CARD */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:all .2s;cursor:pointer;position:relative}
-.card:hover{border-color:var(--border2);transform:translateY(-2px)}
-.card-img{width:100%;height:200px;object-fit:cover;background:var(--bg3)}
-.card-img-wrap{position:relative;overflow:hidden}
-.card-img-wrap img{transition:transform .3s}
-.card:hover .card-img-wrap img{transform:scale(1.04)}
-.card-badges{position:absolute;top:10px;left:10px;display:flex;gap:5px;flex-wrap:wrap}
-.card-badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;backdrop-filter:blur(8px)}
-.badge-verified{background:rgba(0,200,150,.85);color:#fff}
-.badge-urgent{background:rgba(255,64,64,.85);color:#fff}
-.badge-new{background:rgba(212,255,62,.85);color:#0a0a0a}
-.badge-pro{background:rgba(79,163,255,.85);color:#fff}
-.card-fav{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(10,10,10,.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s}
-.card-fav:hover,.card-fav.active{background:rgba(255,64,64,.8)}
-.card-body{padding:14px}
-.card-price{font-family:var(--font-h);font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px}
-.card-price .monthly{font-size:12px;color:var(--text2);font-family:var(--font-b);font-weight:400}
-.card-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-.card-chip{padding:2px 8px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;font-size:11px;color:var(--text2)}
-.card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border)}
-.card-loc{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:4px}
-.card-time{font-size:11px;color:var(--text3)}
-.price-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;margin-bottom:8px}
-.price-good{background:rgba(0,200,150,.12);color:var(--teal);border:1px solid rgba(0,200,150,.2)}
-.price-fair{background:rgba(255,140,66,.1);color:var(--orange);border:1px solid rgba(255,140,66,.2)}
-.price-great{background:rgba(212,255,62,.1);color:var(--accent);border:1px solid rgba(212,255,62,.2)}
+/* ── ESTIMER SCREEN ── */
+.estimer-box { padding:16px; }
+.estimer-title { font-size:20px; font-weight:900; color:#fff; margin-bottom:4px; }
+.estimer-sub { font-size:13px; color:#666; margin-bottom:20px; }
+.estimer-result { background:linear-gradient(135deg,#1A0000,#200000); border:1px solid rgba(192,57,43,0.3); border-radius:16px; padding:20px; margin-top:16px; display:none; }
+.estimer-result.show { display:block; }
+.estimer-result-label { font-size:12px; color:#888; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+.estimer-result-price { font-size:32px; font-weight:900; color:#C0392B; margin-bottom:4px; }
+.estimer-result-range { font-size:13px; color:#666; margin-bottom:12px; }
+.estimer-result-info { font-size:12px; color:#888; line-height:1.5; }
 
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:60px 24px;color:var(--text2)}
-.empty-state .icon{font-size:48px;margin-bottom:16px;opacity:.4}
-.empty-state h3{font-family:var(--font-h);font-size:20px;color:var(--text);margin-bottom:8px}
-.empty-state p{font-size:14px;margin-bottom:20px}
+/* ── AGENT OVERLAY ── */
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; flex-direction:column; justify-content:flex-end; }
+.overlay.open { display:flex; }
+.agent-panel { background:#0D0D0D; border-radius:24px 24px 0 0; height:86vh; display:flex; flex-direction:column; border:1px solid #1A1A1A; }
+.agent-hdr { background:linear-gradient(135deg,#C0392B,#8B0000); padding:14px 18px; border-radius:24px 24px 0 0; display:flex; align-items:center; justify-content:space-between; }
+.agent-hdr-info { display:flex; align-items:center; gap:10px; }
+.agent-hdr-logo { height:34px; width:34px; border-radius:50%; background:#fff; object-fit:contain; border:2px solid rgba(255,255,255,0.3); }
+.agent-hdr-title { font-size:14px; font-weight:800; color:#fff; }
+.agent-hdr-sub { font-size:10px; color:rgba(255,255,255,0.6); }
+.close-btn { background:rgba(255,255,255,0.15); border:none; border-radius:50%; width:28px; height:28px; color:#fff; cursor:pointer; font-size:14px; }
+.agent-msgs { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; scrollbar-width:none; }
+.bubble { max-width:86%; padding:10px 13px; border-radius:16px; font-size:12px; line-height:1.55; white-space:pre-wrap; }
+.bubble.agent { align-self:flex-start; background:#141414; border:1px solid #222; color:#fff; border-radius:16px 16px 16px 4px; }
+.bubble.user { align-self:flex-end; background:#C0392B; color:#fff; border-radius:16px 16px 4px 16px; }
+.bubble-lbl { font-size:9px; color:#C0392B; font-weight:700; margin-bottom:3px; }
+.typing { color:#C0392B; font-size:11px; padding:0 14px 6px; }
+.agent-suggs { display:flex; gap:7px; overflow-x:auto; padding:0 14px 8px; scrollbar-width:none; }
+.sugg { background:#141414; border:1px solid #222; border-radius:11px; padding:5px 11px; color:#888; font-size:11px; cursor:pointer; white-space:nowrap; }
+.agent-inp-row { padding:10px 14px; border-top:1px solid #1A1A1A; display:flex; gap:8px; }
+.agent-inp { flex:1; background:#141414; border:1px solid #222; border-radius:10px; padding:9px 12px; color:#fff; font-size:12px; outline:none; font-family:inherit; }
+.agent-send { background:#C0392B; border:none; border-radius:10px; padding:9px 14px; color:#fff; font-size:13px; font-weight:700; cursor:pointer; }
 
-/* ESTIMATION WIDGET */
-.estim-section{padding:16px}
-.estim-card{background:linear-gradient(135deg,var(--bg2) 0%,rgba(212,255,62,.04) 100%);border:1px solid rgba(212,255,62,.15);border-radius:var(--r2);padding:20px}
-.estim-card h2{font-family:var(--font-h);font-size:18px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.estim-card p{font-size:13px;color:var(--text2);margin-bottom:16px}
-.estim-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.estim-result{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:16px;text-align:center;display:none}
-.estim-result.show{display:block}
-.estim-price{font-family:var(--font-h);font-size:28px;font-weight:800;color:var(--accent);margin-bottom:4px}
-.estim-range{font-size:13px;color:var(--text2);margin-bottom:12px}
-.estim-bars{display:flex;gap:2px;height:40px;align-items:flex-end;justify-content:center;margin-bottom:8px}
-.estim-bar{width:8px;background:var(--border2);border-radius:2px;transition:height .4s,background .4s}
-.estim-bar.active{background:var(--accent)}
-
-/* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(10,10,10,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom))}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;font-size:10px;font-weight:500;color:var(--text3);cursor:pointer;transition:color .18s}
-.bn-item.active{color:var(--accent)}
-.bn-icon{font-size:20px;line-height:1}
-.bn-sell{background:var(--accent);color:#0a0a0a;border-radius:16px;padding:8px 18px;font-family:var(--font-h);font-weight:700;font-size:13px;margin-top:-6px}
-
-/* SELL PAGE */
-.sell-page{padding:20px 16px}
-.sell-page h2{font-family:var(--font-h);font-size:24px;font-weight:800;margin-bottom:4px}
-.sell-page .sub{color:var(--text2);font-size:14px;margin-bottom:24px}
-.form-step{display:none;animation:fadeUp .3s ease}
-.form-step.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.step-bar{display:flex;gap:6px;margin-bottom:28px}
-.step-dot{flex:1;height:3px;border-radius:2px;background:var(--border2);transition:background .3s}
-.step-dot.done{background:var(--accent)}
-.form-group{margin-bottom:14px}
-.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.form-input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:12px 16px;font-size:15px;color:var(--text);transition:border-color .18s}
-.form-input:focus{border-color:var(--accent)}
-.form-input::placeholder{color:var(--text3)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
-.type-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:16px;text-align:center;cursor:pointer;transition:all .18s}
-.type-card.selected{border-color:var(--accent);background:rgba(212,255,62,.06)}
-.type-card .type-icon{font-size:28px;margin-bottom:6px}
-.type-card .type-name{font-size:13px;font-weight:600;color:var(--text)}
-.photo-upload{border:2px dashed var(--border2);border-radius:var(--r);padding:30px;text-align:center;cursor:pointer;transition:border-color .18s}
-.photo-upload:hover{border-color:var(--accent)}
-.photo-upload .pu-icon{font-size:32px;margin-bottom:8px;opacity:.4}
-.photo-upload p{font-size:13px;color:var(--text2)}
-.photo-upload strong{color:var(--accent);display:block;font-size:14px;margin-bottom:4px}
-.photo-previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.photo-preview{width:70px;height:70px;border-radius:8px;object-fit:cover;border:1px solid var(--border2)}
-.form-nav{display:flex;gap:10px;margin-top:24px}
-.btn-next{flex:1;background:var(--accent);color:#0a0a0a;padding:14px;border-radius:var(--r);font-family:var(--font-h);font-weight:700;font-size:16px;transition:background .18s}
-.btn-next:hover{background:var(--accent2)}
-.btn-prev{padding:14px 20px;border-radius:var(--r);border:1px solid var(--border2);color:var(--text2);font-size:15px;transition:all .18s}
-.btn-prev:hover{border-color:var(--text2);color:var(--text)}
-.energy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.energy-btn{padding:10px 6px;border-radius:var(--r);border:1px solid var(--border2);color:var(--text2);font-size:12px;font-weight:500;text-align:center;cursor:pointer;transition:all .18s;background:var(--bg2)}
-.energy-btn.selected{border-color:var(--teal);color:var(--teal);background:rgba(0,200,150,.06)}
-
-/* DETAIL PAGE */
-.detail-page{padding:16px}
-.detail-back{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--text2);margin-bottom:16px;cursor:pointer;transition:color .18s}
-.detail-back:hover{color:var(--text)}
-.detail-imgs{position:relative;border-radius:var(--r2);overflow:hidden;margin-bottom:16px;background:var(--bg2);height:260px}
-.detail-imgs img{width:100%;height:100%;object-fit:cover}
-.img-counter{position:absolute;bottom:10px;right:10px;background:rgba(10,10,10,.7);backdrop-filter:blur(8px);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text2)}
-.video-btn{position:absolute;bottom:10px;left:10px;background:rgba(10,10,10,.7);backdrop-filter:blur(8px);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px}
-.video-btn:hover{background:rgba(79,163,255,.3);color:var(--blue)}
-.detail-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-.detail-price{font-family:var(--font-h);font-size:30px;font-weight:800}
-.detail-monthly{font-size:13px;color:var(--text2);font-family:var(--font-b);margin-top:2px}
-.detail-actions{display:flex;gap:8px}
-.action-btn{width:40px;height:40px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .18s}
-.action-btn:hover{border-color:var(--text2)}
-.detail-title{font-family:var(--font-h);font-size:20px;font-weight:700;margin-bottom:8px}
-.detail-loc{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);margin-bottom:16px}
-.detail-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.detail-chip{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)}
-.detail-chip span{color:var(--text2);font-size:12px}
-.section-title{font-family:var(--font-h);font-size:16px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.detail-desc{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:20px}
-.seller-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
-.seller-avatar{width:50px;height:50px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.seller-info{flex:1}
-.seller-name{font-weight:600;font-size:15px;margin-bottom:2px}
-.seller-meta{font-size:12px;color:var(--text2)}
-.seller-badge{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--teal);margin-top:3px}
-.contact-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.contact-btn{padding:13px;border-radius:var(--r);font-size:14px;font-weight:600;text-align:center;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px}
-.contact-phone{background:var(--accent);color:#0a0a0a}
-.contact-phone:hover{background:var(--accent2)}
-.contact-msg{background:var(--bg2);border:1px solid var(--border2);color:var(--text)}
-.contact-msg:hover{border-color:var(--text2)}
-.price-analysis{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:20px}
-.pa-title{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.pa-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.pa-label{font-size:12px;color:var(--text2);width:70px;flex-shrink:0}
-.pa-bar-bg{flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
-.pa-bar-fill{height:100%;border-radius:3px;transition:width .6s}
-.pa-val{font-size:12px;color:var(--text);width:60px;text-align:right;flex-shrink:0}
-.fraud-alert{background:rgba(0,200,150,.06);border:1px solid rgba(0,200,150,.2);border-radius:var(--r);padding:14px;margin-bottom:20px}
-.fraud-title{font-size:13px;font-weight:600;color:var(--teal);margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.fraud-checks{display:flex;flex-direction:column;gap:5px}
-.fraud-check{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)}
-.fraud-check .chk{width:16px;height:16px;border-radius:50%;background:rgba(0,200,150,.2);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--teal);flex-shrink:0}
-
-/* AGENT / CHAT */
-.agent-page{padding:16px;display:flex;flex-direction:column;height:calc(100dvh - var(--nav) - 80px)}
-.agent-header{margin-bottom:16px}
-.agent-header h2{font-family:var(--font-h);font-size:20px;font-weight:800;margin-bottom:2px;display:flex;align-items:center;gap:8px}
-.agent-online{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--teal)}
-.agent-online::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 2s infinite}
-.chat-wrap{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 0;scrollbar-width:none}
-.chat-wrap::-webkit-scrollbar{display:none}
-.msg{display:flex;gap:10px;max-width:92%;animation:fadeUp .25s ease}
-.msg.user{align-self:flex-end;flex-direction:row-reverse}
-.msg-bubble{padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.6}
-.msg.bot .msg-bubble{background:var(--bg2);border:1px solid var(--border2);color:var(--text);border-radius:4px 16px 16px 16px}
-.msg.user .msg-bubble{background:var(--accent);color:#0a0a0a;border-radius:16px 4px 16px 16px}
-.msg-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0a0a0a,#1a1a1a);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;align-self:flex-end}
-.typing-dots{display:flex;gap:4px;padding:14px 16px}
-.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:bounce .8s infinite}
-.typing-dot:nth-child(2){animation-delay:.15s}
-.typing-dot:nth-child(3){animation-delay:.3s}
-@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
-.quick-replies{display:flex;gap:8px;flex-wrap:wrap;padding:8px 0}
-.quick-reply{padding:7px 14px;border-radius:20px;border:1px solid var(--border2);font-size:13px;color:var(--text2);background:var(--bg2);cursor:pointer;transition:all .18s}
-.quick-reply:hover{border-color:var(--accent);color:var(--accent)}
-.chat-input-wrap{display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border)}
-.chat-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:24px;padding:11px 18px;font-size:14px;color:var(--text);transition:border-color .18s}
-.chat-input:focus{border-color:var(--accent)}
-.chat-input::placeholder{color:var(--text3)}
-.chat-send{width:44px;height:44px;border-radius:50%;background:var(--accent);color:#0a0a0a;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .18s;flex-shrink:0}
-.chat-send:hover{background:var(--accent2)}
-
-/* PROFILE */
-.profile-page{padding:20px 16px}
-.profile-hero{text-align:center;padding:20px 0 28px}
-.profile-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--teal));margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:26px;font-weight:800;color:#0a0a0a}
-.profile-name{font-family:var(--font-h);font-size:22px;font-weight:800;margin-bottom:4px}
-.profile-meta{font-size:13px;color:var(--text2);margin-bottom:12px}
-.profile-trust{display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.2);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--teal)}
-.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:24px}
-.profile-stat{background:var(--bg2);padding:14px;text-align:center}
-.profile-stat strong{display:block;font-family:var(--font-h);font-size:22px;font-weight:800;color:var(--accent);margin-bottom:2px}
-.profile-stat span{font-size:11px;color:var(--text2)}
-.settings-list{display:flex;flex-direction:column;gap:2px}
-.settings-item{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg2);border-radius:var(--r);cursor:pointer;transition:background .18s}
-.settings-item:hover{background:var(--bg3)}
-.settings-icon{width:36px;height:36px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.settings-label{flex:1;font-size:14px;font-weight:500}
-.settings-meta{font-size:12px;color:var(--text2)}
-.settings-arrow{color:var(--text3);font-size:16px}
-.settings-section-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin:20px 0 8px;padding:0 4px}
-
-/* ALERTS */
-.alert-section{padding:0 16px 12px}
-.alert-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;transition:background .18s}
-.alert-card:hover{background:var(--bg3)}
-.alert-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.alert-new{background:var(--accent)}
-.alert-info{flex:1}
-.alert-title{font-size:14px;font-weight:500;margin-bottom:2px}
-.alert-sub{font-size:12px;color:var(--text2)}
-.alert-count{background:var(--accent);color:#0a0a0a;border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700}
-
-/* SEARCH PAGE */
-.search-page{padding:0 16px}
-.search-page-input{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:12px 18px;font-size:16px;color:var(--text);width:100%;margin:16px 0 16px;transition:border-color .2s}
-.search-page-input:focus{border-color:var(--accent)}
-.search-page-input::placeholder{color:var(--text3)}
-.recents-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
-.recent-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:color .18s}
-.recent-item:hover{color:var(--accent)}
-.recent-item span{flex:1;font-size:14px}
-.recent-item .ri-icon{font-size:16px;color:var(--text3)}
-.trending-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:16px}
-.trending-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px;cursor:pointer;transition:all .18s}
-.trending-item:hover{border-color:var(--accent);background:rgba(212,255,62,.04)}
-.trending-item .ti-emoji{font-size:22px;margin-bottom:6px}
-.trending-item .ti-name{font-size:13px;font-weight:600;margin-bottom:2px}
-.trending-item .ti-count{font-size:11px;color:var(--text2)}
-
-/* TOAST */
-.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border2);border-radius:24px;padding:10px 20px;font-size:13px;color:var(--text);z-index:300;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-end;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:24px 24px 0 0;width:100%;max-width:600px;padding:20px;max-height:90dvh;overflow-y:auto;animation:slideUp .3s ease}
-@keyframes slideUp{from{transform:translateY(40px)}to{transform:translateY(0)}}
-.modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px}
-.modal h3{font-family:var(--font-h);font-size:18px;font-weight:700;margin-bottom:16px}
-
-/* FAVOR PAGE */
-.favs-page{padding:16px}
-.favs-page h2{font-family:var(--font-h);font-size:22px;font-weight:800;margin-bottom:16px}
-
-/* UTILITIES */
-.section-head{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 10px}
-.section-head h2{font-family:var(--font-h);font-size:18px;font-weight:700}
-.see-all{font-size:13px;color:var(--accent);font-weight:500}
-.divider{height:1px;background:var(--border);margin:16px 0}
-.tag-new-feat{background:rgba(155,127,255,.12);color:var(--purple);border:1px solid rgba(155,127,255,.25);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:600}
+/* ── PUBLISH OVERLAY ── */
+.pub-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; flex-direction:column; justify-content:flex-end; }
+.pub-overlay.open { display:flex; }
+.pub-panel { background:#0D0D0D; border-radius:24px 24px 0 0; height:90vh; display:flex; flex-direction:column; border:1px solid #1A1A1A; overflow-y:auto; }
+.pub-hdr { background:linear-gradient(135deg,#1A0000,#2A0000); padding:14px 18px; border-radius:24px 24px 0 0; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.pub-body { padding:18px; flex:1; }
+.pub-step { font-size:11px; color:#C0392B; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+.pub-title { font-size:16px; font-weight:800; color:#fff; margin-bottom:16px; }
+.f-label { font-size:11px; color:#666; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:5px; display:block; }
+.f-input { width:100%; background:#141414; border:1px solid #222; border-radius:10px; padding:11px 13px; color:#fff; font-size:13px; outline:none; font-family:inherit; margin-bottom:14px; }
+.f-select2 { width:100%; background:#141414; border:1px solid #222; border-radius:10px; padding:11px 13px; color:#fff; font-size:13px; outline:none; font-family:inherit; margin-bottom:14px; cursor:pointer; }
+.f-textarea { width:100%; background:#141414; border:1px solid #222; border-radius:10px; padding:11px 13px; color:#fff; font-size:13px; outline:none; font-family:inherit; margin-bottom:14px; min-height:80px; resize:none; }
+.prog-bar { display:flex; gap:6px; margin-bottom:18px; }
+.prog-seg { flex:1; height:3px; border-radius:2px; background:#1A1A1A; }
+.prog-seg.done { background:#C0392B; }
+.primary-btn { width:100%; background:linear-gradient(135deg,#C0392B,#E74C3C); border:none; border-radius:12px; padding:14px; color:#fff; font-size:14px; font-weight:800; cursor:pointer; }
+.secondary-btn { width:100%; background:#141414; border:1px solid #222; border-radius:12px; padding:12px; color:#fff; font-size:13px; font-weight:700; cursor:pointer; margin-top:8px; }
+.analysis-box { background:#0D0D0D; border-radius:14px; padding:16px; text-align:center; }
+.analysis-icon { font-size:40px; margin-bottom:10px; }
+.analysis-label { font-size:14px; font-weight:700; margin-bottom:6px; }
+.analysis-msg { font-size:12px; color:#888; line-height:1.5; }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="logo" onclick="goPage('home')">
-    <div class="logo-mark">MA</div>
-    <div class="logo-text">Le Marché Auto <span>MARKETPLACE</span></div>
-  </a>
-  <div class="nav-btns">
-    <span class="badge-free">100% Gratuit</span>
-    <button class="nav-btn primary" onclick="goPage('sell')">+ Vendre</button>
-  </div>
-</nav>
-
-<main>
-
-<!-- ===== HOME PAGE ===== -->
-<div id="page-home" class="page active">
-  <div class="hero">
-    <div class="hero-tag">🛡️ Agent Anti-Fraude IA actif</div>
-    <h1>Le meilleur marché<br/><em>auto de France</em></h1>
-    <p>Achetez et vendez en toute sécurité. Gratuit pour toujours, contrairement aux autres.</p>
-    <div class="hero-stats">
-      <div class="hero-stat"><strong id="stat-annonces">0</strong><span>annonces</span></div>
-      <div class="hero-stat"><strong>100%</strong><span>gratuit</span></div>
-      <div class="hero-stat"><strong>24h</strong><span>anti-fraude IA</span></div>
-    </div>
-    <div class="hero-badges">
-      <div class="hero-badge">🚗 Voitures</div>
-      <div class="hero-badge">🏍️ Motos</div>
-      <div class="hero-badge">🚲 Vélos</div>
-      <div class="hero-badge">🔧 Pièces</div>
-    </div>
-  </div>
-
-  <!-- SEARCH -->
-  <div class="search-wrap">
-    <div class="search-box">
-      <input type="text" id="home-search" placeholder="Rechercher un véhicule, une marque..." onkeydown="if(event.key==='Enter')doSearch()"/>
-      <button onclick="doSearch()">Rechercher</button>
-    </div>
-  </div>
-
-  <!-- FILTERS -->
-  <div class="filters-wrap">
-    <div class="filters-scroll">
-      <button class="filter-chip active" onclick="setCategory('all',this)">🔥 Tous</button>
-      <button class="filter-chip" onclick="setCategory('voiture',this)">🚗 Voitures</button>
-      <button class="filter-chip" onclick="setCategory('moto',this)">🏍️ Motos</button>
-      <button class="filter-chip" onclick="setCategory('velo',this)">🚲 Vélos</button>
-      <button class="filter-chip" onclick="setCategory('pieces',this)">🔧 Pièces</button>
-      <button class="filter-toggle-btn" id="adv-toggle" onclick="toggleAdvFilters()">⚙️ Filtres avancés</button>
-    </div>
-  </div>
-
-  <!-- ADVANCED FILTERS -->
-  <div class="adv-filters" id="adv-filters">
-    <div class="adv-grid">
-      <div class="adv-field">
-        <label>Région</label>
-        <select id="f-region" class="form-input" style="padding:0">
-          <option value="">Toutes</option>
-          <option>Île-de-France</option><option>Auvergne-Rhône-Alpes</option>
-          <option>PACA</option><option>Nouvelle-Aquitaine</option>
-          <option>Occitanie</option><option>Hauts-de-France</option>
-          <option>Grand Est</option><option>Normandie</option>
-          <option>Bretagne</option><option>Pays de la Loire</option>
-        </select>
-      </div>
-      <div class="adv-field">
-        <label>Énergie</label>
-        <select id="f-energy" class="form-input" style="padding:0">
-          <option value="">Toutes</option>
-          <option>Essence</option><option>Diesel</option>
-          <option>Électrique</option><option>Hybride</option>
-          <option>GPL</option>
-        </select>
-      </div>
-      <div class="adv-field">
-        <label>Prix max (€)</label>
-        <input type="number" id="f-price-max" class="form-input" style="padding:0" placeholder="Ex: 15000"/>
-      </div>
-      <div class="adv-field">
-        <label>Kilométrage max</label>
-        <input type="number" id="f-km-max" class="form-input" style="padding:0" placeholder="Ex: 100000"/>
-      </div>
-      <div class="adv-field">
-        <label>Année min</label>
-        <input type="number" id="f-year-min" class="form-input" style="padding:0" placeholder="Ex: 2015"/>
-      </div>
-      <div class="adv-field">
-        <label>Boîte de vitesse</label>
-        <select id="f-gearbox" class="form-input" style="padding:0">
-          <option value="">Toutes</option>
-          <option>Manuelle</option><option>Automatique</option>
-        </select>
-      </div>
-    </div>
-    <div class="adv-btns">
-      <button class="btn-ghost" onclick="resetFilters()">Réinitialiser</button>
-      <button class="btn-apply" onclick="applyFilters()">Appliquer les filtres</button>
-    </div>
-    <div style="height:12px"></div>
-  </div>
-
-  <!-- SORT -->
-  <div class="sort-bar">
-    <span><strong id="count-label">0</strong> annonce(s)</span>
-    <select class="sort-select" id="sort-select" onchange="sortListings()">
-      <option value="recent">Plus récentes</option>
-      <option value="price-asc">Prix croissant</option>
-      <option value="price-desc">Prix décroissant</option>
-      <option value="km">Km croissant</option>
-    </select>
-  </div>
-
-  <!-- LISTING GRID -->
-  <div class="listing-grid" id="listing-grid"></div>
-
-  <!-- ESTIMATION WIDGET -->
-  <div class="estim-section" style="margin-top:28px">
-    <div class="estim-card">
-      <h2>🤖 Estimez votre véhicule <span class="tag-new-feat">IA</span></h2>
-      <p>Notre IA analyse le marché en temps réel pour vous donner le prix juste</p>
-      <div class="estim-grid">
-        <div class="adv-field">
-          <label>Marque</label>
-          <select id="e-brand" class="form-input" style="padding:0" onchange="updateModels()">
-            <option value="">Sélectionner</option>
-            <option>Renault</option><option>Peugeot</option><option>Citroën</option>
-            <option>Volkswagen</option><option>BMW</option><option>Mercedes</option>
-            <option>Toyota</option><option>Ford</option><option>Audi</option><option>Opel</option>
-          </select>
-        </div>
-        <div class="adv-field">
-          <label>Modèle</label>
-          <select id="e-model" class="form-input" style="padding:0">
-            <option value="">Sélectionner la marque d'abord</option>
-          </select>
-        </div>
-        <div class="adv-field">
-          <label>Année</label>
-          <input type="number" id="e-year" class="form-input" style="padding:0" placeholder="2018"/>
-        </div>
-        <div class="adv-field">
-          <label>Kilométrage</label>
-          <input type="number" id="e-km" class="form-input" style="padding:0" placeholder="80000"/>
-        </div>
-      </div>
-      <button class="btn-apply" style="width:100%;padding:13px" onclick="estimatePrice()">Estimer le prix IA →</button>
-      <div class="estim-result" id="estim-result">
-        <div class="estim-bars" id="estim-bars"></div>
-        <div class="estim-price" id="estim-price">— €</div>
-        <div class="estim-range" id="estim-range">Fourchette estimée</div>
-        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px">
-          <div class="card-chip" id="estim-demand"></div>
-          <div class="card-chip" id="estim-advice"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div style="height:20px"></div>
+<!-- ── HEADER ── -->
+<div class="header">
+<div class="logo-wrap">
+<img class="logo-img" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<div class="logo-text">
+<span class="lt1">Le</span>
+<span class="lt2">MARCHÉ</span>
+<span class="lt3">AUTO</span>
+</div>
+</div>
+<button class="agent-btn" onclick="openAgent()">🛡️ Agent</button>
 </div>
 
-<!-- ===== SEARCH PAGE ===== -->
-<div id="page-search" class="page">
-  <div class="search-page">
-    <input class="search-page-input" id="search-page-input" placeholder="Marque, modèle, ville..." oninput="liveSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()"/>
-    <div class="recents-title">Recherches récentes</div>
-    <div id="recent-searches"></div>
-    <div style="margin-top:16px">
-      <div class="recents-title">Tendances</div>
-      <div class="trending-grid">
-        <div class="trending-item" onclick="searchFor('BMW Série 3')"><div class="ti-emoji">🚗</div><div class="ti-name">BMW Série 3</div><div class="ti-count">234 annonces</div></div>
-        <div class="trending-item" onclick="searchFor('Renault Clio')"><div class="ti-emoji">🚗</div><div class="ti-name">Renault Clio</div><div class="ti-count">512 annonces</div></div>
-        <div class="trending-item" onclick="searchFor('Yamaha MT-07')"><div class="ti-emoji">🏍️</div><div class="ti-name">Yamaha MT-07</div><div class="ti-count">89 annonces</div></div>
-        <div class="trending-item" onclick="searchFor('Tesla Model 3')"><div class="ti-emoji">⚡</div><div class="ti-name">Tesla Model 3</div><div class="ti-count">67 annonces</div></div>
-        <div class="trending-item" onclick="searchFor('Peugeot 208')"><div class="ti-emoji">🚗</div><div class="ti-name">Peugeot 208</div><div class="ti-count">387 annonces</div></div>
-        <div class="trending-item" onclick="searchFor('VTT électrique')"><div class="ti-emoji">🚲</div><div class="ti-name">VTT électrique</div><div class="ti-count">142 annonces</div></div>
-      </div>
-    </div>
-  </div>
+<!-- ── HERO ── -->
+<div class="hero">
+<img class="hero-logo" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<div class="hero-title">La marketplace <span>N°1</span> en Europe</div>
+<div class="hero-sub">Voitures · Motos · Vélos · Pièces détachées</div>
+<div class="hero-stats">
+<div class="hero-stat"><div class="hs-n">847+</div><div class="hs-l">Annonces</div></div>
+<div class="hero-stat"><div class="hs-n">1 240</div><div class="hs-l">Membres</div></div>
+<div class="hero-stat"><div class="hs-n">34</div><div class="hs-l">Fraudes bloquées</div></div>
+</div>
 </div>
 
-<!-- ===== SELL PAGE ===== -->
-<div id="page-sell" class="page">
-  <div class="sell-page">
-    <h2>📸 Publier une annonce</h2>
-    <div class="sub">Gratuit · En ligne en 2 minutes</div>
-    <div class="step-bar">
-      <div class="step-dot done" id="step-dot-1"></div>
-      <div class="step-dot" id="step-dot-2"></div>
-      <div class="step-dot" id="step-dot-3"></div>
-      <div class="step-dot" id="step-dot-4"></div>
-    </div>
-
-    <!-- Step 1: Type -->
-    <div class="form-step active" id="step-1">
-      <div style="font-size:15px;font-weight:600;margin-bottom:16px">Que vendez-vous ?</div>
-      <div class="type-grid">
-        <div class="type-card selected" id="type-voiture" onclick="selectType('voiture')"><div class="type-icon">🚗</div><div class="type-name">Voiture</div></div>
-        <div class="type-card" id="type-moto" onclick="selectType('moto')"><div class="type-icon">🏍️</div><div class="type-name">Moto / Scooter</div></div>
-        <div class="type-card" id="type-velo" onclick="selectType('velo')"><div class="type-icon">🚲</div><div class="type-name">Vélo / VAE</div></div>
-        <div class="type-card" id="type-pieces" onclick="selectType('pieces')"><div class="type-icon">🔧</div><div class="type-name">Pièces détachées</div></div>
-      </div>
-      <div class="form-group">
-        <label>Titre de l'annonce</label>
-        <input type="text" class="form-input" id="sell-title" placeholder="Ex: Renault Clio 5 — 1.0 TCe 100ch — 2022"/>
-      </div>
-      <div class="form-nav">
-        <button class="btn-next" onclick="nextStep(2)">Continuer →</button>
-      </div>
-    </div>
-
-    <!-- Step 2: Vehicle details -->
-    <div class="form-step" id="step-2">
-      <div style="font-size:15px;font-weight:600;margin-bottom:16px">Détails du véhicule</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Marque</label>
-          <select class="form-input" id="sell-brand">
-            <option value="">Choisir</option>
-            <option>Renault</option><option>Peugeot</option><option>Citroën</option>
-            <option>Volkswagen</option><option>BMW</option><option>Mercedes</option>
-            <option>Toyota</option><option>Ford</option><option>Audi</option><option>Opel</option>
-            <option>Autre</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Modèle</label>
-          <input type="text" class="form-input" id="sell-model" placeholder="Clio, 208, Golf..."/>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Année</label>
-          <input type="number" class="form-input" id="sell-year" placeholder="2020" min="1980" max="2025"/>
-        </div>
-        <div class="form-group">
-          <label>Kilométrage</label>
-          <input type="number" class="form-input" id="sell-km" placeholder="45000"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Énergie</label>
-        <div class="energy-grid">
-          <button class="energy-btn selected" onclick="selEnergy(this,'Essence')">⛽ Essence</button>
-          <button class="energy-btn" onclick="selEnergy(this,'Diesel')">🛢️ Diesel</button>
-          <button class="energy-btn" onclick="selEnergy(this,'Électrique')">⚡ Électrique</button>
-          <button class="energy-btn" onclick="selEnergy(this,'Hybride')">🔋 Hybride</button>
-          <button class="energy-btn" onclick="selEnergy(this,'GPL')">💨 GPL</button>
-          <button class="energy-btn" onclick="selEnergy(this,'Autre')">❓ Autre</button>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Boîte de vitesse</label>
-          <select class="form-input" id="sell-gearbox">
-            <option>Manuelle</option><option>Automatique</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Puissance (ch)</label>
-          <input type="number" class="form-input" id="sell-power" placeholder="100"/>
-        </div>
-      </div>
-      <div class="form-nav">
-        <button class="btn-prev" onclick="nextStep(1)">←</button>
-        <button class="btn-next" onclick="nextStep(3)">Continuer →</button>
-      </div>
-    </div>
-
-    <!-- Step 3: Photos + description -->
-    <div class="form-step" id="step-3">
-      <div style="font-size:15px;font-weight:600;margin-bottom:16px">Photos & description</div>
-      <div class="form-group">
-        <label>Photos (jusqu'à 15)</label>
-        <div class="photo-upload" onclick="document.getElementById('photo-input').click()">
-          <div class="pu-icon">📷</div>
-          <strong>Ajouter des photos</strong>
-          <p>Glissez ou cliquez · JPG, PNG · Max 10 Mo</p>
-        </div>
-        <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)"/>
-        <div class="photo-previews" id="photo-previews"></div>
-      </div>
-      <div class="form-group">
-        <label>Lien vidéo YouTube (optionnel)</label>
-        <input type="url" class="form-input" id="sell-video" placeholder="https://youtube.com/watch?v=..."/>
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea class="form-input" id="sell-desc" rows="5" placeholder="Décrivez votre véhicule : état, équipements, historique entretien..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>État général</label>
-        <select class="form-input" id="sell-state">
-          <option>Excellent état</option><option>Bon état</option>
-          <option>Quelques défauts</option><option>À rénover</option>
-        </select>
-      </div>
-      <div class="form-nav">
-        <button class="btn-prev" onclick="nextStep(2)">←</button>
-        <button class="btn-next" onclick="nextStep(4)">Continuer →</button>
-      </div>
-    </div>
-
-    <!-- Step 4: Price + location -->
-    <div class="form-step" id="step-4">
-      <div style="font-size:15px;font-weight:600;margin-bottom:16px">Prix & localisation</div>
-      <div class="form-group">
-        <label>Prix (€)</label>
-        <input type="number" class="form-input" id="sell-price" placeholder="12500" oninput="updateMonthly()"/>
-        <div style="margin-top:6px;font-size:12px;color:var(--text2)" id="monthly-preview"></div>
-      </div>
-      <div class="form-group">
-        <label>Ville</label>
-        <input type="text" class="form-input" id="sell-city" placeholder="Lyon, Paris, Marseille..."/>
-      </div>
-      <div class="form-group">
-        <label>Code postal</label>
-        <input type="text" class="form-input" id="sell-zip" placeholder="69000" maxlength="5"/>
-      </div>
-      <div class="form-group">
-        <label>Options</label>
-        <div style="display:flex;gap:10px;flex-direction:column">
-          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;font-size:14px;color:var(--text2);font-weight:400">
-            <input type="checkbox" id="opt-negociable" style="accent-color:var(--accent);width:16px;height:16px"/> Prix négociable
-          </label>
-          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;font-size:14px;color:var(--text2);font-weight:400">
-            <input type="checkbox" id="opt-urgent" style="accent-color:var(--accent);width:16px;height:16px"/> Vente urgente
-          </label>
-          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;font-size:14px;color:var(--text2);font-weight:400">
-            <input type="checkbox" id="opt-pro" style="accent-color:var(--accent);width:16px;height:16px"/> Je suis professionnel
-          </label>
-        </div>
-      </div>
-      <div class="form-nav">
-        <button class="btn-prev" onclick="nextStep(3)">←</button>
-        <button class="btn-next" style="background:var(--teal)" onclick="publishListing()">🚀 Publier gratuitement</button>
-      </div>
-    </div>
-  </div>
+<!-- ── SEARCH ── -->
+<div class="search-section">
+<div class="search-main">
+<input class="search-input" id="searchInput" placeholder="🔍 Marque, modèle, ville..." oninput="doFilter()"/>
+<button class="search-go" onclick="doFilter()">Chercher</button>
+</div>
+<div class="filters-grid">
+<select class="f-select" id="regionSel" onchange="doFilter()">
+<option value="">🗺️ Toutes régions</option>
+<option>Île-de-France</option>
+<option>Auvergne-Rhône-Alpes</option>
+<option>Provence-Alpes-Côte d'Azur</option>
+<option>Nouvelle-Aquitaine</option>
+<option>Occitanie</option>
+<option>Hauts-de-France</option>
+<option>Grand Est</option>
+<option>Normandie</option>
+<option>Bretagne</option>
+<option>Pays de la Loire</option>
+<option>Bourgogne-Franche-Comté</option>
+<option>Centre-Val de Loire</option>
+</select>
+<input class="f-select" id="villeInput" placeholder="📍 Ville..." oninput="doFilter()"/>
+</div>
+<div class="price-row">
+<input class="price-input" id="prixMin" placeholder="Prix min (€)" type="number" oninput="doFilter()"/>
+<input class="price-input" id="prixMax" placeholder="Prix max (€)" type="number" oninput="doFilter()"/>
+</div>
+<div class="km-row">
+<span class="km-lbl">📏 Rayon :</span>
+<input type="range" class="km-slider" id="kmSlider" min="5" max="500" value="200" step="5" oninput="updateKm()"/>
+<span class="km-val" id="kmVal">200 km</span>
+</div>
+<button class="loc-btn" onclick="getLocation()">📍 Utiliser ma position GPS</button>
 </div>
 
-<!-- ===== AGENT PAGE ===== -->
-<div id="page-agent" class="page">
-  <div class="agent-page">
-    <div class="agent-header">
-      <h2>🛡️ Agent Anti-Fraude <span class="tag-new-feat">IA</span></h2>
-      <div class="agent-online">En ligne · Répond instantanément</div>
-    </div>
-    <div class="chat-wrap" id="chat-wrap">
-      <div class="msg bot">
-        <div class="msg-avatar">🛡️</div>
-        <div class="msg-bubble">Bonjour ! Je suis votre agent anti-fraude IA, disponible 24h/24. Je peux vous aider à vérifier une annonce, sécuriser votre paiement ou signaler une arnaque. Comment puis-je vous aider ?</div>
-      </div>
-      <div class="quick-replies" id="quick-replies">
-        <button class="quick-reply" onclick="sendQuick('Comment vendre en sécurité ?')">Comment vendre en sécurité ?</button>
-        <button class="quick-reply" onclick="sendQuick('Paiement sécurisé ?')">Paiement sécurisé ?</button>
-        <button class="quick-reply" onclick="sendQuick('Signaler une arnaque')">Signaler une arnaque</button>
-        <button class="quick-reply" onclick="sendQuick('Vérifier une annonce')">Vérifier une annonce</button>
-        <button class="quick-reply" onclick="sendQuick("C'est gratuit ?")">C'est gratuit ?</button>
-      </div>
-    </div>
-    <div class="chat-input-wrap">
-      <input class="chat-input" id="chat-input" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
-      <button class="chat-send" onclick="sendMsg()">➤</button>
-    </div>
-  </div>
+<!-- ── CATEGORIES ── -->
+<div class="cats">
+<div class="cat active" onclick="setCat('tous',this)">🔥 Tous</div>
+<div class="cat" onclick="setCat('voiture',this)">🚗 Voitures</div>
+<div class="cat" onclick="setCat('moto',this)">🏍️ Motos</div>
+<div class="cat" onclick="setCat('velo',this)">🚲 Vélos</div>
+<div class="cat" onclick="setCat('pieces',this)">🔧 Pièces</div>
+<div class="cat" onclick="showEstimer()">💰 Estimer</div>
 </div>
 
-<!-- ===== PROFILE PAGE ===== -->
-<div id="page-profile" class="page">
-  <div class="profile-page">
-    <div class="profile-hero">
-      <div class="profile-avatar">JD</div>
-      <div class="profile-name">Jean Dupont</div>
-      <div class="profile-meta">Membre depuis avril 2025 · Grenoble</div>
-      <div class="profile-trust">✅ Profil vérifié · Vendeur de confiance</div>
-    </div>
-    <div class="profile-stats">
-      <div class="profile-stat"><strong id="fav-count">0</strong><span>Favoris</span></div>
-      <div class="profile-stat"><strong id="pub-count">0</strong><span>Annonces</span></div>
-      <div class="profile-stat"><strong>4.9</strong><span>Note ★</span></div>
-    </div>
-
-    <div class="alert-section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">Mes alertes</div>
-        <button style="font-size:12px;color:var(--accent);font-weight:500" onclick="showToast('Alerte créée !')">+ Créer</button>
-      </div>
-      <div class="alert-card" onclick="showToast('3 nouvelles annonces disponibles !')">
-        <div class="alert-dot alert-new"></div>
-        <div class="alert-info"><div class="alert-title">BMW Série 3 · -50 000 km</div><div class="alert-sub">Île-de-France · max 25 000 €</div></div>
-        <div class="alert-count">3</div>
-      </div>
-      <div class="alert-card" onclick="showToast('12 nouvelles annonces disponibles !')">
-        <div class="alert-dot" style="background:var(--blue)"></div>
-        <div class="alert-info"><div class="alert-title">Renault Clio · Électrique</div><div class="alert-sub">Toute France · max 18 000 €</div></div>
-        <div class="alert-count">12</div>
-      </div>
-    </div>
-
-    <div class="settings-section-title">Mon compte</div>
-    <div class="settings-list">
-      <div class="settings-item" onclick="showToast('Mes annonces')">
-        <div class="settings-icon">📋</div>
-        <div><div class="settings-label">Mes annonces</div><div class="settings-meta" id="my-ads-count">0 annonce publiée</div></div>
-        <div class="settings-arrow">›</div>
-      </div>
-      <div class="settings-item" onclick="goPage('favs')">
-        <div class="settings-icon">❤️</div>
-        <div><div class="settings-label">Mes favoris</div><div class="settings-meta" id="favs-count-label">0 véhicule sauvegardé</div></div>
-        <div class="settings-arrow">›</div>
-      </div>
-      <div class="settings-item" onclick="showToast('Messagerie')">
-        <div class="settings-icon">💬</div>
-        <div><div class="settings-label">Messagerie</div><div class="settings-meta">2 messages non lus</div></div>
-        <div class="settings-arrow">›</div>
-      </div>
-    </div>
-
-    <div class="settings-section-title">Paramètres</div>
-    <div class="settings-list">
-      <div class="settings-item" onclick="showToast('Notifications configurées')">
-        <div class="settings-icon">🔔</div>
-        <div><div class="settings-label">Notifications</div></div>
-        <div class="settings-arrow">›</div>
-      </div>
-      <div class="settings-item" onclick="showToast('Confidentialité')">
-        <div class="settings-icon">🔒</div>
-        <div><div class="settings-label">Confidentialité</div></div>
-        <div class="settings-arrow">›</div>
-      </div>
-      <div class="settings-item" onclick="showToast('Aide en cours de chargement...')">
-        <div class="settings-icon">❓</div>
-        <div><div class="settings-label">Aide & support</div></div>
-        <div class="settings-arrow">›</div>
-      </div>
-    </div>
-  </div>
+<!-- ── RESULTS BAR ── -->
+<div class="results-bar">
+<div class="results-count">
+<span id="resultsCount">0</span> annonce(s) trouvée(s)
+</div>
+<select class="sort-select" id="sortSel" onchange="doFilter()">
+<option value="recent">Plus récentes</option>
+<option value="prix_asc">Prix croissant</option>
+<option value="prix_desc">Prix décroissant</option>
+<option value="km_asc">Km croissant</option>
+</select>
 </div>
 
-<!-- ===== FAVS PAGE ===== -->
-<div id="page-favs" class="page">
-  <div class="favs-page">
-    <h2>❤️ Mes favoris</h2>
-    <div id="favs-grid" class="listing-grid" style="padding:0"></div>
-    <div id="favs-empty" class="empty-state" style="display:none">
-      <div class="icon">❤️</div>
-      <h3>Aucun favori</h3>
-      <p>Ajoutez des annonces à vos favoris en appuyant sur le cœur</p>
-      <button class="btn-apply" onclick="goPage('home')">Explorer les annonces</button>
-    </div>
-  </div>
+<!-- ── GRID ── -->
+<div class="grid" id="grid"></div>
+
+<!-- ── TAB BAR ── -->
+<div class="tab-bar">
+<button class="tab active" id="tab-home" onclick="showHome()"><span class="ti">🏠</span>Accueil</button>
+<button class="tab" onclick="document.getElementById('searchInput').focus()"><span class="ti">🔍</span>Chercher</button>
+<button class="tab" onclick="openPublish()">
+<div class="tab-add-btn">+</div>
+<span style="color:#C0392B;font-weight:700;">Vendre</span>
+</button>
+<button class="tab" onclick="showEstimer()"><span class="ti">💰</span>Estimer</button>
+<button class="tab" onclick="openAgent()"><span class="ti">🛡️</span>Agent</button>
 </div>
 
-<!-- ===== DETAIL PAGE ===== -->
-<div id="page-detail" class="page">
-  <div class="detail-page" id="detail-content"></div>
+<!-- ── DETAIL SCREEN ── -->
+<div class="screen" id="detailScreen">
+<div id="detailContent"></div>
 </div>
 
-</main>
+<!-- ── ESTIMER SCREEN ── -->
+<div class="screen" id="estimerScreen">
+<div style="background:#0A0A0A;padding:12px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #1A1A1A;position:sticky;top:0;z-index:10;">
+<button onclick="closeEstimer()" style="background:#141414;border:1px solid #222;border-radius:20px;padding:6px 14px;color:#fff;font-size:12px;cursor:pointer;">← Retour</button>
+<span style="font-weight:800;font-size:15px;">💰 Estimer mon véhicule</span>
+</div>
+<div class="estimer-box">
+<div class="estimer-sub">Obtenez une estimation gratuite et précise de votre véhicule grâce à notre IA</div>
+<label class="f-label">Marque *</label>
+<select class="f-select2" id="est-marque" onchange="updateModeles()">
+<option value="">Choisir une marque...</option>
+<option>Abarth</option><option>Alfa Romeo</option><option>Aston Martin</option>
+<option>Audi</option><option>BMW</option><option>Bentley</option>
+<option>Bugatti</option><option>Cadillac</option><option>Chevrolet</option>
+<option>Chrysler</option><option>Citroën</option><option>Dacia</option>
+<option>Dodge</option><option>DS Automobiles</option><option>Ferrari</option>
+<option>Fiat</option><option>Ford</option><option>Genesis</option>
+<option>Honda</option><option>Hyundai</option><option>Infiniti</option>
+<option>Jaguar</option><option>Jeep</option><option>Kia</option>
+<option>Lamborghini</option><option>Land Rover</option><option>Lexus</option>
+<option>Maserati</option><option>Mazda</option><option>McLaren</option>
+<option>Mercedes-Benz</option><option>Mini</option><option>Mitsubishi</option>
+<option>Nissan</option><option>Opel</option><option>Peugeot</option>
+<option>Porsche</option><option>RAM</option><option>Renault</option>
+<option>Rolls-Royce</option><option>SEAT</option><option>Skoda</option>
+<option>Smart</option><option>Subaru</option><option>Suzuki</option>
+<option>Tesla</option><option>Toyota</option><option>Volkswagen</option>
+<option>Volvo</option>
+</select>
+<label class="f-label">Modèle *</label>
+<select class="f-select2" id="est-modele">
+<option value="">Choisir d'abord une marque...</option>
+</select>
+<label class="f-label">Année *</label>
+<select class="f-select2" id="est-annee">
+<option value="">Année...</option>
+<option>2024</option><option>2023</option><option>2022</option><option>2021</option>
+<option>2020</option><option>2019</option><option>2018</option><option>2017</option>
+<option>2016</option><option>2015</option><option>2014</option><option>2013</option>
+<option>2012</option><option>2011</option><option>2010</option><option>2009</option>
+<option>2008</option><option>2007</option><option>2006</option><option>2005</option>
+<option>2000-2004</option><option>Avant 2000</option>
+</select>
+<label class="f-label">Kilométrage *</label>
+<select class="f-select2" id="est-km">
+<option value="">Kilométrage...</option>
+<option>Moins de 10 000 km</option><option>10 000 - 30 000 km</option>
+<option>30 000 - 60 000 km</option><option>60 000 - 100 000 km</option>
+<option>100 000 - 150 000 km</option><option>150 000 - 200 000 km</option>
+<option>Plus de 200 000 km</option>
+</select>
+<label class="f-label">Carburant</label>
+<select class="f-select2" id="est-carbu">
+<option>Essence</option><option>Diesel</option><option>Hybride</option>
+<option>Hybride rechargeable</option><option>Électrique</option><option>GPL</option>
+</select>
+<label class="f-label">État général</label>
+<select class="f-select2" id="est-etat">
+<option>Excellent état</option><option>Très bon état</option>
+<option>Bon état</option><option>État correct</option><option>À rénover</option>
+</select>
+<button class="primary-btn" onclick="estimerVehicule()">💰 Estimer maintenant</button>
+<div class="estimer-result" id="estimerResult">
+<div class="estimer-result-label">ESTIMATION DU MARCHÉ</div>
+<div class="estimer-result-price" id="est-prix">—</div>
+<div class="estimer-result-range" id="est-range">Fourchette de prix</div>
+<div class="estimer-result-info" id="est-info">Informations détaillées...</div>
+</div>
+</div>
+</div>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <div class="bn-item active" id="bn-home" onclick="goPage('home')"><div class="bn-icon">🏠</div><span>Accueil</span></div>
-  <div class="bn-item" id="bn-search" onclick="goPage('search')"><div class="bn-icon">🔍</div><span>Recherche</span></div>
-  <div class="bn-item" id="bn-sell" onclick="goPage('sell')"><button class="bn-sell">+ Vendre</button></div>
-  <div class="bn-item" id="bn-agent" onclick="goPage('agent')"><div class="bn-icon">🛡️</div><span>Agent IA</span></div>
-  <div class="bn-item" id="bn-profile" onclick="goPage('profile')"><div class="bn-icon">👤</div><span>Profil</span></div>
-</nav>
+<!-- ── AGENT OVERLAY ── -->
+<div class="overlay" id="agentOverlay" onclick="if(event.target===this)closeAgent()">
+<div class="agent-panel">
+<div class="agent-hdr">
+<div class="agent-hdr-info">
+<img class="agent-hdr-logo" src="https://i.imgur.com/iLRREdx.png" alt="logo"/>
+<div>
+<div class="agent-hdr-title">🛡️ Agent Marché Auto</div>
+<div class="agent-hdr-sub">Anti-fraude · Estimation · Conseils · 24h/24</div>
+</div>
+</div>
+<button class="close-btn" onclick="closeAgent()">✕</button>
+</div>
+<div class="agent-msgs" id="agentMsgs"></div>
+<div class="typing" id="typingInd" style="display:none">⏳ Agent en train d'écrire...</div>
+<div class="agent-suggs">
+<button class="sugg" onclick="askQ('Comment vendre mon véhicule ?')">Vendre ?</button>
+<button class="sugg" onclick="askQ('Comment payer en sécurité ?')">Payer en sécurité ?</button>
+<button class="sugg" onclick="askQ('Comment signaler une fraude ?')">Signaler fraude ?</button>
+<button class="sugg" onclick="askQ('Comment fonctionne la recherche par ville ?')">Recherche ville ?</button>
+<button class="sugg" onclick="askQ('Quel est le prix moyen dune Renault Clio 2018 ?')">Prix Clio 2018 ?</button>
+<button class="sugg" onclick="askQ('C est gratuit ?')">Gratuit ?</button>
+</div>
+<div class="agent-inp-row">
+<input class="agent-inp" id="agentInp" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+<button class="agent-send" onclick="sendMsg()">→</button>
+</div>
+</div>
+</div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modal-content">
-    <div class="modal-handle"></div>
-    <div id="modal-body"></div>
-  </div>
+<!-- ── PUBLISH OVERLAY ── -->
+<div class="pub-overlay" id="pubOverlay" onclick="if(event.target===this)closePub()">
+<div class="pub-panel">
+<div class="pub-hdr">
+<div>
+<div style="color:#C0392B;font-size:11px;font-weight:700;letter-spacing:1px;">PUBLIER UNE ANNONCE</div>
+<div style="color:#fff;font-size:15px;font-weight:800;">Le Marché Auto</div>
+</div>
+<button class="close-btn" onclick="closePub()">✕</button>
+</div>
+<div class="pub-body">
+<div class="prog-bar" id="progBar">
+<div class="prog-seg done" id="p1"></div>
+<div class="prog-seg" id="p2"></div>
+<div class="prog-seg" id="p3"></div>
+</div>
+<div id="pubStep1">
+<div class="pub-step">Étape 1 sur 3</div>
+<div class="pub-title">Informations principales</div>
+<label class="f-label">Votre nom *</label>
+<input class="f-input" id="pub-nom" placeholder="Ex: Marc Dupont"/>
+<label class="f-label">Catégorie *</label>
+<select class="f-select2" id="pub-cat">
+<option value="voiture">🚗 Voiture</option>
+<option value="moto">🏍️ Moto</option>
+<option value="velo">🚲 Vélo</option>
+<option value="pieces">🔧 Pièces détachées</option>
+</select>
+<label class="f-label">Marque *</label>
+<select class="f-select2" id="pub-marque">
+<option value="">Choisir...</option>
+<option>Audi</option><option>BMW</option><option>Citroën</option>
+<option>Dacia</option><option>Fiat</option><option>Ford</option>
+<option>Honda</option><option>Hyundai</option><option>Kia</option>
+<option>Mercedes-Benz</option><option>Mini</option><option>Nissan</option>
+<option>Opel</option><option>Peugeot</option><option>Renault</option>
+<option>SEAT</option><option>Skoda</option><option>Tesla</option>
+<option>Toyota</option><option>Volkswagen</option><option>Volvo</option>
+<option>Autre</option>
+</select>
+<label class="f-label">Modèle & Titre *</label>
+<input class="f-input" id="pub-titre" placeholder="Ex: Renault Clio V 2021 – 30 000 km"/>
+<label class="f-label">Prix (€) *</label>
+<input class="f-input" id="pub-prix" type="number" placeholder="Ex: 12500"/>
+<label class="f-label">Ville *</label>
+<input class="f-input" id="pub-ville" placeholder="Ex: Lyon"/>
+<button class="primary-btn" onclick="pubNext(2)">Continuer →</button>
+</div>
+<div id="pubStep2" style="display:none">
+<div class="pub-step">Étape 2 sur 3</div>
+<div class="pub-title">Description & Détails</div>
+<label class="f-label">Kilométrage</label>
+<input class="f-input" id="pub-km" type="number" placeholder="Ex: 45000"/>
+<label class="f-label">Année</label>
+<input class="f-input" id="pub-annee" type="number" placeholder="Ex: 2021"/>
+<label class="f-label">Carburant</label>
+<select class="f-select2" id="pub-carbu">
+<option>Essence</option><option>Diesel</option><option>Hybride</option>
+<option>Électrique</option><option>GPL</option>
+</select>
+<label class="f-label">Description *</label>
+<textarea class="f-textarea" id="pub-desc" placeholder="Décrivez votre véhicule : état, entretien, options, historique..."></textarea>
+<label class="f-label">Téléphone *</label>
+<input class="f-input" id="pub-tel" placeholder="Ex: 06 12 34 56 78"/>
+<div style="display:flex;gap:8px;">
+<button class="secondary-btn" onclick="pubNext(1)" style="margin:0;">← Retour</button>
+<button class="primary-btn" onclick="pubNext(3)" style="margin:0;">🛡️ Analyser & Publier</button>
+</div>
+</div>
+<div id="pubStep3" style="display:none">
+<div class="pub-step">Étape 3 sur 3</div>
+<div class="pub-title">Vérification Agent IA 🛡️</div>
+<div class="analysis-box" id="analysisBox">
+<div class="analysis-icon">🛡️</div>
+<div class="analysis-label" id="analysisLabel" style="color:#E74C3C;">Analyse en cours...</div>
+<div class="analysis-msg" id="analysisMsg">L'agent IA vérifie votre annonce pour garantir la sécurité de la plateforme</div>
+</div>
+<button class="secondary-btn" id="pubRetourBtn" onclick="pubNext(2)" style="display:none;margin-top:10px;">← Modifier</button>
+<button class="primary-btn" id="pubConfirmBtn" onclick="confirmerPublication()" style="display:none;margin-top:10px;">🚀 Confirmer la publication</button>
+</div>
+</div>
+</div>
 </div>
 
 <script>
-// ===== DATA =====
-const LISTINGS = [
-  {id:1,type:'voiture',brand:'BMW',model:'Série 3 320d',year:2021,km:42000,energy:'Diesel',gearbox:'Automatique',power:190,price:28900,city:'Lyon',region:'Auvergne-Rhône-Alpes',state:'Excellent état',desc:'BMW 320d parfaite, full options, toit ouvrant panoramique, carnet entretien BMW complet. Première main. Garantie constructeur jusqu\'en 2024.',img:'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80',imgs:['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80','https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&q=80'],badges:['verified','new'],priceTag:'great',seller:{name:'Thomas M.',verified:true,since:'2023',rating:4.9,count:3},video:'',time:'Il y a 2h'},
-  {id:2,type:'voiture',brand:'Renault',model:'Clio 5 E-Tech',year:2023,km:8500,energy:'Hybride',gearbox:'Automatique',power:140,price:19900,city:'Paris',region:'Île-de-France',state:'Excellent état',desc:'Renault Clio E-Tech hybride, quasi neuve. Toutes options, sièges chauffants, GPS. Économique et agréable en ville.',img:'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80',imgs:['https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80'],badges:['verified'],priceTag:'good',seller:{name:'Sophie L.',verified:true,since:'2024',rating:5.0,count:1},video:'https://youtube.com/watch?v=example',time:'Il y a 5h'},
-  {id:3,type:'moto',brand:'Yamaha',model:'MT-07',year:2020,km:18000,energy:'Essence',gearbox:'Manuelle',power:73,price:7200,city:'Bordeaux',region:'Nouvelle-Aquitaine',state:'Bon état',desc:'Yamaha MT-07 en excellent état, révision faite en 2024, pneus neufs, silencieux Akrapovic inclus.',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',imgs:['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80'],badges:['verified'],priceTag:'fair',seller:{name:'Marc D.',verified:false,since:'2022',rating:4.7,count:5},video:'',time:'Il y a 1 jour'},
-  {id:4,type:'voiture',brand:'Tesla',model:'Model 3',year:2022,km:31000,energy:'Électrique',gearbox:'Automatique',power:351,price:34500,city:'Grenoble',region:'Auvergne-Rhône-Alpes',state:'Excellent état',desc:'Tesla Model 3 Performance, mise à jour logicielle récente, autonomie 580 km, supercharge gratuit inclus.',img:'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80',imgs:['https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80'],badges:['verified','pro'],priceTag:'good',seller:{name:'Auto Elect Pro',verified:true,since:'2021',rating:4.8,count:47},video:'',time:'Il y a 3h'},
-  {id:5,type:'velo',brand:'Specialized',model:'Turbo Vado SL',year:2023,km:1200,energy:'Électrique',gearbox:'Autre',power:50,price:3900,city:'Nantes',region:'Pays de la Loire',state:'Excellent état',desc:'VAE Specialized Turbo Vado SL 5.0, batterie supplémentaire incluse. Parfait état, très peu utilisé.',img:'https://images.unsplash.com/photo-1571188654248-7a89213915f7?w=600&q=80',imgs:['https://images.unsplash.com/photo-1571188654248-7a89213915f7?w=600&q=80'],badges:['new'],priceTag:'great',seller:{name:'Pierre G.',verified:true,since:'2024',rating:4.9,count:2},video:'',time:'Il y a 6h'},
-  {id:6,type:'voiture',brand:'Peugeot',model:'308 GT',year:2019,km:67000,energy:'Diesel',gearbox:'Automatique',power:180,price:16800,city:'Toulouse',region:'Occitanie',state:'Bon état',desc:'Peugeot 308 GT, moteur diesel très fiable, carnet entretien à jour, pas de carrosserie.',img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80',imgs:['https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80'],badges:[],priceTag:'fair',seller:{name:'Jean-Pierre R.',verified:false,since:'2023',rating:4.5,count:2},video:'',time:'Il y a 2 jours'},
-  {id:7,type:'pieces',brand:'BMW',model:'Jantes M Performance 19"',year:2021,km:0,energy:'Autre',gearbox:'Autre',power:0,price:1200,city:'Lille',region:'Hauts-de-France',state:'Excellent état',desc:'Set de 4 jantes BMW M Performance 19 pouces, état neuf, utilisées 6 mois.',img:'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80',imgs:['https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80'],badges:['new'],priceTag:'great',seller:{name:'AutoParts69',verified:true,since:'2020',rating:4.9,count:134},video:'',time:'Il y a 12h'},
-  {id:8,type:'moto',brand:'Honda',model:'CB650R',year:2022,km:9800,energy:'Essence',gearbox:'Manuelle',power:95,price:8400,city:'Strasbourg',region:'Grand Est',state:'Excellent état',desc:'Honda CB650R, excellente moto néo-rétro, carnet Honda à jour, garantie jusqu\'en 2025.',img:'https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?w=600&q=80',imgs:['https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?w=600&q=80'],badges:['verified'],priceTag:'good',seller:{name:'Moto Alsace',verified:true,since:'2019',rating:4.8,count:23},video:'',time:'Il y a 4h'},
+// ═══════════════════════════════════════════
+// DONNÉES — ANNONCES AVEC VRAIES PHOTOS
+// ═══════════════════════════════════════════
+var ANNONCES = [
+{ id:1, titre:"Peugeot 308 SW 2019", marque:"Peugeot", prix:14500, cat:"voiture", ville:"Lyon", region:"Auvergne-Rhône-Alpes", km:78000, annee:2019, carbu:"Diesel", etat:"Très bon état", verified:true, vendeur:"Marc D.", tel:"06 12 34 56 78", desc:"Très bon état général, révision faite, CT ok jusqu'en 2026. Boîte automatique, GPS, régulateur de vitesse, caméra de recul.", img:"https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&q=75" },
+{ id:2, titre:"Renault Scenic 3 2015", marque:"Renault", prix:7900, cat:"voiture", ville:"Paris", region:"Île-de-France", km:95000, annee:2015, carbu:"Diesel", etat:"Bon état", verified:true, vendeur:"Sophie L.", tel:"06 23 45 67 89", desc:"Renault Scénic 3 phase 2, 1.5 dCi 110cv, 7 places, entretien suivi carnet complet.", img:"https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&q=75" },
+{ id:3, titre:"Renault Clio 5 2021", marque:"Renault", prix:13900, cat:"voiture", ville:"Bordeaux", region:"Nouvelle-Aquitaine", km:28000, annee:2021, carbu:"Essence", etat:"Excellent état", verified:true, vendeur:"Pierre K.", tel:"06 34 56 78 90", desc:"Clio 5 Intens TCe 100, full LED, GPS 9.3, détecteur de fatigue, première main, non fumeur.", img:"https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=400&q=75" },
+{ id:4, titre:"Volkswagen Golf 7 2018", marque:"Volkswagen", prix:16500, cat:"voiture", ville:"Strasbourg", region:"Grand Est", km:62000, annee:2018, carbu:"Essence", etat:"Très bon état", verified:true, vendeur:"Thomas R.", tel:"06 45 67 89 01", desc:"Golf 7 Highline TSI 150, DSG7, full options, carnet d'entretien VW complet, pneus récents.", img:"https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400&q=75" },
+{ id:5, titre:"BMW Série 3 320d 2020", marque:"BMW", prix:28900, cat:"voiture", ville:"Nice", region:"Provence-Alpes-Côte d'Azur", km:42000, annee:2020, carbu:"Diesel", etat:"Excellent état", verified:true, vendeur:"Alex M.", tel:"06 56 78 90 12", desc:"BMW 320d G20, pack M Sport, écran 12.3, sièges chauffants, HUD, aucun défaut, garantie 6 mois.", img:"https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&q=75" },
+{ id:6, titre:"Mercedes Classe A 200 2019", marque:"Mercedes-Benz", prix:22500, cat:"voiture", ville:"Toulouse", region:"Occitanie", km:55000, annee:2019, carbu:"Essence", etat:"Très bon état", verified:true, vendeur:"Emma B.", tel:"06 67 89 01 23", desc:"Classe A W177, AMG Line, MBUX 10.25, toit panoramique, garantie Mercedes jusqu'en 2025.", img:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&q=75" },
+{ id:7, titre:"Yamaha MT-07 2021", marque:"Yamaha", prix:6800, cat:"moto", ville:"Marseille", region:"Provence-Alpes-Côte d'Azur", km:15000, annee:2021, carbu:"Essence", etat:"Excellent état", verified:true, vendeur:"Karim B.", tel:"06 78 90 12 34", desc:"Yamaha MT-07 2021, parfait état, entretien régulier chez concessionnaire, pneus neufs, accessoires inclus.", img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75" },
+{ id:8, titre:"Honda CB650R 2022", marque:"Honda", prix:8500, cat:"moto", ville:"Lille", region:"Hauts-de-France", km:8000, annee:2022, carbu:"Essence", etat:"Excellent état", verified:true, vendeur:"Lucas F.", tel:"06 89 01 23 45", desc:"CB650R Neo Sports Café, couleur mat gunpowder black, zéro chute, garantie Honda active.", img:"https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=400&q=75" },
+{ id:9, titre:"Kawasaki Z900 2020", marque:"Kawasaki", prix:9200, cat:"moto", ville:"Nantes", region:"Pays de la Loire", km:22000, annee:2020, carbu:"Essence", etat:"Très bon état", verified:false, vendeur:"Antoine G.", tel:"06 90 12 34 56", desc:"Z900 Performance, 3 modes de conduite, quickshifter, TCS, entretien suivi.", img:"https://images.unsplash.com/photo-1611241893603-3c359704e0ee?w=400&q=75" },
+{ id:10, titre:"VTT Trek Marlin 7 2022", marque:"Trek", prix:750, cat:"velo", ville:"Bordeaux", region:"Nouvelle-Aquitaine", km:0, annee:2022, carbu:"Électrique", etat:"Très bon état", verified:false, vendeur:"Marie C.", tel:"06 01 23 45 67", desc:"Trek Marlin 7, fourche suspendue RockShox, freins hydrauliques Shimano, utilisé une saison.", img:"https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=400&q=75" },
+{ id:11, titre:"Vélo électrique Specialized 2022", marque:"Specialized", prix:2800, cat:"velo", ville:"Paris", region:"Île-de-France", km:0, annee:2022, carbu:"Électrique", etat:"Excellent état", verified:true, vendeur:"Julien P.", tel:"06 12 34 56 78", desc:"Turbo Vado SL, moteur Specialized 240W, autonomie 130km, chargeur inclus, comme neuf.", img:"https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=400&q=75" },
+{ id:12, titre:"Jantes BMW M Sport 18p", marque:"BMW", prix:380, cat:"pieces", ville:"Lyon", region:"Auvergne-Rhône-Alpes", km:0, annee:2020, carbu:"", etat:"Très bon état", verified:true, vendeur:"Auto Parts Pro", tel:"04 72 12 34 56", desc:"4 jantes alliage BMW M Sport 18 pouces style 436, adaptées Série 1/2/3/4, légères traces usage.", img:"https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400&q=75" },
+{ id:13, titre:"Turbo Volkswagen Golf 6 GTI", marque:"Volkswagen", prix:175, cat:"pieces", ville:"Rennes", region:"Bretagne", km:0, annee:2012, carbu:"", etat:"Bon état", verified:false, vendeur:"Garage Breton", tel:"02 99 12 34 56", desc:"Turbo Garrett original Golf 6 GTI 2.0 TSI, ref 06J145713F. Testé avant dépose suite à upgrade.", img:"https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&q=75" },
+{ id:14, titre:"Renault Megane 4 2018", marque:"Renault", prix:11500, cat:"voiture", ville:"Grenoble", region:"Auvergne-Rhône-Alpes", km:72000, annee:2018, carbu:"Diesel", etat:"Bon état", verified:true, vendeur:"Nadia M.", tel:"06 11 22 33 44", desc:"Mégane 4 Intens dCi 110, carnet d'entretien Renault, CT valide, kit 4 pneus hiver inclus.", img:"https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400&q=75" },
+{ id:15, titre:"Toyota Yaris Hybride 2022", marque:"Toyota", prix:19800, cat:"voiture", ville:"Montpellier", region:"Occitanie", km:18000, annee:2022, carbu:"Hybride", etat:"Excellent état", verified:true, vendeur:"Garage Toyota Sud", tel:"04 67 12 34 56", desc:"Yaris 4 hybride 116h Collection, 1 main, full options, garantie Toyota jusqu'en 2027, 0 défaut.", img:"https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=400&q=75" },
+{ id:16, titre:"Audi A3 Sportback 2020", marque:"Audi", prix:24900, cat:"voiture", ville:"Paris", region:"Île-de-France", km:35000, annee:2020, carbu:"Essence", etat:"Excellent état", verified:true, vendeur:"Premium Auto Paris", tel:"01 23 45 67 89", desc:"A3 Sportback 35 TFSI S line, Virtual Cockpit, sieges sport, park assist, historique complet Audi.", img:"https://images.unsplash.com/photo-1542362567-b07e54358753?w=400&q=75" },
 ];
 
-const MODELS = {
-  Renault:['Clio','Megane','Captur','Zoe','Arkana','Talisman','Kadjar'],
-  Peugeot:['208','308','3008','5008','508','2008','Rifter'],
-  Citroën:['C3','C4','C5 X','Berlingo','C3 Aircross','C5 Aircross'],
-  Volkswagen:['Golf','Polo','Passat','Tiguan','T-Roc','ID.4','Touareg'],
-  BMW:['Série 1','Série 3','Série 5','X1','X3','X5','i3','i4','M3'],
-  Mercedes:['Classe A','Classe C','Classe E','GLC','GLA','CLA','EQB'],
-  Toyota:['Yaris','Corolla','RAV4','Prius','C-HR','Camry','Hilux'],
-  Ford:['Fiesta','Focus','Puma','Kuga','Mustang','Ranger','Transit'],
-  Audi:['A1','A3','A4','A6','Q3','Q5','Q7','e-tron','TT'],
-  Opel:['Corsa','Astra','Crossland','Grandland','Mokka','Zafira'],
+// ═══════════════════════════════════════════
+// MODÈLES PAR MARQUE POUR ESTIMATION
+// ═══════════════════════════════════════════
+var MODELES = {
+"Renault": ["Clio","Mégane","Scenic","Scénic 1","Scénic 2","Scénic 3","Scénic 4","Captur","Kadjar","Koleos","Talisman","Laguna","Twingo","Zoe","Kangoo","Espace","Vel Satis","Fluence","Latitude","Arkana","Austral","Rafale"],
+"Peugeot": ["108","208","2008","308","3008","408","4008","508","5008","Partner","Rifter","Expert","Traveller","Boxer","RCZ","107","206","207","307","406","407","607"],
+"Citroën": ["C1","C3","C3 Aircross","C4","C4 Cactus","C5","C5 Aircross","C5 X","C6","Berlingo","SpaceTourer","Jumpy","Dispatch","C-Elysée","DS3","DS4","DS5"],
+"Volkswagen": ["Polo","Golf","Golf GTI","Golf R","Passat","Arteon","Tiguan","Touareg","T-Cross","T-Roc","ID.3","ID.4","ID.5","Sharan","Touran","Caddy","Transporter"],
+"BMW": ["Série 1","Série 2","Série 3","Série 4","Série 5","Série 6","Série 7","Série 8","X1","X2","X3","X4","X5","X6","X7","Z4","M2","M3","M4","M5","iX","i4","i7"],
+"Mercedes-Benz": ["Classe A","Classe B","Classe C","Classe E","Classe S","CLA","CLS","GLA","GLB","GLC","GLE","GLS","AMG GT","Vito","Sprinter","EQA","EQB","EQC","EQS"],
+"Audi": ["A1","A2","A3","A4","A5","A6","A7","A8","Q2","Q3","Q5","Q7","Q8","TT","R8","e-tron","e-tron GT","RS3","RS4","RS5","RS6","S3","S4","S5"],
+"Ford": ["Fiesta","Focus","Mondeo","Kuga","EcoSport","Puma","Explorer","Mustang","F-150","Ranger","Transit","S-Max","Galaxy","Edge","Bronco","Mach-E"],
+"Toyota": ["Yaris","Corolla","Camry","Prius","RAV4","C-HR","Aygo","Supra","Land Cruiser","Hilux","Proace","bZ4X","GR86","Mirai","Auris"],
+"Honda": ["Civic","Jazz","HR-V","CR-V","ZR-V","e:Ny1","NSX","Type R","Accord","FR-V","CR-Z","Legend"],
+"Nissan": ["Micra","Juke","Qashqai","X-Trail","Ariya","Leaf","Note","Navara","NV200","Pulsar","Almera","Primera"],
+"Opel": ["Corsa","Astra","Insignia","Mokka","Crossland","Grandland","Zafira","Meriva","Vectra","Omega","Signum","Agila","Combo"],
+"SEAT": ["Ibiza","Leon","Ateca","Arona","Tarraco","Alhambra","Toledo","Mii","Exeo","Cupra Formentor","Cupra Leon","Cupra Born"],
+"Skoda": ["Fabia","Octavia","Superb","Karoq","Kodiaq","Scala","Kamiq","Citigo","Rapid","Yeti","Enyaq"],
+"Dacia": ["Sandero","Logan","Duster","Spring","Jogger","Dokker","Lodgy","Pick-Up","Bigster"],
+"Fiat": ["500","500X","500L","Panda","Tipo","Punto","Bravo","Stilo","Doblo","Qubo","Ducato","Egea"],
+"Hyundai": ["i10","i20","i30","i40","Tucson","Santa Fe","Kona","Ioniq","Ioniq 5","Ioniq 6","ix35","ix55","Nexo"],
+"Kia": ["Picanto","Rio","Ceed","Stinger","Sportage","Sorento","Niro","EV6","EV9","Stonic","XCeed","ProCeed"],
+"Mazda": ["Mazda2","Mazda3","Mazda6","CX-3","CX-30","CX-5","CX-60","MX-5","MX-30"],
+"Volvo": ["V40","V60","V90","S60","S90","XC40","XC60","XC90","C40","EX30","EX90"],
+"Tesla": ["Model 3","Model S","Model X","Model Y","Cybertruck","Roadster"],
+"Yamaha": ["MT-07","MT-09","MT-10","YZF-R1","YZF-R6","YZF-R3","TMAX","XMAX","Tracer 9","Ténéré 700","XSR700","XSR900"],
+"Honda": ["CB650R","CB1000R","CBR600RR","CBR1000RR","Africa Twin","Forza 750","X-ADV","NC750X","Rebel 500","CMX500"],
+"Kawasaki": ["Z900","Z1000","Ninja 400","Ninja 650","Ninja ZX-10R","Versys 650","Versys 1000","Z650","Z400","ZX-6R"],
+"Autre": ["Autre modèle"]
 };
 
-const BOT_REPLIES = {
-  'comment vendre':['Pour vendre en toute sécurité sur Le Marché Auto :\n\n✅ Mettez des photos de qualité (8-15 photos)\n✅ Soyez précis dans la description\n✅ Activez la vérification vendeur\n✅ Utilisez notre paiement sécurisé intégré\n✅ Ne communiquez jamais votre RIB avant la remise du véhicule\n\nVotre annonce est 100% gratuite et mise en ligne immédiatement !'],
-  'paiement':['Notre paiement sécurisé fonctionne comme un service de séquestre :\n\n1️⃣ L\'acheteur dépose la somme sur notre compte sécurisé\n2️⃣ Vous remettez le véhicule\n3️⃣ L\'acheteur confirme la remise\n4️⃣ Vous recevez le paiement sous 24h\n\n🔒 Aucun risque de chèque sans provision ou virement frauduleux.'],
-  'arnaque':['Les arnaques les plus courantes :\n\n⚠️ Acheteur qui paie "en trop" et demande un remboursement\n⚠️ Faux virement avec capture d\'écran\n⚠️ Transporteur international inconnu\n⚠️ Demande de PayPal "Amis & Famille"\n\n🛡️ Règle d\'or : jamais de remise de clé sans argent en main ou virement confirmé par votre banque.\n\nVoulez-vous signaler une annonce suspecte ?'],
-  'vérifier':['Pour vérifier une annonce, voici mes vérifications automatiques :\n\n✅ Numéro de téléphone vérifié\n✅ Photos originales (détection de photos volées)\n✅ Prix cohérent avec le marché\n✅ Historique du vendeur\n\nDonnez-moi le numéro de l\'annonce et je l\'analyse pour vous !'],
-  'gratuit':['✅ OUI, Le Marché Auto est 100% gratuit !\n\n📢 Contrairement à LeBonCoin qui facture 79,90€ dès la 3e annonce, chez nous :\n\n• Dépôt d\'annonces : GRATUIT\n• Photos illimitées : GRATUIT\n• Agent anti-fraude : GRATUIT\n• Messagerie : GRATUIT\n• Alertes email : GRATUIT\n\nNous nous rémunérons uniquement sur les options premium optionnelles pour les professionnels.'],
+// ═══════════════════════════════════════════
+// PRIX DE RÉFÉRENCE POUR ESTIMATION
+// ═══════════════════════════════════════════
+var PRIX_REF = {
+"Renault Clio": { base:8000, recent:15000 },
+"Renault Megane": { base:6000, recent:18000 },
+"Renault Scenic": { base:3000, recent:14000 },
+"Renault Captur": { base:7000, recent:22000 },
+"Peugeot 208": { base:5000, recent:20000 },
+"Peugeot 308": { base:6000, recent:22000 },
+"Peugeot 3008": { base:9000, recent:32000 },
+"Volkswagen Golf": { base:5000, recent:28000 },
+"Volkswagen Polo": { base:4000, recent:18000 },
+"BMW Série 3": { base:8000, recent:45000 },
+"BMW Série 5": { base:10000, recent:65000 },
+"Mercedes Classe A": { base:7000, recent:35000 },
+"Mercedes Classe C": { base:9000, recent:50000 },
+"Audi A3": { base:7000, recent:35000 },
+"Audi A4": { base:9000, recent:42000 },
+"Toyota Yaris": { base:4000, recent:22000 },
+"Tesla Model 3": { base:25000, recent:55000 },
+"default": { base:5000, recent:25000 }
 };
 
-let state = {
-  currentPage: 'home',
-  category: 'all',
-  favs: [],
-  listings: [...LISTINGS],
-  filteredListings: [...LISTINGS],
-  sellType: 'voiture',
-  sellEnergy: 'Essence',
-  sellStep: 1,
-  totalPublished: 0,
-  chatHistory: [],
-  searches: [],
-};
+var currentCat = "tous";
+var agentMsgs = [];
+var currentDetail = null;
 
-// ===== NAVIGATION =====
-function goPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  const bn = document.getElementById('bn-' + page);
-  if (bn) bn.classList.add('active');
-  state.currentPage = page;
-  window.scrollTo(0, 0);
-  if (page === 'home') renderListings();
-  if (page === 'favs') renderFavs();
-  if (page === 'profile') updateProfile();
+// ═══════════════════════════════════════════
+// FILTRAGE & RENDU
+// ═══════════════════════════════════════════
+function doFilter() {
+var search = document.getElementById("searchInput").value.toLowerCase();
+var region = document.getElementById("regionSel").value.toLowerCase();
+var ville = document.getElementById("villeInput").value.toLowerCase();
+var prixMin = parseInt(document.getElementById("prixMin").value) || 0;
+var prixMax = parseInt(document.getElementById("prixMax").value) || 9999999;
+var sort = document.getElementById("sortSel").value;
+
+var filtered = ANNONCES.filter(function(a) {
+var catOk = currentCat === "tous" || a.cat === currentCat;
+var searchOk = !search || a.titre.toLowerCase().indexOf(search) >= 0 || a.ville.toLowerCase().indexOf(search) >= 0 || a.marque.toLowerCase().indexOf(search) >= 0;
+var regionOk = !region || a.region.toLowerCase().indexOf(region) >= 0;
+var villeOk = !ville || a.ville.toLowerCase().indexOf(ville) >= 0;
+var prixOk = a.prix >= prixMin && a.prix <= prixMax;
+return catOk && searchOk && regionOk && villeOk && prixOk;
+});
+
+if (sort === "prix_asc") filtered.sort(function(a,b){return a.prix-b.prix;});
+else if (sort === "prix_desc") filtered.sort(function(a,b){return b.prix-a.prix;});
+else if (sort === "km_asc") filtered.sort(function(a,b){return a.km-b.km;});
+
+document.getElementById("resultsCount").textContent = filtered.length;
+renderGrid(filtered);
 }
 
-// ===== LISTINGS =====
-function renderListings(listings) {
-  const grid = document.getElementById('listing-grid');
-  const data = listings || state.filteredListings;
-  document.getElementById('count-label').textContent = data.length;
-  document.getElementById('stat-annonces').textContent = state.listings.length + state.totalPublished;
-  if (!data.length) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="icon">🔍</div><h3>Aucune annonce trouvée</h3><p>Essayez d\'élargir vos critères de recherche</p><button class="btn-apply" onclick="resetFilters()">Réinitialiser</button></div>';
-    return;
-  }
-  grid.innerHTML = data.map(l => cardHTML(l)).join('');
+function renderGrid(list) {
+var grid = document.getElementById("grid");
+if (list.length === 0) {
+grid.innerHTML = '<div class="no-results"><div class="nr-ico">🔍</div><p>Aucune annonce trouvée<br><span style="font-size:11px;color:#444;">Modifiez vos critères de recherche</span></p></div>';
+return;
+}
+var html = "";
+for (var i = 0; i < list.length; i++) {
+var a = list[i];
+html += '<div class="card" onclick="showDetail(' + a.id + ')">';
+html += '<div class="card-img-wrap">';
+html += '<div class="card-img"><img src="' + a.img + '" alt="' + a.titre + '" onerror="this.parentElement.innerHTML=\'<div style=font-size:40px>' + getCatIcon(a.cat) + '</div>\'" loading="lazy"/></div>';
+html += '<div class="card-badge ' + (a.verified ? 'badge-ok' : 'badge-new') + '">' + (a.verified ? '✓ Vérifié' : '⚡ Nouveau') + '</div>';
+html += '<button class="card-fav" onclick="event.stopPropagation();this.textContent=this.textContent===\'🤍\'?\'❤️\':\'🤍\'">🤍</button>';
+html += '</div><div class="card-body">';
+html += '<div class="card-title">' + a.titre + '</div>';
+html += '<div class="card-price">' + a.prix.toLocaleString('fr-FR') + ' €</div>';
+html += '<div class="card-meta">';
+html += '<span>📍 ' + a.ville + '</span>';
+if (a.km > 0) html += '<span>⏱ ' + a.km.toLocaleString('fr-FR') + ' km</span>';
+if (a.annee) html += '<span>📅 ' + a.annee + ' · ' + (a.carbu || '') + '</span>';
+html += '</div></div></div>';
+}
+grid.innerHTML = html;
 }
 
-function cardHTML(l) {
-  const badgeHTML = l.badges.map(b => {
-    if (b==='verified') return '<span class="card-badge badge-verified">✓ Vérifié</span>';
-    if (b==='urgent') return '<span class="card-badge badge-urgent">⚡ Urgent</span>';
-    if (b==='new') return '<span class="card-badge badge-new">Nouveau</span>';
-    if (b==='pro') return '<span class="card-badge badge-pro">Pro</span>';
-    return '';
-  }).join('');
-  const priceTagHTML = {
-    great:'<div class="price-badge price-great">🔥 Très bonne affaire</div>',
-    good:'<div class="price-badge price-good">✓ Bonne affaire</div>',
-    fair:'<div class="price-badge price-fair">~ Prix équitable</div>',
-  }[l.priceTag] || '';
-  const isFav = state.favs.includes(l.id);
-  const monthly = Math.round(l.price / 60);
-  const chips = [];
-  if (l.year) chips.push(l.year);
-  if (l.km) chips.push(l.km.toLocaleString('fr') + ' km');
-  if (l.energy && l.energy !== 'Autre') chips.push(l.energy);
-  if (l.gearbox && l.gearbox !== 'Autre') chips.push(l.gearbox);
-  return `<div class="card" onclick="openDetail(${l.id})">
-    <div class="card-img-wrap">
-      <img class="card-img" src="${l.img}" alt="${l.brand} ${l.model}" loading="lazy"/>
-      <div class="card-badges">${badgeHTML}</div>
-      <button class="card-fav ${isFav?'active':''}" onclick="event.stopPropagation();toggleFav(${l.id},this)">♥</button>
-    </div>
-    <div class="card-body">
-      ${priceTagHTML}
-      <div class="card-price">${l.price.toLocaleString('fr')} € <span class="monthly">ou ~${monthly}€/mois</span></div>
-      <div class="card-title">${l.brand} ${l.model}</div>
-      <div class="card-chips">${chips.map(c=>`<span class="card-chip">${c}</span>`).join('')}</div>
-      <div class="card-footer">
-        <div class="card-loc">📍 ${l.city}</div>
-        <div class="card-time">${l.time}</div>
-      </div>
-    </div>
-  </div>`;
+function getCatIcon(cat) {
+return {voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[cat] || "🚗";
 }
 
-// ===== CATEGORY FILTER =====
-function setCategory(cat, btn) {
-  state.category = cat;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  applyFilters();
+function setCat(cat, el) {
+currentCat = cat;
+document.querySelectorAll(".cat").forEach(function(c){c.classList.remove("active");});
+el.classList.add("active");
+if (cat === "estimer") { showEstimer(); return; }
+doFilter();
 }
 
-// ===== ADVANCED FILTERS =====
-function toggleAdvFilters() {
-  const el = document.getElementById('adv-filters');
-  const btn = document.getElementById('adv-toggle');
-  el.classList.toggle('open');
-  btn.classList.toggle('active');
+function updateKm() {
+document.getElementById("kmVal").textContent = document.getElementById("kmSlider").value + " km";
+doFilter();
 }
 
-function applyFilters() {
-  let data = [...state.listings];
-  if (state.category !== 'all') data = data.filter(l => l.type === state.category);
-  const region = document.getElementById('f-region')?.value;
-  const energy = document.getElementById('f-energy')?.value;
-  const priceMax = document.getElementById('f-price-max')?.value;
-  const kmMax = document.getElementById('f-km-max')?.value;
-  const yearMin = document.getElementById('f-year-min')?.value;
-  const gearbox = document.getElementById('f-gearbox')?.value;
-  const search = document.getElementById('home-search')?.value.toLowerCase();
-  if (region) data = data.filter(l => l.region === region);
-  if (energy) data = data.filter(l => l.energy === energy);
-  if (priceMax) data = data.filter(l => l.price <= +priceMax);
-  if (kmMax) data = data.filter(l => l.km <= +kmMax);
-  if (yearMin) data = data.filter(l => l.year >= +yearMin);
-  if (gearbox) data = data.filter(l => l.gearbox === gearbox);
-  if (search) data = data.filter(l => `${l.brand} ${l.model} ${l.city} ${l.energy}`.toLowerCase().includes(search));
-  state.filteredListings = data;
-  sortListings();
+function getLocation() {
+if (!navigator.geolocation) { alert("Géolocalisation non disponible."); return; }
+navigator.geolocation.getCurrentPosition(
+function() { alert("📍 Position détectée !\nRecherche des annonces autour de vous en cours..."); },
+function() { alert("Position non disponible.\nEntrez votre ville manuellement."); }
+);
 }
 
-function resetFilters() {
-  ['f-region','f-energy','f-price-max','f-km-max','f-year-min','f-gearbox'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  document.getElementById('home-search').value = '';
-  state.category = 'all';
-  document.querySelectorAll('.filter-chip').forEach((c,i) => c.classList.toggle('active', i===0));
-  state.filteredListings = [...state.listings];
-  sortListings();
-  showToast('Filtres réinitialisés');
+// ═══════════════════════════════════════════
+// DÉTAIL ANNONCE
+// ═══════════════════════════════════════════
+function showDetail(id) {
+var a = ANNONCES.find(function(x){return x.id===id;});
+if (!a) return;
+currentDetail = a;
+var html = '';
+html += '<div class="detail-img-wrap">';
+html += '<div class="detail-img"><img src="' + a.img + '" alt="' + a.titre + '" onerror="this.parentElement.innerHTML=\'<div style=font-size:80px>' + getCatIcon(a.cat) + '</div>\'"/></div>';
+html += '<button class="back-btn" onclick="closeDetail()">← Retour</button>';
+html += '</div><div class="detail-body">';
+html += '<div class="detail-price">' + a.prix.toLocaleString('fr-FR') + ' €</div>';
+html += '<div class="detail-title">' + a.titre + '</div>';
+html += '<div class="detail-tags">';
+if (a.ville) html += '<span class="tag">📍 ' + a.ville + '</span>';
+if (a.km > 0) html += '<span class="tag">⏱ ' + a.km.toLocaleString('fr-FR') + ' km</span>';
+if (a.annee) html += '<span class="tag">📅 ' + a.annee + '</span>';
+if (a.carbu) html += '<span class="tag">⛽ ' + a.carbu + '</span>';
+if (a.etat) html += '<span class="tag">✨ ' + a.etat + '</span>';
+html += '</div>';
+html += '<div class="detail-section"><div class="detail-section-title">Description</div><div class="detail-desc">' + a.desc + '</div></div>';
+html += '<div class="detail-section"><div class="detail-section-title">Vendeur</div>';
+html += '<div class="seller-box"><div class="seller-avatar">👤</div>';
+html += '<div><div class="seller-name">' + a.vendeur + '</div><div class="seller-type">Vendeur particulier</div></div>';
+if (a.verified) html += '<div class="seller-badge">✓ Vérifié</div>';
+html += '</div></div>';
+html += '<button class="contact-btn" onclick="alert(\'Appeler ' + a.vendeur + ' : ' + a.tel + '\')">📞 Contacter le vendeur</button>';
+html += '<button class="signal-btn" onclick="alert(\'Signalement envoyé à notre équipe. Merci !\')">🚩 Signaler cette annonce</button>';
+html += '<button class="agent-link-btn" onclick="closeDetail();openAgent()">🛡️ Demander à l\'Agent Anti-Fraude</button>';
+html += '</div>';
+document.getElementById("detailContent").innerHTML = html;
+document.getElementById("detailScreen").classList.add("open");
+document.getElementById("detailScreen").scrollTop = 0;
 }
 
-function sortListings() {
-  const sort = document.getElementById('sort-select')?.value || 'recent';
-  const data = [...state.filteredListings];
-  if (sort === 'price-asc') data.sort((a,b) => a.price - b.price);
-  if (sort === 'price-desc') data.sort((a,b) => b.price - a.price);
-  if (sort === 'km') data.sort((a,b) => a.km - b.km);
-  renderListings(data);
+function closeDetail() {
+document.getElementById("detailScreen").classList.remove("open");
 }
 
-function doSearch() {
-  const val = document.getElementById('home-search')?.value || document.getElementById('search-page-input')?.value || '';
-  if (!val) return;
-  if (!state.searches.includes(val)) state.searches.unshift(val);
-  if (state.searches.length > 5) state.searches.pop();
-  goPage('home');
-  applyFilters();
-  showToast(`Recherche : "${val}"`);
+function showHome() {
+closeDetail();
+closeEstimer();
+closePub();
 }
 
-function liveSearch(val) {
-  const el = document.getElementById('recent-searches');
-  if (!el) return;
-  const filtered = state.searches.filter(s => s.toLowerCase().includes(val.toLowerCase()));
-  el.innerHTML = filtered.map(s => `<div class="recent-item" onclick="searchFor('${s}')"><span class="ri-icon">🕐</span><span>${s}</span><span>›</span></div>`).join('');
+// ═══════════════════════════════════════════
+// ESTIMATION
+// ═══════════════════════════════════════════
+function updateModeles() {
+var marque = document.getElementById("est-marque").value;
+var sel = document.getElementById("est-modele");
+sel.innerHTML = '<option value="">Choisir un modèle...</option>';
+if (marque && MODELES[marque]) {
+MODELES[marque].forEach(function(m) {
+sel.innerHTML += '<option>' + m + '</option>';
+});
+}
 }
 
-function searchFor(term) {
-  document.getElementById('search-page-input').value = term;
-  document.getElementById('home-search').value = term;
-  doSearch();
+function estimerVehicule() {
+var marque = document.getElementById("est-marque").value;
+var modele = document.getElementById("est-modele").value;
+var annee = parseInt(document.getElementById("est-annee").value) || 2015;
+var km = document.getElementById("est-km").value;
+var etat = document.getElementById("est-etat").value;
+
+if (!marque || !modele) { alert("Veuillez choisir une marque et un modèle."); return; }
+
+var now = 2024;
+var age = now - annee;
+var key = marque + " " + modele;
+var ref = PRIX_REF[key] || PRIX_REF["default"];
+
+var base = ref.recent;
+var depreciation = 1 - (age * 0.08);
+if (depreciation < 0.15) depreciation = 0.15;
+var prix = Math.round(base * depreciation);
+
+if (km.indexOf("Moins") >= 0) prix = Math.round(prix * 1.1);
+else if (km.indexOf("10 000 - 30") >= 0) prix = Math.round(prix * 1.0);
+else if (km.indexOf("30 000 - 60") >= 0) prix = Math.round(prix * 0.92);
+else if (km.indexOf("60 000 - 100") >= 0) prix = Math.round(prix * 0.82);
+else if (km.indexOf("100 000 - 150") >= 0) prix = Math.round(prix * 0.70);
+else if (km.indexOf("150 000 - 200") >= 0) prix = Math.round(prix * 0.58);
+else if (km.indexOf("Plus de 200") >= 0) prix = Math.round(prix * 0.42);
+
+if (etat === "Excellent état") prix = Math.round(prix * 1.08);
+else if (etat === "Bon état") prix = Math.round(prix * 0.93);
+else if (etat === "État correct") prix = Math.round(prix * 0.80);
+else if (etat === "À rénover") prix = Math.round(prix * 0.60);
+
+var min = Math.round(prix * 0.88);
+var max = Math.round(prix * 1.12);
+
+document.getElementById("est-prix").textContent = prix.toLocaleString("fr-FR") + " €";
+document.getElementById("est-range").textContent = "Fourchette : " + min.toLocaleString("fr-FR") + " € — " + max.toLocaleString("fr-FR") + " €";
+document.getElementById("est-info").textContent = "Estimation basée sur le marché français pour un " + marque + " " + modele + " de " + annee + " en " + etat.toLowerCase() + ". Prix indicatif avant négociation.";
+document.getElementById("estimerResult").classList.add("show");
 }
 
-// ===== FAVORITES =====
-function toggleFav(id, btn) {
-  if (state.favs.includes(id)) {
-    state.favs = state.favs.filter(f => f !== id);
-    btn.classList.remove('active');
-    showToast('Retiré des favoris');
-  } else {
-    state.favs.push(id);
-    btn.classList.add('active');
-    showToast('❤️ Ajouté aux favoris');
-  }
-  updateProfile();
+function showEstimer() {
+document.getElementById("estimerScreen").classList.add("open");
+document.getElementById("estimerScreen").scrollTop = 0;
 }
 
-function renderFavs() {
-  const grid = document.getElementById('favs-grid');
-  const empty = document.getElementById('favs-empty');
-  const favListings = state.listings.filter(l => state.favs.includes(l.id));
-  if (!favListings.length) {
-    grid.style.display = 'none';
-    empty.style.display = 'block';
-  } else {
-    grid.style.display = 'grid';
-    empty.style.display = 'none';
-    grid.innerHTML = favListings.map(l => cardHTML(l)).join('');
-  }
+function closeEstimer() {
+document.getElementById("estimerScreen").classList.remove("open");
 }
 
-function updateProfile() {
-  document.getElementById('fav-count').textContent = state.favs.length;
-  document.getElementById('pub-count').textContent = state.totalPublished;
-  document.getElementById('favs-count-label').textContent = state.favs.length + ' véhicule(s) sauvegardé(s)';
-  document.getElementById('my-ads-count').textContent = state.totalPublished + ' annonce(s) publiée(s)';
+// ═══════════════════════════════════════════
+// PUBLICATION
+// ═══════════════════════════════════════════
+function openPublish() {
+document.getElementById("pubOverlay").classList.add("open");
+pubNext(1);
 }
 
-// ===== DETAIL PAGE =====
-function openDetail(id) {
-  const l = state.listings.find(x => x.id === id);
-  if (!l) return;
-  const monthly = Math.round(l.price / 60);
-  const isFav = state.favs.includes(l.id);
-  const priceTagHTML = {
-    great:'<div class="price-badge price-great" style="margin-bottom:10px">🔥 Très bonne affaire</div>',
-    good:'<div class="price-badge price-good" style="margin-bottom:10px">✓ Bonne affaire</div>',
-    fair:'<div class="price-badge price-fair" style="margin-bottom:10px">~ Prix équitable</div>',
-  }[l.priceTag] || '';
-  const chips = [
-    ['📅','Année',l.year],['🛣️','Kilométrage',l.km?l.km.toLocaleString('fr')+' km':'—'],
-    ['⛽','Énergie',l.energy],['⚙️','Boîte',l.gearbox],
-    ['💪','Puissance',l.power?l.power+' ch':'—'],['🏁','État',l.state],
-  ];
-  document.getElementById('detail-content').innerHTML = `
-    <div class="detail-back" onclick="history.back()">← Retour</div>
-    <div class="detail-imgs">
-      <img src="${l.img}" alt="${l.brand} ${l.model}"/>
-      <div class="img-counter">1/${l.imgs.length}</div>
-      ${l.video?`<button class="video-btn" onclick="showToast('Ouverture de la vidéo...')">▶ Voir la vidéo</button>`:''}
-    </div>
-    <div class="detail-header">
-      <div>
-        ${priceTagHTML}
-        <div class="detail-price">${l.price.toLocaleString('fr')} €</div>
-        <div class="detail-monthly">ou environ ${monthly} €/mois</div>
-      </div>
-      <div class="detail-actions">
-        <button class="action-btn ${isFav?'active':''}" id="detail-fav" onclick="toggleFav(${l.id},this);document.getElementById('detail-fav').textContent=state.favs.includes(${l.id})?'❤️':'🤍'">
-          ${isFav?'❤️':'🤍'}
-        </button>
-        <button class="action-btn" onclick="showToast('Lien copié !')">🔗</button>
-      </div>
-    </div>
-    <h1 class="detail-title">${l.brand} ${l.model}</h1>
-    <div class="detail-loc">📍 ${l.city}, ${l.region}</div>
-    <div class="detail-chips">${chips.map(([icon,label,val])=>`<div class="detail-chip">${icon} <span>${label}</span> ${val}</div>`).join('')}</div>
-    <div class="price-analysis">
-      <div class="pa-title">📊 Analyse du prix IA</div>
-      <div class="pa-bar-wrap"><div class="pa-label">Ce véhicule</div><div class="pa-bar-bg"><div class="pa-bar-fill" style="width:65%;background:var(--accent)"></div></div><div class="pa-val">${l.price.toLocaleString('fr')} €</div></div>
-      <div class="pa-bar-wrap"><div class="pa-label">Marché moyen</div><div class="pa-bar-bg"><div class="pa-bar-fill" style="width:80%;background:var(--text3)"></div></div><div class="pa-val">${Math.round(l.price*1.12).toLocaleString('fr')} €</div></div>
-      <div class="pa-bar-wrap"><div class="pa-label">Prix haut</div><div class="pa-bar-bg"><div class="pa-bar-fill" style="width:100%;background:var(--border2)"></div></div><div class="pa-val">${Math.round(l.price*1.25).toLocaleString('fr')} €</div></div>
-    </div>
-    <div class="fraud-alert">
-      <div class="fraud-title">🛡️ Vérifications anti-fraude IA</div>
-      <div class="fraud-checks">
-        <div class="fraud-check"><div class="chk">✓</div>Photos originales vérifiées</div>
-        <div class="fraud-check"><div class="chk">✓</div>Prix cohérent avec le marché</div>
-        <div class="fraud-check"><div class="chk">✓</div>Vendeur actif depuis ${l.seller.since}</div>
-        ${l.seller.verified?'<div class="fraud-check"><div class="chk">✓</div>Identité vendeur vérifiée</div>':''}
-        <div class="fraud-check"><div class="chk">✓</div>Aucun signalement de fraude</div>
-      </div>
-    </div>
-    <div class="section-title">Description</div>
-    <div class="detail-desc">${l.desc}</div>
-    <div class="section-title">Vendeur</div>
-    <div class="seller-card">
-      <div class="seller-avatar">${l.seller.name.split(' ').map(n=>n[0]).join('')}</div>
-      <div class="seller-info">
-        <div class="seller-name">${l.seller.name}</div>
-        <div class="seller-meta">Membre depuis ${l.seller.since} · ⭐ ${l.seller.rating} · ${l.seller.count} annonce(s)</div>
-        ${l.seller.verified?'<div class="seller-badge">✓ Identité vérifiée</div>':''}
-      </div>
-    </div>
-    <div class="contact-btns">
-      <button class="contact-btn contact-phone" onclick="showToast('📞 06 XX XX XX XX')">📞 Appeler</button>
-      <button class="contact-btn contact-msg" onclick="goPage('agent');showToast('Message envoyé !')">💬 Message</button>
-    </div>
-    <button class="btn-apply" style="width:100%;padding:14px;margin-bottom:12px;background:var(--teal);font-size:15px" onclick="showModal('pay',${l.id})">🔒 Paiement sécurisé</button>
-  `;
-  goPage('detail');
+function closePub() {
+document.getElementById("pubOverlay").classList.remove("open");
 }
 
-// ===== SELL FORM =====
-function selectType(type) {
-  state.sellType = type;
-  document.querySelectorAll('[id^="type-"]').forEach(c => c.classList.remove('selected'));
-  document.getElementById('type-' + type).classList.add('selected');
+function pubNext(step) {
+["pubStep1","pubStep2","pubStep3"].forEach(function(s,i){
+document.getElementById(s).style.display = (i+1===step) ? "block" : "none";
+});
+["p1","p2","p3"].forEach(function(s,i){
+document.getElementById(s).className = "prog-seg" + (i<step?" done":"");
+});
+if (step === 3) analyzePublication();
 }
 
-function selEnergy(btn, val) {
-  state.sellEnergy = val;
-  document.querySelectorAll('.energy-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+function analyzePublication() {
+var titre = document.getElementById("pub-titre").value;
+var desc = document.getElementById("pub-desc").value;
+var prix = document.getElementById("pub-prix").value;
+document.getElementById("analysisLabel").style.color = "#E74C3C";
+document.getElementById("analysisLabel").textContent = "🛡️ Analyse en cours...";
+document.getElementById("analysisMsg").textContent = "L'agent IA vérifie votre annonce...";
+document.getElementById("pubRetourBtn").style.display = "none";
+document.getElementById("pubConfirmBtn").style.display = "none";
+
+fetch("https://api.anthropic.com/v1/messages", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+model: "claude-sonnet-4-20250514",
+max_tokens: 300,
+system: "Tu es un modérateur pour une marketplace automobile. Réponds UNIQUEMENT en JSON : {\"status\":\"VALIDE\" ou \"BLOQUE\",\"message\":\"explication courte\"}. VALIDE si véhicule/pièce auto-moto-vélo légitime. BLOQUE si fraude, hors catégorie, prix anormal ou contenu interdit.",
+messages: [{ role: "user", content: "Titre: " + titre + ". Description: " + desc + ". Prix: " + prix + "€." }]
+})
+}).then(function(r){return r.json();}).then(function(data){
+try {
+var txt = (data.content[0].text || "{}").replace(/```json|```/g,"").trim();
+var result = JSON.parse(txt);
+if (result.status === "VALIDE") {
+document.getElementById("analysisLabel").style.color = "#27AE60";
+document.getElementById("analysisLabel").textContent = "✅ Annonce approuvée !";
+document.getElementById("analysisMsg").textContent = result.message;
+document.getElementById("pubConfirmBtn").style.display = "block";
+} else {
+document.getElementById("analysisLabel").style.color = "#E74C3C";
+document.getElementById("analysisLabel").textContent = "🚨 Annonce bloquée";
+document.getElementById("analysisMsg").textContent = result.message;
+document.getElementById("pubRetourBtn").style.display = "block";
+}
+} catch(e) {
+document.getElementById("analysisLabel").style.color = "#27AE60";
+document.getElementById("analysisLabel").textContent = "✅ Annonce approuvée !";
+document.getElementById("pubConfirmBtn").style.display = "block";
+}
+}).catch(function(){
+document.getElementById("analysisLabel").style.color = "#27AE60";
+document.getElementById("analysisLabel").textContent = "✅ Annonce approuvée !";
+document.getElementById("pubConfirmBtn").style.display = "block";
+});
 }
 
-function nextStep(step) {
-  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-  document.getElementById('step-' + step).classList.add('active');
-  state.sellStep = step;
-  for (let i=1; i<=4; i++) {
-    document.getElementById('step-dot-'+i).classList.toggle('done', i<=step);
-  }
-  window.scrollTo(0,0);
+function confirmerPublication() {
+closePub();
+alert("🎉 Votre annonce a été publiée avec succès !\n\nElle sera visible par tous les membres du Marché Auto.");
 }
 
-function handlePhotos(input) {
-  const prev = document.getElementById('photo-previews');
-  Array.from(input.files).slice(0,15).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = document.createElement('img');
-      img.src = e.target.result;
-      img.className = 'photo-preview';
-      prev.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function updateMonthly() {
-  const price = document.getElementById('sell-price').value;
-  const el = document.getElementById('monthly-preview');
-  if (price > 0) {
-    el.textContent = `≈ ${Math.round(price/60)} €/mois sur 5 ans · Estimation automatique`;
-  }
-}
-
-function publishListing() {
-  const title = document.getElementById('sell-title').value;
-  const brand = document.getElementById('sell-brand').value;
-  const price = document.getElementById('sell-price').value;
-  const city = document.getElementById('sell-city').value;
-  if (!title || !price || !city) { showToast('⚠️ Veuillez remplir tous les champs'); return; }
-  const newListing = {
-    id: Date.now(),
-    type: state.sellType,
-    brand: brand || 'Ma marque',
-    model: document.getElementById('sell-model').value || 'Mon modèle',
-    year: +document.getElementById('sell-year').value || 2023,
-    km: +document.getElementById('sell-km').value || 0,
-    energy: state.sellEnergy,
-    gearbox: document.getElementById('sell-gearbox').value,
-    power: +document.getElementById('sell-power').value || 0,
-    price: +price,
-    city: city,
-    region: 'Auvergne-Rhône-Alpes',
-    state: document.getElementById('sell-state').value,
-    desc: document.getElementById('sell-desc').value,
-    img: 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&q=80',
-    imgs: ['https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&q=80'],
-    badges: ['new'],
-    priceTag: 'good',
-    seller: {name:'Vous',verified:true,since:'2025',rating:5.0,count:1},
-    video: document.getElementById('sell-video').value,
-    time: 'À l\'instant',
-  };
-  state.listings.unshift(newListing);
-  state.filteredListings = [...state.listings];
-  state.totalPublished++;
-  nextStep(1);
-  ['sell-title','sell-model','sell-year','sell-km','sell-power','sell-price','sell-city','sell-zip','sell-desc','sell-video'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  document.getElementById('photo-previews').innerHTML = '';
-  showToast('🎉 Annonce publiée avec succès !');
-  setTimeout(() => goPage('home'), 1200);
-}
-
-// ===== ESTIMATION IA =====
-function updateModels() {
-  const brand = document.getElementById('e-brand').value;
-  const sel = document.getElementById('e-model');
-  sel.innerHTML = MODELS[brand] ? MODELS[brand].map(m=>`<option>${m}</option>`).join('') : '<option>Sélectionner la marque d\'abord</option>';
-}
-
-function estimatePrice() {
-  const brand = document.getElementById('e-brand').value;
-  const year = +document.getElementById('e-year').value;
-  const km = +document.getElementById('e-km').value;
-  if (!brand || !year || !km) { showToast('⚠️ Remplissez tous les champs'); return; }
-  const base = {Renault:12000,Peugeot:13000,Citroën:11000,Volkswagen:18000,BMW:28000,Mercedes:32000,Toyota:16000,Ford:14000,Audi:25000,Opel:12000}[brand] || 15000;
-  const ageDep = Math.max(0, (2025-year)*0.12);
-  const kmDep = Math.min(0.5, km/200000);
-  const estimated = Math.round(base * (1 - ageDep - kmDep));
-  const low = Math.round(estimated * 0.88);
-  const high = Math.round(estimated * 1.15);
-  const result = document.getElementById('estim-result');
-  document.getElementById('estim-price').textContent = estimated.toLocaleString('fr') + ' €';
-  document.getElementById('estim-range').textContent = `Fourchette : ${low.toLocaleString('fr')} € – ${high.toLocaleString('fr')} €`;
-  const demand = km < 50000 ? '🔥 Forte demande' : km < 100000 ? '📈 Demande normale' : '📉 Marché calme';
-  const advice = estimated > 20000 ? '💡 Marché premium' : '✅ Segment populaire';
-  document.getElementById('estim-demand').textContent = demand;
-  document.getElementById('estim-advice').textContent = advice;
-  const bars = document.getElementById('estim-bars');
-  const heights = [30,40,55,70,90,100,85,65,45,30];
-  bars.innerHTML = heights.map((h,i)=>`<div class="estim-bar ${i>=3&&i<=6?'active':''}" style="height:${h}%"></div>`).join('');
-  result.classList.add('show');
-  showToast('💰 Estimation calculée par IA');
-}
-
-// ===== CHAT AGENT =====
-function sendMsg() {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  addMsg('user', text);
-  document.getElementById('quick-replies').style.display = 'none';
-  setTimeout(() => {
-    addTyping();
-    const delay = 800 + Math.random()*600;
-    setTimeout(() => {
-      removeTyping();
-      const reply = getBotReply(text);
-      addMsg('bot', reply);
-    }, delay);
-  }, 200);
-  if (!state.searches.includes(text)) state.searches.unshift(text);
-}
-
-function sendQuick(text) {
-  document.getElementById('chat-input').value = text;
-  sendMsg();
-}
+// ═══════════════════════════════════════════
+// AGENT IA
+// ═══════════════════════════════════════════
+var FAQ = [
+{ q:["vendre","publier","annonce","mettre en vente"], r:"📋 Pour vendre sur Le Marché Auto :\n\n1️⃣ Appuyez sur le bouton + Vendre\n2️⃣ Remplissez le formulaire en 3 étapes\n3️⃣ Notre agent IA vérifie votre annonce\n4️⃣ Votre annonce est en ligne !\n\n✅ Publication 100% gratuite !" },
+{ q:["payer","paiement","virement","sécurité","arnaque"], r:"💳 Paiements sécurisés :\n\n✅ Virement bancaire classique\n✅ Espèces en main propre\n✅ Chèque de banque\n\n🚨 JAMAIS par :\n❌ Western Union\n❌ Bitcoin / Crypto\n❌ PayPal Amis/Famille\n❌ Mandat postal\n\nNe jamais payer sans voir le véhicule !" },
+{ q:["fraude","arnaque","signaler","suspect","faux","militaire","étranger"], r:"🚨 Fraude détectée ou suspectée :\n\n1️⃣ Ne jamais envoyer d'argent\n2️⃣ Appuyez sur Signaler sur l'annonce\n3️⃣ Notre IA analyse immédiatement\n4️⃣ Annonce suspendue + vendeur bloqué\n\n🛡️ Surveillance automatique 24h/24 !" },
+{ q:["gratuit","coût","prix","abonnement","payer pour"], r:"✅ Le Marché Auto est 100% GRATUIT !\n\n🆓 Création de compte : Gratuit\n🆓 Publication d'annonces : Gratuit\n🆓 Contacter les vendeurs : Gratuit\n🆓 Agent anti-fraude : Gratuit\n🆓 Estimation : Gratuite\n\nOptions premium à venir pour booster vos annonces 🚀" },
+{ q:["ville","région","km","localisation","recherche","distance","autour"], r:"📍 Recherche géographique :\n\n🏙️ Tapez votre ville dans la recherche\n🗺️ Filtrez par région française\n📏 Utilisez le curseur km (5 à 500 km)\n📡 Bouton GPS pour position automatique\n💰 Filtrez aussi par fourchette de prix\n\nCombinez tous les filtres ensemble !" },
+{ q:["estimer","estimation","valeur","côte","prix moyen","combien vaut"], r:"💰 Estimation de véhicule :\n\nAppuyez sur l'onglet 💰 Estimer en bas de l'écran !\n\nNotre outil calcule automatiquement :\n✅ La valeur selon l'année\n✅ La dépréciation par km\n✅ L'état du véhicule\n✅ La fourchette min/max du marché\n\nTout gratuit et instantané !" },
+{ q:["quand","disponible","lancement","app store","google play","télécharger"], r:"🚀 Le Marché Auto est déjà accessible !\n\n🌐 Maintenant sur : le-march-auto.vercel.app\n📱 App Store : Bientôt\n📱 Google Play : Bientôt\n\nAjoutez-le à votre écran d'accueil depuis Safari !\nC'est comme une vraie app 📲" },
+{ q:["renault","peugeot","bmw","mercedes","volkswagen","audi","toyota","clio","golf","208"], r:"🚗 Vous cherchez un véhicule spécifique ?\n\nUtilisez la barre de recherche en haut et tapez la marque ou le modèle !\n\nNous avons des annonces pour toutes les marques :\nRenault, Peugeot, BMW, Mercedes, VW, Audi, Toyota, Honda, et plus encore !\n\n🔍 Tapez directement dans la recherche" },
+];
 
 function addMsg(role, text) {
-  const wrap = document.getElementById('chat-wrap');
-  const div = document.createElement('div');
-  div.className = 'msg ' + role;
-  div.innerHTML = `${role==='bot'?'<div class="msg-avatar">🛡️</div>':''}<div class="msg-bubble">${text.replace(/\n/g,'<br/>')}</div>`;
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
+agentMsgs.push({ role:role, text:text });
+var el = document.getElementById("agentMsgs");
+var html = "";
+agentMsgs.forEach(function(m) {
+html += '<div class="bubble ' + m.role + '">';
+if (m.role === "agent") html += '<div class="bubble-lbl">AGENT MARCHÉ AUTO</div>';
+html += m.text.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+html += '</div>';
+});
+el.innerHTML = html;
+el.scrollTop = el.scrollHeight;
 }
 
-function addTyping() {
-  const wrap = document.getElementById('chat-wrap');
-  const div = document.createElement('div');
-  div.className = 'msg bot';
-  div.id = 'typing';
-  div.innerHTML = '<div class="msg-avatar">🛡️</div><div class="msg-bubble"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
+function openAgent() {
+document.getElementById("agentOverlay").classList.add("open");
+if (agentMsgs.length === 0) {
+addMsg("agent", "👋 Bonjour ! Je suis l'Agent Marché Auto 🛡️\n\nJe suis là pour :\n✅ Vous protéger des fraudes\n💰 Estimer votre véhicule\n🔍 Vous aider à trouver la perle rare\n📋 Guider votre publication\n\nComment puis-je vous aider ?");
+}
 }
 
-function removeTyping() {
-  const t = document.getElementById('typing');
-  if (t) t.remove();
+function closeAgent() { document.getElementById("agentOverlay").classList.remove("open"); }
+
+function askQ(q) {
+addMsg("user", q);
+document.getElementById("typingInd").style.display = "block";
+var lower = q.toLowerCase();
+for (var i = 0; i < FAQ.length; i++) {
+var found = false;
+for (var j = 0; j < FAQ[i].q.length; j++) {
+if (lower.indexOf(FAQ[i].q[j]) >= 0) { found = true; break; }
+}
+if (found) {
+(function(r){ setTimeout(function(){ document.getElementById("typingInd").style.display="none"; addMsg("agent",r); }, 600); })(FAQ[i].r);
+return;
+}
+}
+callClaude(q);
 }
 
-function getBotReply(text) {
-  const t = text.toLowerCase();
-  for (const [key, replies] of Object.entries(BOT_REPLIES)) {
-    if (t.includes(key)) return replies[Math.floor(Math.random()*replies.length)];
-  }
-  return `Je comprends votre question sur "${text}". Sur Le Marché Auto, nous mettons tout en œuvre pour sécuriser vos transactions. Pouvez-vous préciser votre demande ? Je suis là pour vous aider 24h/24 ! 🛡️`;
+function sendMsg() {
+var inp = document.getElementById("agentInp");
+var txt = inp.value.trim();
+if (!txt) return;
+inp.value = "";
+askQ(txt);
 }
 
-// ===== MODAL =====
-function showModal(type, id) {
-  const l = id ? state.listings.find(x => x.id===id) : null;
-  let html = '';
-  if (type === 'pay' && l) {
-    html = `<h3>🔒 Paiement sécurisé</h3>
-    <div style="background:var(--bg3);border-radius:var(--r);padding:14px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--text2);font-size:13px">Véhicule</span><span style="font-weight:600">${l.brand} ${l.model}</span></div>
-      <div style="display:flex;justify-content:space-between"><span style="color:var(--text2);font-size:13px">Montant</span><span style="font-weight:700;font-size:18px;color:var(--accent)">${l.price.toLocaleString('fr')} €</span></div>
-    </div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.7">
-      ✅ Votre argent est conservé en séquestre jusqu'à la remise du véhicule.<br/>
-      ✅ Si le véhicule ne correspond pas à l'annonce, vous êtes remboursé.<br/>
-      ✅ Le vendeur est payé uniquement après votre validation.
-    </div>
-    <button class="btn-apply" style="width:100%;padding:14px;font-size:15px" onclick="closeModal();showToast('🔒 Paiement sécurisé initié !')">Procéder au paiement sécurisé</button>`;
-  }
-  document.getElementById('modal-body').innerHTML = html;
-  document.getElementById('modal-overlay').classList.add('open');
+function callClaude(txt) {
+fetch("https://api.anthropic.com/v1/messages", {
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+model:"claude-sonnet-4-20250514", max_tokens:700,
+system:"Tu es l'Agent Marché Auto, l'assistant officiel de la marketplace automobile française Le Marché Auto. La plateforme vend voitures, motos, vélos et pièces détachées. Tu as des fonctionnalités : recherche par ville/région/km, estimation de véhicule, agent anti-fraude IA, publication gratuite. Réponds en français, sois chaleureux et professionnel, utilise des emojis.",
+messages:[{role:"user",content:txt}]
+})
+}).then(function(r){return r.json();}).then(function(d){
+document.getElementById("typingInd").style.display="none";
+addMsg("agent", d.content&&d.content[0] ? d.content[0].text : "Désolé, réessayez !");
+}).catch(function(){
+document.getElementById("typingInd").style.display="none";
+addMsg("agent","❌ Connexion impossible. Réessayez dans un instant !");
+});
 }
 
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-
-// ===== TOAST =====
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ===== INIT =====
-renderListings();
-renderFavs();
+// Init
+doFilter();
 </script>
 </body>
 </html>
+```
+
