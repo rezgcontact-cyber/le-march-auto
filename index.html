@@ -1,95 +1,158 @@
-<body>
+<script>
+const ANNONCES = [
+{ id:1, titre:"Peugeot 308 SW 2019", prix:14500, cat:"voiture", ville:"Lyon", region:"Auvergne-Rhône-Alpes", km:78000, icon:"🚗", verified:true, desc:"Très bon état, CT ok, révision faite." },
+{ id:2, titre:"Yamaha MT-07 2021", prix:6800, cat:"moto", ville:"Paris", region:"Île-de-France", km:15000, icon:"🏍️", verified:true, desc:"Parfait état, entretien régulier." },
+{ id:3, titre:"Jantes BMW Série 3 17p", prix:320, cat:"pieces", ville:"Marseille", region:"Provence-Alpes-Côte d'Azur", km:null, icon:"🔧", verified:true, desc:"4 jantes alliage originales BMW." },
+{ id:4, titre:"VTT Trek Marlin 7 2022", prix:750, cat:"velo", ville:"Bordeaux", region:"Nouvelle-Aquitaine", km:null, icon:"🚲", verified:false, desc:"Quasi neuf, utilisé une saison." },
+{ id:5, titre:"Renault Clio V 2022", prix:17900, cat:"voiture", ville:"Toulouse", region:"Occitanie", km:22000, icon:"🚗", verified:true, desc:"Full options, garantie constructeur." },
+{ id:6, titre:"Honda CB650R 2023", prix:8200, cat:"moto", ville:"Nice", region:"Provence-Alpes-Côte d'Azur", km:5000, icon:"🏍️", verified:true, desc:"Zéro chute, entretien Honda." },
+{ id:7, titre:"Turbo Golf 6 GTI", prix:180, cat:"pieces", ville:"Lille", region:"Hauts-de-France", km:null, icon:"🔧", verified:false, desc:"Turbo original testé avant dépose." },
+{ id:8, titre:"Vélo route Specialized", prix:1200, cat:"velo", ville:"Strasbourg", region:"Grand Est", km:null, icon:"🚲", verified:true, desc:"Cadre alu, Shimano 105, taille 54." },
+{ id:9, titre:"Volkswagen Golf 7 2018", prix:12500, cat:"voiture", ville:"Paris", region:"Île-de-France", km:65000, icon:"🚗", verified:true, desc:"DSG7, full LED, excellent état." },
+{ id:10, titre:"Kawasaki Z900 2022", prix:9500, cat:"moto", ville:"Lyon", region:"Auvergne-Rhône-Alpes", km:8000, icon:"🏍️", verified:true, desc:"Pneus neufs, garantie 1 an." },
+{ id:11, titre:"Amortisseurs Renault Clio", prix:90, cat:"pieces", ville:"Nantes", region:"Pays de la Loire", km:null, icon:"🔧", verified:false, desc:"Paire avant, très bon état." },
+{ id:12, titre:"BMX Freestyle 2023", prix:350, cat:"velo", ville:"Rennes", region:"Bretagne", km:null, icon:"🚲", verified:true, desc:"Neuf, jamais utilisé en compet." },
+];
 
-<div class="header">
-<img class="logo-h" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
-<button class="agent-btn" onclick="openAgent()">🛡️ Agent Anti-Fraude</button>
-</div>
+let currentCat = "tous";
+let agentMsgs = [];
 
-<div class="hero">
-<img class="hero-logo" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
-<p>Voitures · Motos · Vélos · Pièces détachées</p>
-<div class="soon-badge">🔔 Bientôt disponible !</div>
-</div>
+function filterAnnonces() {
+const search = document.getElementById("searchInput").value.toLowerCase();
+const region = document.getElementById("regionSelect").value.toLowerCase();
+const ville = document.getElementById("villeInput").value.toLowerCase();
+let filtered = ANNONCES.filter(a => {
+const catOk = currentCat === "tous" || a.cat === currentCat;
+const searchOk = !search || a.titre.toLowerCase().includes(search) || a.ville.toLowerCase().includes(search);
+const regionOk = !region || a.region.toLowerCase().includes(region);
+const villeOk = !ville || a.ville.toLowerCase().includes(ville);
+return catOk && searchOk && regionOk && villeOk;
+});
+renderAnnonces(filtered);
+}
 
-<div class="search-box">
-<div class="search-row">
-<input class="search-input" id="searchInput" placeholder="🔍 Rechercher (ex: Golf, BMW...)" oninput="filterAnnonces()"/>
-<button class="search-btn" onclick="filterAnnonces()">Chercher</button>
+function renderAnnonces(list) {
+const grid = document.getElementById("grid");
+const count = document.getElementById("resultsCount");
+count.textContent = list.length + " annonce" + (list.length > 1 ? "s" : "");
+if (list.length === 0) {
+grid.innerHTML = '<div class="no-results"><div style="font-size:40px;margin-bottom:12px;">🔍</div><div>Aucune annonce trouvée</div><div style="font-size:12px;margin-top:6px;">Essayez une autre ville ou région</div></div>';
+return;
+}
+grid.innerHTML = list.map(a => `
+<div class="card" onclick="alert('${a.titre}\n💰 ${a.prix.toLocaleString("fr-FR")} €\n📍 ${a.ville} — ${a.region}\n${a.km ? "⏱ " + a.km.toLocaleString() + " km" : ""}\n\n${a.desc}')">
+<div class="card-wrap">
+<div class="card-img">${a.icon}</div>
+<div class="card-badge">${a.verified ? "✓ Vérifié" : "⚡ Nouveau"}</div>
 </div>
-<div class="filters-row">
-<select class="filter-select" id="regionSelect" onchange="filterAnnonces()">
-<option value="">🗺️ Toutes les régions</option>
-<option>Île-de-France</option>
-<option>Auvergne-Rhône-Alpes</option>
-<option>Provence-Alpes-Côte d'Azur</option>
-<option>Nouvelle-Aquitaine</option>
-<option>Occitanie</option>
-<option>Hauts-de-France</option>
-<option>Grand Est</option>
-<option>Normandie</option>
-<option>Bretagne</option>
-<option>Pays de la Loire</option>
-<option>Bourgogne-Franche-Comté</option>
-<option>Centre-Val de Loire</option>
-</select>
-<input class="filter-select" id="villeInput" placeholder="📍 Ville (ex: Lyon)" oninput="filterAnnonces()"/>
+<div class="card-body">
+<div class="card-title">${a.titre}</div>
+<div class="card-price">${a.prix.toLocaleString("fr-FR")} €</div>
+<div class="card-meta">
+<span>📍 ${a.ville}</span>
+${a.km ? "<span>⏱ " + a.km.toLocaleString() + " km</span>" : ""}
+<span style="color:#444;font-size:9px;">${a.region}</span>
 </div>
-<div class="km-row">
-<span class="km-label">📏 Rayon :</span>
-<input type="range" class="km-slider" id="kmSlider" min="5" max="500" value="50" step="5" oninput="updateKm()"/>
-<span class="km-value" id="kmValue">50 km</span>
 </div>
-<button class="location-btn" onclick="getLocation()">
-📍 Utiliser ma position automatiquement
-</button>
 </div>
+`).join("");
+}
 
-<div class="cats">
-<div class="cat active" onclick="setCat('tous',this)">🔥 Tous</div>
-<div class="cat" onclick="setCat('voiture',this)">🚗 Voitures</div>
-<div class="cat" onclick="setCat('moto',this)">🏍️ Motos</div>
-<div class="cat" onclick="setCat('velo',this)">🚲 Vélos</div>
-<div class="cat" onclick="setCat('pieces',this)">🔧 Pièces</div>
-</div>
+function setCat(cat, el) {
+currentCat = cat;
+document.querySelectorAll(".cat").forEach(c => c.classList.remove("active"));
+el.classList.add("active");
+filterAnnonces();
+}
 
-<div class="results-info">
-<span class="results-count" id="resultsCount">0 annonce</span>
-</div>
+function updateKm() {
+const val = document.getElementById("kmSlider").value;
+document.getElementById("kmValue").textContent = val + " km";
+filterAnnonces();
+}
 
-<div class="grid" id="grid"></div>
+function getLocation() {
+if (!navigator.geolocation) { alert("Géolocalisation non disponible."); return; }
+navigator.geolocation.getCurrentPosition(
+pos => alert("📍 Position détectée !\nRecherche des annonces autour de vous..."),
+() => alert("❌ Position non disponible.\nEntrez votre ville manuellement.")
+);
+}
 
-<div class="tab-bar">
-<button class="tab active"><span class="tab-icon">🏠</span>Accueil</button>
-<button class="tab"><span class="tab-icon">🔍</span>Recherche</button>
-<button class="tab" onclick="alert('Publication bientôt disponible !')"><div class="tab-add">+</div><span style="color:#E74C3C;font-weight:700;font-size:10px;">Vendre</span></button>
-<button class="tab" onclick="openAgent()"><span class="tab-icon">🛡️</span>Agent</button>
-<button class="tab"><span class="tab-icon">👤</span>Profil</button>
-</div>
+const FAQ = [
+{ q:["vendre","publier","annonce"], r:"📋 Pour vendre :\n\n1️⃣ Cliquez sur + Publier\n2️⃣ Remplissez le formulaire\n3️⃣ L'agent IA vérifie l'annonce\n4️⃣ En ligne en quelques minutes !\n\n✅ 100% gratuit !" },
+{ q:["payer","paiement","sécurité","virement"], r:"💳 Paiements sécurisés :\n\n✅ Virement bancaire\n✅ Espèces en main propre\n\n🚨 Jamais par :\n❌ Western Union\n❌ Bitcoin\n❌ PayPal Amis" },
+{ q:["fraude","arnaque","signaler","suspect"], r:"🚨 Signaler une fraude :\n\n1️⃣ Cliquez Signaler sur l'annonce\n2️⃣ L'IA analyse immédiatement\n3️⃣ Annonce suspendue si fraude\n\n🛡️ Surveillance 24h/24 !" },
+{ q:["gratuit","cout","prix","combien"], r:"✅ Le Marché Auto est GRATUIT !\n\n🆓 Publication : Gratuit\n🆓 Contact vendeur : Gratuit\n🆓 Agent anti-fraude : Gratuit" },
+{ q:["ville","region","km","localisation","recherche","distance"], r:"📍 Recherche géographique :\n\n🏙️ Filtrez par ville\n🗺️ Filtrez par région\n📏 Choisissez un rayon en km\n📡 Utilisez votre position GPS\n\nCombinez les filtres !" },
+{ q:["quand","disponible","lancement"], r:"🚀 Lancement imminent !\n\n📱 iPhone et Android bientôt\n🌐 Déjà accessible sur navigateur !\n\nSuivez-nous ! 🔔" },
+];
 
-<div class="overlay" id="agentOverlay" onclick="if(event.target===this)closeAgent()">
-<div class="agent-panel">
-<div class="agent-header">
-<div style="display:flex;align-items:center;gap:10px;">
-<img src="https://i.imgur.com/iLRREdx.png" style="height:32px;width:32px;border-radius:50%;background:#fff;object-fit:contain;"/>
-<div>
-<div style="color:#fff;font-weight:800;font-size:14px;">🛡️ Agent Marché Auto</div>
-<div style="color:rgba(255,255,255,0.6);font-size:10px;">Anti-fraude · 24h/24</div>
-</div>
-</div>
-<button class="close-x" onclick="closeAgent()">✕</button>
-</div>
-<div class="msgs" id="agentMsgs"></div>
-<div class="typing-ind" id="typingInd" style="display:none">⏳ Agent en train d'écrire...</div>
-<div class="suggs">
-<button class="sugg" onclick="askQ('Comment vendre ?')">Comment vendre ?</button>
-<button class="sugg" onclick="askQ('Paiement sécurisé ?')">Paiement sécurisé ?</button>
-<button class="sugg" onclick="askQ('Signaler une fraude ?')">Signaler fraude ?</button>
-<button class="sugg" onclick="askQ('Recherche par ville ?')">Recherche par ville ?</button>
-<button class="sugg" onclick="askQ('C est gratuit ?')">C'est gratuit ?</button>
-</div>
-<div class="inp-row">
-<input class="msg-inp" id="agentInp" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
-<button class="send" onclick="sendMsg()">→</button>
-</div>
-</div>
-</div>
+function addMsg(role, text) {
+agentMsgs.push({ role, text });
+const el = document.getElementById("agentMsgs");
+el.innerHTML = agentMsgs.map(m => `<div class="bubble ${m.role}">${m.role==="agent"?'<div class="bubble-lbl">AGENT MARCHÉ AUTO</div>':""}${m.text}</div>`).join("");
+el.scrollTop = el.scrollHeight;
+}
+
+function openAgent() {
+document.getElementById("agentOverlay").classList.add("open");
+if (agentMsgs.length === 0) addMsg("agent", "👋 Bonjour ! Je suis l'Agent Marché Auto 🛡️\n\nComment puis-je vous aider ?");
+}
+
+function closeAgent() { document.getElementById("agentOverlay").classList.remove("open"); }
+
+function askQ(q) {
+addMsg("user", q);
+document.getElementById("typingInd").style.display = "block";
+const lower = q.toLowerCase();
+for (const f of FAQ) {
+if (f.q.some(k => lower.includes(k))) {
+setTimeout(() => { document.getElementById("typingInd").style.display="none"; addMsg("agent", f.r); }, 700);
+return;
+}
+}
+callClaude(q);
+}
+
+async function sendMsg() {
+const inp = document.getElementById("agentInp");
+const txt = inp.value.trim();
+if (!txt) return;
+addMsg("user", txt);
+inp.value = "";
+document.getElementById("typingInd").style.display = "block";
+const lower = txt.toLowerCase();
+for (const f of FAQ) {
+if (f.q.some(k => lower.includes(k))) {
+setTimeout(() => { document.getElementById("typingInd").style.display="none"; addMsg("agent", f.r); }, 700);
+return;
+}
+}
+await callClaude(txt);
+}
+
+async function callClaude(txt) {
+try {
+const res = await fetch("https://api.anthropic.com/v1/messages", {
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+model:"claude-sonnet-4-20250514", max_tokens:600,
+system:"Tu es l'Agent Marché Auto, assistant anti-fraude de la marketplace automobile Le Marché Auto. Réponds en français, sois chaleureux, utilise des emojis.",
+messages:[{role:"user",content:txt}]
+})
+});
+const data = await res.json();
+document.getElementById("typingInd").style.display = "none";
+addMsg("agent", data.content?.[0]?.text || "Désolé, réessayez !");
+} catch {
+document.getElementById("typingInd").style.display = "none";
+addMsg("agent", "❌ Connexion impossible. Réessayez !");
+}
+}
+
+filterAnnonces();
+</script>
+</body>
+</html>
