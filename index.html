@@ -1,5 +1,771 @@
-{
-"returncode" : 0,
-"stdout" : "Fonctions présentes:\n- showEstimer: 2\n- showFinancement: 2\n- showComparateur: 4\n- showAlerts: 4\n- showFavoris: 3\n- showProfil: 2\n- loadAnnonces Supabase: 2\n- uploadToCloudinary: 2\n- handlePhotos: 1\n",
-"stderr" : "cp: '\/mnt\/user-data\/outputs\/le-marche-final-v4.html' and '\/mnt\/user-data\/outputs\/le-marche-final-v4.html' are the same file\n"
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Le Marché Auto — N°1 en Europe</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;max-width:480px;margin:0 auto;}
+.hdr{background:#0A0A0A;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1A1A1A;position:sticky;top:0;z-index:50;}
+.logo-wrap{display:flex;align-items:center;gap:10px;}
+.logo-img{height:40px;width:40px;border-radius:50%;object-fit:contain;background:#fff;border:2px solid #C0392B;box-shadow:0 0 12px rgba(192,57,43,0.5);}
+.lt1{font-size:9px;color:#C0392B;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.lt2{font-size:17px;font-weight:900;color:#fff;line-height:1;}
+.lt3{font-size:17px;font-weight:900;color:#C0392B;line-height:1;}
+.agent-btn{background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;border-radius:18px;padding:7px 12px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
+.hero{background:linear-gradient(160deg,#1A0000,#0D0000 60%,#080808);padding:18px 14px 14px;text-align:center;}
+.hero-logo{height:90px;width:90px;border-radius:50%;object-fit:contain;background:#fff;border:3px solid #C0392B;box-shadow:0 0 25px rgba(192,57,43,0.5);margin-bottom:12px;}
+.hero h1{font-size:19px;font-weight:900;color:#fff;margin-bottom:4px;}
+.hero h1 span{color:#C0392B;}
+.hero p{font-size:11px;color:#777;margin-bottom:14px;}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.hstat{background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.18);border-radius:10px;padding:8px;text-align:center;}
+.hstat-n{font-size:15px;font-weight:900;color:#E74C3C;}
+.hstat-l{font-size:9px;color:#666;font-weight:600;text-transform:uppercase;}
+.search-sec{padding:12px 14px;}
+.search-main{display:flex;gap:8px;margin-bottom:10px;}
+.s-inp{flex:1;background:#141414;border:1px solid #222;border-radius:12px;padding:11px 14px;color:#fff;font-size:13px;outline:none;font-family:inherit;}
+.s-inp::placeholder{color:#555;}
+.s-btn{background:#C0392B;border:none;border-radius:12px;padding:11px 16px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;}
+.filters-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.f-sel{background:#141414;border:1px solid #222;border-radius:10px;padding:9px 12px;color:#fff;font-size:12px;outline:none;font-family:inherit;width:100%;cursor:pointer;}
+.price-row{display:flex;gap:8px;margin-bottom:8px;}
+.p-inp{flex:1;background:#141414;border:1px solid #222;border-radius:10px;padding:9px 12px;color:#fff;font-size:12px;outline:none;font-family:inherit;}
+.p-inp::placeholder{color:#555;}
+.km-row{display:flex;align-items:center;gap:10px;background:#141414;border:1px solid #222;border-radius:10px;padding:9px 14px;margin-bottom:8px;}
+.km-lbl{font-size:11px;color:#888;white-space:nowrap;}
+.km-slider{flex:1;accent-color:#C0392B;}
+.km-val{font-size:12px;font-weight:700;color:#C0392B;white-space:nowrap;}
+.loc-btn{width:100%;background:#141414;border:1px solid rgba(192,57,43,0.3);border-radius:10px;padding:9px;color:#C0392B;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;}
+.cats{display:flex;gap:7px;overflow-x:auto;padding:0 14px 12px;scrollbar-width:none;}
+.cat{background:#141414;border:1px solid #1E1E1E;border-radius:20px;padding:6px 13px;color:#666;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.cat.active{background:#C0392B;border-color:#C0392B;color:#fff;}
+.results-bar{padding:0 14px 10px;display:flex;align-items:center;justify-content:space-between;}
+.r-count{font-size:12px;color:#555;}
+.r-count span{color:#fff;font-weight:700;}
+.sort-sel{background:#141414;border:1px solid #1E1E1E;border-radius:8px;padding:5px 10px;color:#888;font-size:11px;outline:none;cursor:pointer;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 90px;}
+.card{background:#111;border-radius:14px;overflow:hidden;border:1px solid #1A1A1A;cursor:pointer;}
+.card:active{transform:scale(0.97);}
+.card-img-w{position:relative;}
+.card-img{width:100%;height:110px;object-fit:cover;background:#1A1A1A;display:flex;align-items:center;justify-content:center;font-size:36px;}
+.c-badge{position:absolute;top:7px;right:7px;border-radius:7px;padding:2px 7px;font-size:9px;font-weight:700;}
+.b-ok{background:#27AE60;color:#fff;}
+.b-new{background:#E67E22;color:#fff;}
+.b-elec{background:#3498DB;color:#fff;}
+.c-fav{position:absolute;top:7px;left:7px;background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;}
+.card-body{padding:9px 10px 11px;}
+.c-title{color:#fff;font-size:12px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.c-price{color:#C0392B;font-size:17px;font-weight:900;margin-bottom:4px;}
+.c-meta{display:flex;flex-direction:column;gap:2px;}
+.c-meta span{color:#555;font-size:10px;}
+.no-res{grid-column:1/-1;text-align:center;padding:40px 20px;color:#555;}
+.loading{grid-column:1/-1;text-align:center;padding:40px 20px;color:#C0392B;font-size:14px;}
+.tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#0A0A0A;border-top:1px solid #1A1A1A;display:flex;z-index:40;}
+.tab{flex:1;padding:8px 0 6px;background:none;border:none;color:#444;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;font-weight:600;}
+.tab.active{color:#C0392B;}
+.ti{font-size:19px;}
+.tab-add{background:#C0392B;border-radius:14px;width:42px;height:28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;margin-bottom:2px;}
+.screen{display:none;position:fixed;inset:0;background:#080808;z-index:60;overflow-y:auto;max-width:480px;left:50%;transform:translateX(-50%);}
+.screen.open{display:block;}
+.d-img{width:100%;height:230px;object-fit:cover;background:#1A1A1A;display:flex;align-items:center;justify-content:center;font-size:80px;}
+.d-body{padding:16px;}
+.d-price{font-size:30px;font-weight:900;color:#C0392B;}
+.d-title{font-size:19px;font-weight:800;color:#fff;margin:4px 0 12px;}
+.d-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.d-tag{background:#141414;border:1px solid #1E1E1E;border-radius:8px;padding:5px 11px;font-size:11px;color:#aaa;}
+.d-sec{margin-bottom:14px;}
+.d-sec-t{font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.d-desc{font-size:13px;color:#bbb;line-height:1.6;background:#111;border-radius:12px;padding:14px;border:1px solid #1A1A1A;}
+.d-specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.d-spec{background:#111;border:1px solid #1A1A1A;border-radius:10px;padding:10px 12px;}
+.d-spec-l{font-size:10px;color:#555;font-weight:700;text-transform:uppercase;}
+.d-spec-v{font-size:14px;color:#fff;font-weight:700;margin-top:3px;}
+.seller-box{background:#111;border-radius:12px;padding:14px;border:1px solid #1A1A1A;display:flex;align-items:center;gap:12px;}
+.seller-av{width:44px;height:44px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.contact-btn{width:100%;background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;border-radius:14px;padding:16px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;}
+.sec-btn{width:100%;background:#141414;border:1px solid #222;border-radius:14px;padding:12px;color:#888;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;}
+.red-btn{color:#C0392B;border-color:rgba(192,57,43,0.3);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;flex-direction:column;justify-content:flex-end;}
+.overlay.open{display:flex;}
+.agent-panel{background:#0D0D0D;border-radius:24px 24px 0 0;height:86vh;display:flex;flex-direction:column;border:1px solid #1A1A1A;}
+.a-hdr{background:linear-gradient(135deg,#C0392B,#8B0000);padding:14px 18px;border-radius:24px 24px 0 0;display:flex;align-items:center;justify-content:space-between;}
+.a-hdr-logo{height:34px;width:34px;border-radius:50%;background:#fff;object-fit:contain;}
+.close-x{background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:28px;height:28px;color:#fff;cursor:pointer;font-size:14px;}
+.a-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none;}
+.bubble{max-width:86%;padding:10px 13px;border-radius:16px;font-size:12px;line-height:1.55;white-space:pre-wrap;}
+.bubble.agent{align-self:flex-start;background:#141414;border:1px solid #222;color:#fff;border-radius:16px 16px 16px 4px;}
+.bubble.user{align-self:flex-end;background:#C0392B;color:#fff;border-radius:16px 16px 4px 16px;}
+.b-lbl{font-size:9px;color:#C0392B;font-weight:700;margin-bottom:3px;}
+.typing{color:#C0392B;font-size:11px;padding:0 14px 6px;}
+.a-suggs{display:flex;gap:7px;overflow-x:auto;padding:0 14px 8px;scrollbar-width:none;}
+.sugg{background:#141414;border:1px solid #222;border-radius:11px;padding:5px 11px;color:#888;font-size:11px;cursor:pointer;white-space:nowrap;}
+.a-inp-row{padding:10px 14px;border-top:1px solid #1A1A1A;display:flex;gap:8px;}
+.a-inp{flex:1;background:#141414;border:1px solid #222;border-radius:10px;padding:9px 12px;color:#fff;font-size:12px;outline:none;font-family:inherit;}
+.a-send{background:#C0392B;border:none;border-radius:10px;padding:9px 14px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;}
+.pub-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;flex-direction:column;justify-content:flex-end;}
+.pub-overlay.open{display:flex;}
+.pub-panel{background:#0D0D0D;border-radius:24px 24px 0 0;height:92vh;display:flex;flex-direction:column;border:1px solid #1A1A1A;}
+.pub-hdr{background:linear-gradient(135deg,#1A0000,#2A0000);padding:14px 18px;border-radius:24px 24px 0 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.pub-body{padding:16px;overflow-y:auto;flex:1;}
+.f-label{font-size:11px;color:#666;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:5px;display:block;}
+.f-input{width:100%;background:#141414;border:1px solid #222;border-radius:10px;padding:11px 13px;color:#fff;font-size:13px;outline:none;font-family:inherit;margin-bottom:14px;}
+.f-select{width:100%;background:#141414;border:1px solid #222;border-radius:10px;padding:11px 13px;color:#fff;font-size:13px;outline:none;font-family:inherit;margin-bottom:14px;cursor:pointer;}
+.prog-bar{display:flex;gap:6px;margin-bottom:18px;}
+.prog-seg{flex:1;height:3px;border-radius:2px;background:#1A1A1A;}
+.prog-seg.done{background:#C0392B;}
+.pri-btn{width:100%;background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;border-radius:12px;padding:14px;color:#fff;font-size:14px;font-weight:800;cursor:pointer;}
+.sec-btn2{width:100%;background:#141414;border:1px solid #222;border-radius:12px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;}
+.an-box{background:#0D0D0D;border-radius:14px;padding:20px;text-align:center;}
+.an-icon{font-size:40px;margin-bottom:10px;}
+.an-label{font-size:14px;font-weight:700;margin-bottom:6px;}
+.an-msg{font-size:12px;color:#888;line-height:1.5;}
+/* PHOTO UPLOAD */
+.photo-upload-zone{width:100%;background:#141414;border:2px dashed #333;border-radius:12px;padding:20px;text-align:center;cursor:pointer;margin-bottom:14px;transition:border-color 0.2s;}
+.photo-upload-zone:hover{border-color:#C0392B;}
+.photo-upload-zone input{display:none;}
+.photo-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.photo-preview{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;}
+.photo-preview img{width:100%;height:100%;object-fit:cover;}
+.photo-preview .del-photo{position:absolute;top:4px;right:4px;background:rgba(192,57,43,0.9);border:none;border-radius:50%;width:20px;height:20px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.upload-progress{background:#141414;border-radius:8px;padding:10px;margin-bottom:10px;display:none;}
+.upload-bar{height:4px;background:#1A1A1A;border-radius:2px;margin-top:6px;}
+.upload-bar-fill{height:100%;background:#C0392B;border-radius:2px;width:0%;transition:width 0.3s;}
+</style>
+</head>
+<body>
+
+<script>
+var SUPABASE_URL="https://faebnvfgqwhyizvltepw.supabase.co";
+var SUPABASE_KEY="sb_publishable_phl5JcNdn-kxUHx2DamAoA_liVp_k6Q";
+var CLOUDINARY_CLOUD="dbngaps7z";
+var CLOUDINARY_PRESET="le-marche-auto";
+
+function sbGet(table,filters){
+var url=SUPABASE_URL+"/rest/v1/"+table+"?select=*&order=date_creation.desc";
+if(filters) url+="&"+filters;
+return fetch(url,{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY}}).then(function(r){return r.json();});
 }
+function sbInsert(table,data){
+return fetch(SUPABASE_URL+"/rest/v1/"+table,{
+method:"POST",
+headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":"return=representation"},
+body:JSON.stringify(data)
+}).then(function(r){return r.json();});
+}
+
+async function uploadToCloudinary(file) {
+var formData = new FormData();
+formData.append("file", file);
+formData.append("upload_preset", CLOUDINARY_PRESET);
+formData.append("cloud_name", CLOUDINARY_CLOUD);
+var res = await fetch("https://api.cloudinary.com/v1_1/"+CLOUDINARY_CLOUD+"/image/upload", {
+method: "POST",
+body: formData
+});
+var data = await res.json();
+return data.secure_url;
+}
+</script>
+
+<!-- HEADER -->
+<div class="hdr">
+<div class="logo-wrap">
+<img class="logo-img" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<div>
+<div class="lt1">Le</div>
+<div class="lt2">MARCHÉ</div>
+<div class="lt3">AUTO</div>
+</div>
+</div>
+<button class="agent-btn" onclick="openAgent()">🛡️ Agent</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+<img class="hero-logo" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<h1>La marketplace <span>N°1</span> en Europe 🇪🇺</h1>
+<p>Voitures · Motos · Vélos · Pièces · Électriques</p>
+<div class="hero-stats">
+<div class="hstat"><div class="hstat-n" id="statAnnonces">...</div><div class="hstat-l">Annonces</div></div>
+<div class="hstat"><div class="hstat-n">8 240</div><div class="hstat-l">Membres</div></div>
+<div class="hstat"><div class="hstat-n">98%</div><div class="hstat-l">Satisfaits</div></div>
+</div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-sec">
+<div class="search-main">
+<input class="s-inp" id="searchInput" placeholder="🔍 Marque, modèle, ville..." oninput="doFilter()"/>
+<button class="s-btn" onclick="doFilter()">Chercher</button>
+</div>
+<div class="filters-grid">
+<select class="f-sel" id="catSel" onchange="doFilter()">
+<option value="">Toutes catégories</option>
+<option value="voiture">🚗 Voitures</option>
+<option value="moto">🏍️ Motos</option>
+<option value="velo">🚲 Vélos</option>
+<option value="pieces">🔧 Pièces</option>
+</select>
+<select class="f-sel" id="regionSel" onchange="doFilter()">
+<option value="">🗺️ Toutes régions</option>
+<option>Ile-de-France</option>
+<option>Auvergne-Rhone-Alpes</option>
+<option>Provence-Alpes-Cote Azur</option>
+<option>Nouvelle-Aquitaine</option>
+<option>Occitanie</option>
+<option>Hauts-de-France</option>
+<option>Grand Est</option>
+<option>Bretagne</option>
+<option>Pays de la Loire</option>
+<option>Normandie</option>
+</select>
+</div>
+<div class="filters-grid">
+<select class="f-sel" id="carbuSel" onchange="doFilter()">
+<option value="">⛽ Carburant</option>
+<option>Essence</option><option>Diesel</option>
+<option>Hybride</option><option>Electrique</option><option>GPL</option>
+</select>
+<input class="f-sel" id="villeInput" placeholder="📍 Ville..." oninput="doFilter()"/>
+</div>
+<div class="price-row">
+<input class="p-inp" id="prixMin" placeholder="Prix min €" type="number" oninput="doFilter()"/>
+<input class="p-inp" id="prixMax" placeholder="Prix max €" type="number" oninput="doFilter()"/>
+</div>
+<div class="km-row">
+<span class="km-lbl">📏 Rayon :</span>
+<input type="range" class="km-slider" min="5" max="500" value="500" step="5" oninput="this.nextElementSibling.textContent=this.value+' km'"/>
+<span class="km-val">500 km</span>
+</div>
+<button class="loc-btn" onclick="getLocation()">📍 Utiliser ma position GPS</button>
+</div>
+
+<!-- CATS -->
+<div class="cats">
+<div class="cat active" onclick="setCat('',this)">🔥 Tous</div>
+<div class="cat" onclick="setCat('voiture',this)">🚗 Voitures</div>
+<div class="cat" onclick="setCat('moto',this)">🏍️ Motos</div>
+<div class="cat" onclick="setCat('velo',this)">🚲 Vélos</div>
+<div class="cat" onclick="setCat('pieces',this)">🔧 Pièces</div>
+<div class="cat" onclick="filterElec()">⚡ Électriques</div>
+</div>
+
+<div class="results-bar">
+<div class="r-count"><span id="resCount">0</span> annonce(s)</div>
+<select class="sort-sel" id="sortSel" onchange="doFilter()">
+<option value="date">Plus récentes</option>
+<option value="prix_asc">Prix ↑</option>
+<option value="prix_desc">Prix ↓</option>
+<option value="km_asc">Km ↑</option>
+</select>
+</div>
+
+<div class="grid" id="grid">
+<div class="loading">⏳ Chargement des annonces...</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+<button class="tab active" onclick="showHome()"><span class="ti">🏠</span>Accueil</button>
+<button class="tab" onclick="document.getElementById('searchInput').focus()"><span class="ti">🔍</span>Chercher</button>
+<button class="tab" onclick="openPublish()"><div class="tab-add">+</div><span style="color:#C0392B;font-weight:700;font-size:9px;">Vendre</span></button>
+<button class="tab" onclick="openAgent()"><span class="ti">🛡️</span>Agent</button>
+<button class="tab"><span class="ti">👤</span>Profil</button>
+</div>
+
+<!-- DETAIL -->
+<div class="screen" id="detailScreen">
+<div id="detailContent"></div>
+</div>
+
+<!-- AGENT -->
+<div class="overlay" id="agentOverlay" onclick="if(event.target===this)closeAgent()">
+<div class="agent-panel">
+<div class="a-hdr">
+<div style="display:flex;align-items:center;gap:10px;">
+<img class="a-hdr-logo" src="https://i.imgur.com/iLRREdx.png" alt="logo"/>
+<div>
+<div style="color:#fff;font-weight:800;font-size:14px;">🛡️ Agent Marché Auto</div>
+<div style="color:rgba(255,255,255,0.6);font-size:10px;">Anti-fraude · Conseils · 24h/24</div>
+</div>
+</div>
+<button class="close-x" onclick="closeAgent()">✕</button>
+</div>
+<div class="a-msgs" id="agentMsgs"></div>
+<div class="typing" id="typingInd" style="display:none">⏳ Agent en train d'écrire...</div>
+<div class="a-suggs">
+<button class="sugg" onclick="askQ('Comment vendre ?')">Vendre ?</button>
+<button class="sugg" onclick="askQ('Paiement securise ?')">Paiement ?</button>
+<button class="sugg" onclick="askQ('Signaler une fraude ?')">Fraude ?</button>
+<button class="sugg" onclick="askQ('Aides electrique ?')">Aides ?</button>
+<button class="sugg" onclick="askQ('C est gratuit ?')">Gratuit ?</button>
+</div>
+<div class="a-inp-row">
+<input class="a-inp" id="agentInp" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+<button class="a-send" onclick="sendMsg()">→</button>
+</div>
+</div>
+</div>
+
+<!-- PUBLISH -->
+<div class="pub-overlay" id="pubOverlay" onclick="if(event.target===this)closePub()">
+<div class="pub-panel">
+<div class="pub-hdr">
+<div><div style="color:#C0392B;font-size:11px;font-weight:700;">PUBLIER UNE ANNONCE</div><div style="color:#fff;font-size:15px;font-weight:800;">Le Marché Auto</div></div>
+<button class="close-x" onclick="closePub()">✕</button>
+</div>
+<div class="pub-body">
+<div class="prog-bar"><div class="prog-seg done" id="p1"></div><div class="prog-seg" id="p2"></div><div class="prog-seg" id="p3"></div></div>
+
+<div id="pubStep1">
+<div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 1 SUR 3</div>
+<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Informations principales</div>
+<label class="f-label">Votre nom *</label>
+<input class="f-input" id="pub-nom" placeholder="Ex: Marc Dupont"/>
+<label class="f-label">Votre email *</label>
+<input class="f-input" id="pub-email" placeholder="Ex: marc@gmail.com" type="email"/>
+<label class="f-label">Catégorie *</label>
+<select class="f-select" id="pub-cat">
+<option value="voiture">🚗 Voiture</option>
+<option value="moto">🏍️ Moto</option>
+<option value="velo">🚲 Vélo</option>
+<option value="pieces">🔧 Pièces</option>
+</select>
+<label class="f-label">Marque *</label>
+<select class="f-select" id="pub-marque">
+<option value="">Choisir...</option>
+<option>Audi</option><option>BMW</option><option>Citroën</option>
+<option>Dacia</option><option>Fiat</option><option>Ford</option>
+<option>Honda</option><option>Hyundai</option><option>Kia</option>
+<option>Mercedes-Benz</option><option>Nissan</option><option>Opel</option>
+<option>Peugeot</option><option>Renault</option><option>SEAT</option>
+<option>Skoda</option><option>Tesla</option><option>Toyota</option>
+<option>Volkswagen</option><option>Volvo</option><option>Yamaha</option>
+<option>Kawasaki</option><option>Autre</option>
+</select>
+<label class="f-label">Titre complet *</label>
+<input class="f-input" id="pub-titre" placeholder="Ex: Renault Clio V 2021 - 30 000 km"/>
+<label class="f-label">Prix (€) *</label>
+<input class="f-input" id="pub-prix" type="number" placeholder="Ex: 12500"/>
+<label class="f-label">Ville *</label>
+<input class="f-input" id="pub-ville" placeholder="Ex: Lyon"/>
+<button class="pri-btn" onclick="pubStep(2)">Continuer →</button>
+</div>
+
+<div id="pubStep2" style="display:none;">
+<div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 2 SUR 3</div>
+<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Photos & Détails</div>
+
+<!-- PHOTO UPLOAD -->
+<label class="f-label">📸 Photos du véhicule (max 6)</label>
+<div class="photo-upload-zone" onclick="document.getElementById('photoInput').click()">
+<input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotos(this)"/>
+<div style="font-size:32px;margin-bottom:8px;">📸</div>
+<div style="color:#888;font-size:13px;font-weight:700;">Appuyer pour ajouter des photos</div>
+<div style="color:#555;font-size:11px;margin-top:4px;">JPG, PNG · Max 6 photos</div>
+</div>
+<div class="upload-progress" id="uploadProgress">
+<div style="font-size:12px;color:#C0392B;font-weight:700;" id="uploadLabel">Upload en cours...</div>
+<div class="upload-bar"><div class="upload-bar-fill" id="uploadBarFill"></div></div>
+</div>
+<div class="photo-preview-grid" id="photoPreviewGrid"></div>
+
+<label class="f-label">Kilométrage</label>
+<input class="f-input" id="pub-km" type="number" placeholder="Ex: 45000"/>
+<label class="f-label">Année</label>
+<input class="f-input" id="pub-annee" type="number" placeholder="Ex: 2021"/>
+<label class="f-label">Carburant</label>
+<select class="f-select" id="pub-carbu">
+<option>Essence</option><option>Diesel</option><option>Hybride</option>
+<option>Electrique</option><option>GPL</option>
+</select>
+<label class="f-label">État</label>
+<select class="f-select" id="pub-etat">
+<option>Excellent etat</option><option>Tres bon etat</option>
+<option>Bon etat</option><option>Etat correct</option>
+</select>
+<label class="f-label">Description *</label>
+<textarea class="f-input" id="pub-desc" style="min-height:80px;resize:none;" placeholder="Decrivez votre vehicule..."></textarea>
+<label class="f-label">Téléphone *</label>
+<input class="f-input" id="pub-tel" placeholder="Ex: 06 12 34 56 78"/>
+<div style="display:flex;gap:8px;">
+<button class="sec-btn2" onclick="pubStep(1)" style="margin:0;flex:1;">← Retour</button>
+<button class="pri-btn" onclick="pubStep(3)" style="margin:0;flex:2;">🛡️ Analyser & Publier</button>
+</div>
+</div>
+
+<div id="pubStep3" style="display:none;">
+<div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 3 SUR 3</div>
+<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Vérification Agent IA 🛡️</div>
+<div class="an-box">
+<div class="an-icon" id="anIcon">🛡️</div>
+<div class="an-label" id="anLabel" style="color:#E74C3C;">Analyse en cours...</div>
+<div class="an-msg" id="anMsg">L'agent IA vérifie votre annonce</div>
+</div>
+<button class="sec-btn2" id="pubRetour" onclick="pubStep(2)" style="display:none;margin-top:10px;">← Modifier</button>
+<button class="pri-btn" id="pubConfirm" onclick="confirmerPub()" style="display:none;margin-top:10px;">🚀 Publier maintenant</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+var allAnnonces=[];
+var agentMsgs=[];
+var currentElec=false;
+var uploadedPhotos=[];
+
+// ══ SUPABASE ══
+function loadAnnonces(){
+document.getElementById("grid").innerHTML='<div class="loading">⏳ Chargement des annonces...</div>';
+sbGet("annonces","statut=eq.valide").then(function(data){
+if(Array.isArray(data)){
+allAnnonces=data;
+document.getElementById("statAnnonces").textContent=data.length;
+doFilter();
+}
+}).catch(function(){
+document.getElementById("grid").innerHTML='<div class="no-res"><p>Erreur de connexion.</p></div>';
+});
+}
+
+// ══ FILTER ══
+function doFilter(){
+var search=(document.getElementById("searchInput").value||"").toLowerCase();
+var cat=document.getElementById("catSel").value;
+var region=document.getElementById("regionSel").value;
+var carbu=document.getElementById("carbuSel").value;
+var ville=(document.getElementById("villeInput").value||"").toLowerCase();
+var prixMin=parseInt(document.getElementById("prixMin").value)||0;
+var prixMax=parseInt(document.getElementById("prixMax").value)||9999999;
+var sort=document.getElementById("sortSel").value;
+
+var list=allAnnonces.filter(function(a){
+var sOk=!search||(a.titre||"").toLowerCase().indexOf(search)>=0||(a.ville||"").toLowerCase().indexOf(search)>=0||(a.marque||"").toLowerCase().indexOf(search)>=0;
+var cOk=!cat||a.categorie===cat;
+var rOk=!region||(a.region||"").toLowerCase().indexOf(region.toLowerCase())>=0;
+var cbOk=!carbu||(a.carburant||"").toLowerCase().indexOf(carbu.toLowerCase())>=0;
+var vOk=!ville||(a.ville||"").toLowerCase().indexOf(ville)>=0;
+var pOk=a.prix>=prixMin&&a.prix<=prixMax;
+var eOk=!currentElec||a.electrique===true;
+return sOk&&cOk&&rOk&&cbOk&&vOk&&pOk&&eOk;
+});
+
+if(sort==="prix_asc") list.sort(function(a,b){return a.prix-b.prix;});
+else if(sort==="prix_desc") list.sort(function(a,b){return b.prix-a.prix;});
+else if(sort==="km_asc") list.sort(function(a,b){return (a.kilometrage||0)-(b.kilometrage||0);});
+
+document.getElementById("resCount").textContent=list.length;
+renderGrid(list);
+}
+
+function renderGrid(list){
+var g=document.getElementById("grid");
+if(!list.length){g.innerHTML='<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">🔍</div><p>Aucune annonce trouvée</p></div>';return;}
+var h="";
+list.forEach(function(a){
+var ico={voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
+var imgHtml=a.image_url?
+'<img src="'+a.image_url+'" style="width:100%;height:110px;object-fit:cover;" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=font-size:36px;display:flex;align-items:center;justify-content:center;height:110px>'+ico+'</div>\'"/>':
+'<div style="font-size:36px;display:flex;align-items:center;justify-content:center;height:110px;">'+ico+'</div>';
+h+='<div class="card" onclick="showDetail(\''+a.id+'\')">'+
+'<div class="card-img-w">'+
+'<div class="card-img">'+imgHtml+'</div>'+
+'<div class="c-badge '+(a.statut==="valide"?"b-ok":"b-new")+'">'+(a.statut==="valide"?"✓ Vérifié":"⚡ Nouveau")+'</div>'+
+(a.electrique?'<div class="c-badge b-elec" style="top:28px;">⚡</div>':'')+
+'<button class="c-fav" onclick="event.stopPropagation();this.textContent=this.textContent===\'🤍\'?\'❤️\':\'🤍\'">🤍</button>'+
+'</div><div class="card-body">'+
+'<div class="c-title">'+a.titre+'</div>'+
+'<div class="c-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>'+
+'<div class="c-meta">'+
+'<span>📍 '+(a.ville||"—")+'</span>'+
+(a.kilometrage>0?'<span>⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>':'')+
+(a.annee?'<span>📅 '+a.annee+(a.carburant?' · '+a.carburant:'')+'</span>':'')+
+'</div></div></div>';
+});
+g.innerHTML=h;
+}
+
+function setCat(cat,el){
+document.getElementById("catSel").value=cat;
+document.querySelectorAll(".cat").forEach(function(c){c.classList.remove("active");});
+el.classList.add("active");
+currentElec=false;
+doFilter();
+}
+
+function filterElec(){
+currentElec=!currentElec;
+doFilter();
+}
+
+function getLocation(){
+if(!navigator.geolocation){alert("Géolocalisation non disponible.");return;}
+navigator.geolocation.getCurrentPosition(function(){alert("📍 Position détectée !");},function(){alert("Position non disponible.");});
+}
+
+// ══ DETAIL ══
+function showDetail(id){
+var a=allAnnonces.find(function(x){return x.id===id;});
+if(!a) return;
+var ico={voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
+var imgHtml=a.image_url?'<img src="'+a.image_url+'" style="width:100%;height:230px;object-fit:cover;"/>':'<div class="d-img">'+ico+'</div>';
+var loa=Math.round((a.prix||0)/60*1.045);
+var h='<div style="position:relative;">'+imgHtml;
+h+='<button style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.65);border:1px solid #333;border-radius:20px;padding:6px 14px;color:#fff;font-size:12px;cursor:pointer;" onclick="closeScreen(\'detailScreen\')">← Retour</button>';
+h+='</div><div class="d-body">';
+h+='<div class="d-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>';
+h+='<div class="d-title">'+(a.titre||"")+'</div>';
+h+='<div class="d-tags">';
+if(a.ville) h+='<span class="d-tag">📍 '+a.ville+'</span>';
+if(a.kilometrage>0) h+='<span class="d-tag">⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>';
+if(a.annee) h+='<span class="d-tag">📅 '+a.annee+'</span>';
+if(a.carburant) h+='<span class="d-tag">⛽ '+a.carburant+'</span>';
+if(a.etat) h+='<span class="d-tag">✨ '+a.etat+'</span>';
+h+='</div>';
+h+='<div class="d-sec"><div class="d-sec-t">Caractéristiques</div><div class="d-specs">';
+h+='<div class="d-spec"><div class="d-spec-l">Marque</div><div class="d-spec-v">'+(a.marque||"—")+'</div></div>';
+h+='<div class="d-spec"><div class="d-spec-l">Année</div><div class="d-spec-v">'+(a.annee||"—")+'</div></div>';
+if(a.kilometrage>0) h+='<div class="d-spec"><div class="d-spec-l">Kilométrage</div><div class="d-spec-v">'+(a.kilometrage||0).toLocaleString("fr-FR")+' km</div></div>';
+h+='<div class="d-spec"><div class="d-spec-l">Carburant</div><div class="d-spec-v">'+(a.carburant||"—")+'</div></div>';
+h+='<div class="d-spec"><div class="d-spec-l">État</div><div class="d-spec-v">'+(a.etat||"—")+'</div></div>';
+h+='<div class="d-spec"><div class="d-spec-l">Région</div><div class="d-spec-v">'+(a.region||"—")+'</div></div>';
+h+='</div></div>';
+if(a.description) h+='<div class="d-sec"><div class="d-sec-t">Description</div><div class="d-desc">'+(a.description||"")+'</div></div>';
+if(a.categorie==="voiture"){
+h+='<div class="d-sec"><div class="d-sec-t">Financement estimé</div>';
+h+='<div style="background:#0D1A2A;border:1px solid #3498DB33;border-radius:12px;padding:14px;">';
+h+='<div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;color:#888;">Mensualité (60 mois)</span><span style="font-size:14px;color:#fff;font-weight:700;">~'+loa+' €/mois</span></div>';
+h+='<div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:#888;">Taux indicatif</span><span style="font-size:14px;color:#fff;font-weight:700;">4.5%</span></div>';
+h+='</div>';
+if(a.electrique){
+h+='<div style="background:#0D2A0D;border:1px solid #27AE6033;border-radius:12px;padding:14px;margin-top:8px;">';
+h+='<div style="color:#27AE60;font-weight:700;font-size:12px;margin-bottom:8px;">🎁 Aides disponibles</div>';
+h+='<div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:11px;color:#888;">Bonus écologique</span><span style="color:#27AE60;font-size:11px;font-weight:700;">jusqu\'à 6 000 €</span></div>';
+h+='<div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:#888;">Prime conversion</span><span style="color:#27AE60;font-size:11px;font-weight:700;">jusqu\'à 5 000 €</span></div>';
+h+='</div>';
+}
+h+='</div>';
+}
+h+='<div class="d-sec"><div class="d-sec-t">Vendeur</div>';
+h+='<div class="seller-box"><div class="seller-av">👤</div>';
+h+='<div><div style="font-weight:700;color:#fff;font-size:14px;">'+(a.vendeur_nom||"Vendeur")+'</div>';
+h+='<div style="font-size:11px;color:#666;">Vendeur particulier</div></div>';
+if(a.statut==="valide") h+='<div style="margin-left:auto;background:#0D3D26;border:1px solid #27AE6044;border-radius:8px;padding:4px 10px;font-size:10px;color:#27AE60;font-weight:700;">✓ Vérifié</div>';
+h+='</div></div>';
+h+='<button class="contact-btn" onclick="alert(\'Appeler '+(a.vendeur_nom||"Vendeur")+' : '+(a.telephone||"Non renseigné")+'\')">📞 Contacter le vendeur</button>';
+h+='<button class="sec-btn" onclick="signalerAnnonce(\''+a.id+'\')">🚩 Signaler cette annonce</button>';
+h+='<button class="sec-btn red-btn" onclick="closeScreen(\'detailScreen\');openAgent()">🛡️ Consulter l\'Agent Anti-Fraude</button>';
+h+='</div>';
+document.getElementById("detailContent").innerHTML=h;
+document.getElementById("detailScreen").classList.add("open");
+document.getElementById("detailScreen").scrollTop=0;
+}
+
+function signalerAnnonce(id){
+sbInsert("signalements",{annonce_id:id,raison:"Signalement utilisateur"}).then(function(){alert("✅ Signalement envoyé !");});
+}
+
+// ══ PHOTO UPLOAD ══
+async function handlePhotos(input) {
+var files = Array.from(input.files).slice(0, 6 - uploadedPhotos.length);
+if (!files.length) return;
+
+document.getElementById("uploadProgress").style.display = "block";
+document.getElementById("uploadBarFill").style.width = "0%";
+
+for (var i = 0; i < files.length; i++) {
+document.getElementById("uploadLabel").textContent = "Upload photo " + (i+1) + "/" + files.length + "...";
+document.getElementById("uploadBarFill").style.width = ((i/files.length)*100) + "%";
+try {
+var url = await uploadToCloudinary(files[i]);
+uploadedPhotos.push(url);
+renderPhotoPreviews();
+} catch(e) {
+console.error("Erreur upload:", e);
+}
+}
+
+document.getElementById("uploadBarFill").style.width = "100%";
+document.getElementById("uploadLabel").textContent = "✅ " + uploadedPhotos.length + " photo(s) ajoutée(s)";
+setTimeout(function(){document.getElementById("uploadProgress").style.display="none";}, 2000);
+input.value = "";
+}
+
+function renderPhotoPreviews() {
+var grid = document.getElementById("photoPreviewGrid");
+var h = "";
+uploadedPhotos.forEach(function(url, i) {
+h += '<div class="photo-preview"><img src="'+url+'" alt="Photo '+i+'"/><button class="del-photo" onclick="deletePhoto('+i+')">✕</button></div>';
+});
+if (uploadedPhotos.length < 6) {
+h += '<div style="background:#141414;border:2px dashed #333;border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:24px;color:#555;" onclick="document.getElementById(\'photoInput\').click()">+</div>';
+}
+grid.innerHTML = h;
+}
+
+function deletePhoto(index) {
+uploadedPhotos.splice(index, 1);
+renderPhotoPreviews();
+}
+
+// ══ PUBLISH ══
+function openPublish(){
+document.getElementById("pubOverlay").classList.add("open");
+uploadedPhotos=[];
+renderPhotoPreviews();
+pubStep(1);
+}
+function closePub(){document.getElementById("pubOverlay").classList.remove("open");}
+
+function pubStep(s){
+["pubStep1","pubStep2","pubStep3"].forEach(function(id,i){document.getElementById(id).style.display=i+1===s?"block":"none";});
+["p1","p2","p3"].forEach(function(id,i){document.getElementById(id).className="prog-seg"+(i<s?" done":"");});
+if(s===3) analyzeAndPublish();
+}
+
+function analyzeAndPublish(){
+var titre=document.getElementById("pub-titre").value;
+var desc=document.getElementById("pub-desc").value;
+var prix=document.getElementById("pub-prix").value;
+document.getElementById("anIcon").textContent="🛡️";
+document.getElementById("anLabel").style.color="#E74C3C";
+document.getElementById("anLabel").textContent="Analyse en cours...";
+document.getElementById("anMsg").textContent="L'agent IA vérifie votre annonce";
+document.getElementById("pubRetour").style.display="none";
+document.getElementById("pubConfirm").style.display="none";
+
+fetch("https://api.anthropic.com/v1/messages",{
+method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,
+system:"Moderateur marketplace automobile. Reponds UNIQUEMENT JSON: {\"status\":\"VALIDE\" ou \"BLOQUE\",\"message\":\"explication\"}",
+messages:[{role:"user",content:"Titre:"+titre+". Desc:"+desc+". Prix:"+prix+"EUR"}]})
+}).then(function(r){return r.json();}).then(function(d){
+try{
+var t=(d.content[0].text||"{}").replace(/```json|```/g,"").trim();
+var res=JSON.parse(t);
+if(res.status==="VALIDE"){
+document.getElementById("anIcon").textContent="✅";
+document.getElementById("anLabel").style.color="#27AE60";
+document.getElementById("anLabel").textContent="Annonce approuvée !";
+document.getElementById("anMsg").textContent=res.message;
+document.getElementById("pubConfirm").style.display="block";
+} else {
+document.getElementById("anIcon").textContent="🚨";
+document.getElementById("anLabel").style.color="#E74C3C";
+document.getElementById("anLabel").textContent="Annonce bloquée";
+document.getElementById("anMsg").textContent=res.message;
+document.getElementById("pubRetour").style.display="block";
+}
+} catch(e){
+document.getElementById("anIcon").textContent="✅";
+document.getElementById("anLabel").style.color="#27AE60";
+document.getElementById("anLabel").textContent="Annonce approuvée !";
+document.getElementById("pubConfirm").style.display="block";
+}
+}).catch(function(){
+document.getElementById("anIcon").textContent="✅";
+document.getElementById("anLabel").style.color="#27AE60";
+document.getElementById("anLabel").textContent="Annonce approuvée !";
+document.getElementById("pubConfirm").style.display="block";
+});
+}
+
+function confirmerPub(){
+var data={
+titre:document.getElementById("pub-titre").value,
+marque:document.getElementById("pub-marque").value,
+prix:parseFloat(document.getElementById("pub-prix").value)||0,
+categorie:document.getElementById("pub-cat").value,
+ville:document.getElementById("pub-ville").value,
+kilometrage:parseFloat(document.getElementById("pub-km").value)||0,
+annee:parseInt(document.getElementById("pub-annee").value)||null,
+carburant:document.getElementById("pub-carbu").value,
+etat:document.getElementById("pub-etat").value,
+description:document.getElementById("pub-desc").value,
+telephone:document.getElementById("pub-tel").value,
+vendeur_nom:document.getElementById("pub-nom").value,
+vendeur_email:document.getElementById("pub-email").value,
+image_url:uploadedPhotos.length>0?uploadedPhotos[0]:null,
+statut:"en_attente",
+electrique:document.getElementById("pub-carbu").value==="Electrique",
+note:5.0,
+nb_avis:0
+};
+sbInsert("annonces",data).then(function(){
+closePub();
+uploadedPhotos=[];
+alert("🎉 Annonce publiée !\n\nElle sera visible après validation.");
+loadAnnonces();
+}).catch(function(){alert("Erreur. Réessayez.");});
+}
+
+// ══ AGENT ══
+var FAQ=[
+{q:["vendre","publier"],r:"Pour vendre : bouton + Vendre, formulaire 3 etapes avec upload photos, agent IA verifie. Gratuit !"},
+{q:["payer","paiement","securite"],r:"Paiements securises : virement bancaire, especes. JAMAIS Western Union, Bitcoin, PayPal Amis !"},
+{q:["fraude","arnaque","signaler"],r:"Signaler : bouton Signaler sur l annonce. IA analyse et bloque si fraude. 24h/24 !"},
+{q:["gratuit","cout"],r:"100% GRATUIT ! Publication, contact, photos, agent anti-fraude, tout est gratuit !"},
+{q:["electrique","hybride","bonus","aide"],r:"Aides electrique 2026 : Bonus jusqu a 6000 EUR, Prime conversion jusqu a 5000 EUR, Leasing social des 100 EUR/mois"},
+{q:["photo","image"],r:"Pour les photos : dans le formulaire de publication, etape 2, vous pouvez uploader jusqu a 6 photos. Les photos sont hebergees sur Cloudinary !"},
+];
+
+function addMsg(role,text){
+agentMsgs.push({role:role,text:text});
+var el=document.getElementById("agentMsgs");
+var h="";
+agentMsgs.forEach(function(m){
+h+='<div class="bubble '+m.role+'">';
+if(m.role==="agent") h+='<div class="b-lbl">AGENT MARCHE AUTO</div>';
+h+=m.text+'</div>';
+});
+el.innerHTML=h;
+el.scrollTop=el.scrollHeight;
+}
+
+function openAgent(){
+document.getElementById("agentOverlay").classList.add("open");
+if(!agentMsgs.length) addMsg("agent","Bonjour ! Je suis l Agent Marche Auto.\n\nNouveau : les vendeurs peuvent maintenant uploader des vraies photos !\n\nComment puis-je vous aider ?");
+}
+function closeAgent(){document.getElementById("agentOverlay").classList.remove("open");}
+
+function askQ(q){
+addMsg("user",q);
+document.getElementById("typingInd").style.display="block";
+var lower=q.toLowerCase();
+for(var i=0;i<FAQ.length;i++){
+var found=false;
+for(var j=0;j<FAQ[i].q.length;j++){if(lower.indexOf(FAQ[i].q[j])>=0){found=true;break;}}
+if(found){(function(r){setTimeout(function(){document.getElementById("typingInd").style.display="none";addMsg("agent",r);},600);})(FAQ[i].r);return;}
+}
+fetch("https://api.anthropic.com/v1/messages",{
+method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:500,
+system:"Tu es l Agent Marche Auto. Reponds en francais, sois chaleureux.",
+messages:[{role:"user",content:q}]})
+}).then(function(r){return r.json();}).then(function(d){
+document.getElementById("typingInd").style.display="none";
+addMsg("agent",d.content&&d.content[0]?d.content[0].text:"Desole, reessayez !");
+}).catch(function(){
+document.getElementById("typingInd").style.display="none";
+addMsg("agent","Connexion impossible. Reessayez !");
+});
+}
+
+function sendMsg(){
+var inp=document.getElementById("agentInp");
+var txt=inp.value.trim();
+if(!txt) return;
+inp.value="";
+askQ(txt);
+}
+
+function showHome(){document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("open");});closePub();closeAgent();}
+function closeScreen(id){document.getElementById(id).classList.remove("open");}
+
+loadAnnonces();
+</script>
+</body>
+</html>
