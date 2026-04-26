@@ -770,82 +770,153 @@ function showDetail(id) {
   var a = allAnnonces.find(function(x){return x.id === id;});
   if (!a) return;
   var ico = getCatIco(a.categorie);
-  var imgHtml = a.image_url
-    ? '<img src="'+a.image_url+'" style="width:100%;height:230px;object-fit:cover;" onerror="this.style.display=\'none\'"/>'
-    : '<div style="font-size:80px;display:flex;align-items:center;justify-content:center;height:230px;background:#1A1A1A;">'+ico+'</div>';
   var loa = Math.round((a.prix||0)/60*1.045);
+  var apport = Math.round((a.prix||0)*0.1);
   var note = a.note || 5;
   var stars = "";
   for(var s=0;s<Math.floor(note);s++) stars+="⭐";
 
-  var h = '<div style="position:relative;">'+imgHtml;
-  h += '<button style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.65);border:1px solid #333;border-radius:20px;padding:6px 14px;color:#fff;font-size:12px;cursor:pointer;" onclick="closeScreen(\'detailScreen\')">← Retour</button></div>';
-  h += '<div class="d-body">';
-  h += '<div class="d-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>';
-  h += '<div class="d-title">'+(a.titre||"")+'</div>';
-  h += '<div style="font-size:13px;color:#F1C40F;margin-bottom:12px;">'+stars+' <span style="color:#666;">('+note+'/5)</span></div>';
-  h += '<div class="d-tags">';
-  if(a.ville) h += '<span class="d-tag">📍 '+a.ville+'</span>';
-  if(a.kilometrage>0) h += '<span class="d-tag">⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>';
-  if(a.annee) h += '<span class="d-tag">📅 '+a.annee+'</span>';
-  if(a.carburant) h += '<span class="d-tag'+(a.electrique?" elec":"")+'">⛽ '+a.carburant+'</span>';
-  if(a.etat) h += '<span class="d-tag">✨ '+a.etat+'</span>';
-  if(a.type_vendeur) h += '<span class="d-tag">👤 '+a.type_vendeur+'</span>';
+  var h = '';
+
+  // ── HERO IMAGE ──
+  h += '<div style="position:relative;height:280px;background:#1A1A1A;overflow:hidden;">';
+  if(a.image_url) {
+    h += '<img src="'+a.image_url+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML=\'<div style=display:flex;align-items:center;justify-content:center;height:280px;font-size:80px>'+ico+'</div>\'"/>';
+  } else {
+    h += '<div style="display:flex;align-items:center;justify-content:center;height:280px;font-size:80px;">'+ico+'</div>';
+  }
+  h += '<div style="position:absolute;bottom:0;left:0;right:0;height:140px;background:linear-gradient(transparent,#080808);"></div>';
+  // Bouton retour
+  h += '<button style="position:absolute;top:14px;left:14px;background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:38px;height:38px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="closeScreen(\'detailScreen\')">←</button>';
+  // Boutons favoris + partage
+  h += '<div style="position:absolute;top:14px;right:14px;display:flex;gap:8px;">';
+  h += '<button style="background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:38px;height:38px;color:#fff;font-size:16px;cursor:pointer;" onclick="event.stopPropagation()">🤍</button>';
+  h += '</div>';
+  // Badge vérifié
+  if(a.statut==="valide") h += '<div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#27AE60;border-radius:20px;padding:4px 14px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;">✓ ANNONCE VÉRIFIÉE</div>';
+  if(a.electrique) h += '<div style="position:absolute;top:44px;left:50%;transform:translateX(-50%);background:#3498DB;border-radius:20px;padding:4px 14px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;">⚡ ÉLECTRIQUE</div>';
+  // Prix sur image
+  h += '<div style="position:absolute;bottom:18px;left:16px;">';
+  h += '<div style="font-size:34px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,0.5);">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>';
+  if(a.categorie==="voiture") h += '<div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;">~'+loa+' €/mois sur 60 mois</div>';
+  h += '</div>';
   h += '</div>';
 
-  if(a.equipements) {
-    h += '<div class="d-sec"><div class="d-sec-t">Équipements</div>';
-    h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+  // ── CORPS ──
+  h += '<div style="padding:18px 16px 120px;">';
+
+  // TITRE + NOTE
+  h += '<h1 style="font-size:21px;font-weight:900;color:#fff;line-height:1.2;margin:0 0 8px;">'+(a.titre||"")+'</h1>';
+  h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">';
+  h += '<div style="background:#C0392B;border-radius:8px;padding:3px 10px;font-size:13px;font-weight:800;color:#fff;">'+note+' '+stars+'</div>';
+  h += '<span style="font-size:12px;color:#666;">'+(a.nb_avis||0)+' avis · '+(a.type_vendeur||"Particulier")+'</span>';
+  h += '</div>';
+
+  // PILLS SCROLLABLES
+  h += '<div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none;">';
+  if(a.ville) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#ccc;white-space:nowrap;">📍 '+a.ville+'</div>';
+  if(a.kilometrage>0) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#ccc;white-space:nowrap;">⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</div>';
+  if(a.annee) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#ccc;white-space:nowrap;">📅 '+a.annee+'</div>';
+  if(a.carburant) h += '<div style="flex-shrink:0;background:'+(a.electrique?"#0D2A3D":"#141414")+';border:1px solid '+(a.electrique?"#3498DB44":"#222")+';border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:'+(a.electrique?"#3498DB":"#ccc")+';white-space:nowrap;">⛽ '+a.carburant+'</div>';
+  if(a.etat) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#ccc;white-space:nowrap;">✨ '+a.etat+'</div>';
+  h += '</div>';
+
+  // SPECS GRILLE 3 colonnes
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px;">';
+  var specs = [
+    {ico:"🚗",label:"Marque",val:a.marque||"—"},
+    {ico:"📅",label:"Année",val:a.annee||"—"},
+    {ico:"⏱",label:"Km",val:a.kilometrage>0?(a.kilometrage||0).toLocaleString("fr-FR"):"N/A"},
+    {ico:"⛽",label:"Carburant",val:a.carburant||"—"},
+    {ico:"✨",label:"État",val:(a.etat||"—").replace(" etat","").replace(" état","")},
+    {ico:"🗺️",label:"Région",val:(a.region||"—").split("-")[0].trim()}
+  ];
+  specs.forEach(function(s){
+    h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:12px 8px;text-align:center;">';
+    h += '<div style="font-size:18px;margin-bottom:4px;">'+s.ico+'</div>';
+    h += '<div style="font-size:10px;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">'+s.label+'</div>';
+    h += '<div style="font-size:12px;color:#fff;font-weight:700;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+s.val+'</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+
+  // ÉQUIPEMENTS
+  if(a.equipements && a.equipements.trim()) {
+    h += '<div style="margin-bottom:18px;">';
+    h += '<div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Équipements</div>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:7px;">';
     a.equipements.split(",").forEach(function(eq){
-      if(eq.trim()) h += '<span style="background:#1A1A1A;border-radius:8px;padding:4px 10px;font-size:11px;color:#aaa;">✓ '+eq.trim()+'</span>';
+      if(eq.trim()) h += '<span style="background:#1A1A1A;border:1px solid #252525;border-radius:8px;padding:5px 11px;font-size:11px;color:#aaa;">✓ '+eq.trim()+'</span>';
     });
     h += '</div></div>';
   }
 
-  h += '<div class="d-sec"><div class="d-sec-t">Caractéristiques</div><div class="d-specs">';
-  h += '<div class="d-spec"><div class="d-spec-l">Marque</div><div class="d-spec-v">'+(a.marque||"—")+'</div></div>';
-  h += '<div class="d-spec"><div class="d-spec-l">Année</div><div class="d-spec-v">'+(a.annee||"—")+'</div></div>';
-  if(a.kilometrage>0) h += '<div class="d-spec"><div class="d-spec-l">Kilométrage</div><div class="d-spec-v">'+(a.kilometrage||0).toLocaleString("fr-FR")+' km</div></div>';
-  h += '<div class="d-spec"><div class="d-spec-l">Carburant</div><div class="d-spec-v">'+(a.carburant||"—")+'</div></div>';
-  h += '<div class="d-spec"><div class="d-spec-l">État</div><div class="d-spec-v">'+(a.etat||"—")+'</div></div>';
-  h += '<div class="d-spec"><div class="d-spec-l">Région</div><div class="d-spec-v">'+(a.region||"—")+'</div></div>';
-  h += '</div></div>';
-
-  if(a.description) h += '<div class="d-sec"><div class="d-sec-t">Description</div><div class="d-desc">'+(a.description||"")+'</div></div>';
-
-  if(a.categorie==="voiture") {
-    h += '<div class="d-sec"><div class="d-sec-t">Financement estimé</div>';
-    h += '<div style="background:#0D1A2A;border:1px solid #3498DB33;border-radius:12px;padding:14px;">';
-    h += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;color:#888;">Mensualité (60 mois)</span><span style="font-size:14px;color:#fff;font-weight:700;">~'+loa+' €/mois</span></div>';
-    h += '<div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:#888;">Taux indicatif</span><span style="font-size:14px;color:#fff;font-weight:700;">4.5%</span></div>';
-    h += '</div>';
-    if(a.electrique) {
-      h += '<div style="background:#0D2A0D;border:1px solid #27AE6033;border-radius:12px;padding:14px;margin-top:8px;">';
-      h += '<div style="color:#27AE60;font-weight:700;font-size:12px;margin-bottom:8px;">🎁 Aides disponibles</div>';
-      h += '<div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:11px;color:#888;">Bonus écologique</span><span style="color:#27AE60;font-size:11px;font-weight:700;">jusqu\'à 6 000 €</span></div>';
-      h += '<div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:#888;">Prime conversion</span><span style="color:#27AE60;font-size:11px;font-weight:700;">jusqu\'à 5 000 €</span></div>';
-      h += '</div>';
-    }
+  // DESCRIPTION
+  if(a.description) {
+    h += '<div style="margin-bottom:18px;">';
+    h += '<div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Description</div>';
+    h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:14px;font-size:13px;color:#bbb;line-height:1.7;">'+a.description+'</div>';
     h += '</div>';
   }
 
-  // NOTATION
-  h += '<div class="d-sec"><div class="d-sec-t">Noter ce vendeur</div>';
-  h += '<div class="stars-row" id="starsRow">';
-  for(var i=1;i<=5;i++) h += '<span class="star" onclick="noterVendeur('+a.id+','+i+',this)">⭐</span>';
+  // FINANCEMENT
+  if(a.categorie==="voiture") {
+    h += '<div style="background:linear-gradient(135deg,#0D1A2A,#0A1520);border:1px solid #3498DB22;border-radius:14px;padding:16px;margin-bottom:18px;">';
+    h += '<div style="font-size:12px;font-weight:700;color:#3498DB;margin-bottom:12px;">💳 Simulation financement</div>';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1A2A3A;">';
+    h += '<span style="font-size:13px;color:#888;">Mensualité (60 mois)</span><span style="font-size:17px;color:#fff;font-weight:800;">~'+loa+' €/mois</span></div>';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1A2A3A;">';
+    h += '<span style="font-size:13px;color:#888;">Apport recommandé</span><span style="font-size:14px;color:#fff;font-weight:700;">'+apport.toLocaleString("fr-FR")+' €</span></div>';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">';
+    h += '<span style="font-size:13px;color:#888;">Taux indicatif</span><span style="font-size:14px;color:#fff;font-weight:700;">4.5%</span></div>';
+    h += '</div>';
+    if(a.electrique) {
+      h += '<div style="background:#0D2A0D;border:1px solid #27AE6033;border-radius:14px;padding:14px;margin-bottom:18px;">';
+      h += '<div style="color:#27AE60;font-weight:700;font-size:12px;margin-bottom:10px;">🎁 Aides disponibles pour ce véhicule</div>';
+      h += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #0D3A0D;"><span style="font-size:12px;color:#888;">Bonus écologique</span><span style="color:#27AE60;font-size:12px;font-weight:700;">jusqu\'à 6 000 €</span></div>';
+      h += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #0D3A0D;"><span style="font-size:12px;color:#888;">Prime à la conversion</span><span style="color:#27AE60;font-size:12px;font-weight:700;">jusqu\'à 5 000 €</span></div>';
+      h += '<div style="display:flex;justify-content:space-between;padding:6px 0;"><span style="font-size:12px;color:#888;">Leasing social</span><span style="color:#27AE60;font-size:12px;font-weight:700;">dès 100 €/mois</span></div>';
+      h += '</div>';
+    }
+  }
+
+  // NOTER LE VENDEUR
+  h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;padding:14px;margin-bottom:18px;">';
+  h += '<div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Noter ce vendeur</div>';
+  h += '<div id="starsRow" style="display:flex;gap:8px;">';
+  for(var i=1;i<=5;i++) h += '<span style="font-size:28px;cursor:pointer;opacity:0.35;transition:opacity 0.15s;" onclick="noterVendeur(\''+a.id+'\','+i+',this)">⭐</span>';
   h += '</div></div>';
 
-  h += '<div class="d-sec"><div class="d-sec-t">Vendeur</div>';
-  h += '<div class="seller-box"><div class="seller-av">👤</div>';
-  h += '<div><div style="font-weight:700;color:#fff;font-size:14px;">'+(a.vendeur_nom||"Vendeur")+'</div>';
-  h += '<div style="font-size:11px;color:#666;">'+(a.type_vendeur||"Particulier")+'</div></div>';
-  if(a.statut==="valide") h += '<div style="margin-left:auto;background:#0D3D26;border:1px solid #27AE6044;border-radius:8px;padding:4px 10px;font-size:10px;color:#27AE60;font-weight:700;">✓ Vérifié</div>';
+  // VENDEUR
+  h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;padding:14px;margin-bottom:18px;">';
+  h += '<div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">Vendeur</div>';
+  h += '<div style="display:flex;align-items:center;gap:12px;">';
+  h += '<div style="width:50px;height:50px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">👤</div>';
+  h += '<div style="flex:1;">';
+  h += '<div style="font-weight:700;color:#fff;font-size:15px;">'+(a.vendeur_nom||"Vendeur")+'</div>';
+  h += '<div style="font-size:12px;color:#666;margin-top:2px;">'+(a.type_vendeur||"Particulier")+' · '+(a.ville||"")+'</div>';
+  h += '<div style="font-size:12px;color:#F1C40F;margin-top:3px;">'+stars+' '+note+'/5</div>';
+  h += '</div>';
+  if(a.statut==="valide") {
+    h += '<div style="background:#0D3D26;border:1px solid #27AE6044;border-radius:10px;padding:8px 10px;text-align:center;flex-shrink:0;">';
+    h += '<div style="font-size:11px;color:#27AE60;font-weight:700;">✓ Vérifié</div>';
+    h += '</div>';
+  }
   h += '</div></div>';
 
-  h += '<button class="contact-btn" onclick="ouvrirChat(\''+a.id+'\')">💬 Contacter le vendeur</button>';
-  h += '<button class="sec-btn" onclick="alert(\'📞 '+(a.telephone||"Non renseigné")+'\')">📞 Voir le numéro</button>';
-  h += '<button class="sec-btn" onclick="signalerAnnonce(\''+a.id+'\')">🚩 Signaler cette annonce</button>';
-  h += '<button class="sec-btn red-btn" onclick="closeScreen(\'detailScreen\');openAgent()">🛡️ Consulter l\'Agent Anti-Fraude</button>';
+  // SIGNALER / AGENT
+  h += '<div style="display:flex;gap:12px;justify-content:center;margin-bottom:10px;">';
+  h += '<button style="background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:6px;" onclick="signalerAnnonce(\''+a.id+'\')">🚩 Signaler</button>';
+  h += '<span style="color:#333;">·</span>';
+  h += '<button style="background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:6px;" onclick="closeScreen(\'detailScreen\');openAgent()">🛡️ Agent Anti-Fraude</button>';
+  h += '</div>';
+
+  h += '</div>';
+
+  // ── BARRE ACTIONS FIXE ──
+  h += '<div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:linear-gradient(transparent,#080808 35%);padding:16px;display:flex;gap:10px;z-index:10;">';
+  h += '<button style="flex:1;background:#141414;border:1px solid #2A2A2A;border-radius:14px;padding:16px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;" onclick="alert(\'📞 '+(a.telephone||"Non renseigné")+'\')">📞 Appeler</button>';
+  h += '<button style="flex:2;background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;border-radius:14px;padding:16px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;" onclick="ouvrirChat(\''+a.id+'\')">💬 Contacter</button>';
   h += '</div>';
 
   document.getElementById("detailContent").innerHTML = h;
