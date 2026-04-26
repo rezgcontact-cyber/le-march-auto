@@ -453,7 +453,7 @@ var equip = document.getElementById("equipSel").value;
 var vOk=!ville||(a.ville||"").toLowerCase().indexOf(ville)>=0;
 var pOk=a.prix>=prixMin&&a.prix<=prixMax;
 var eOk=!currentElec||a.electrique===true;
-return sOk&&cOk&&rOk&&cbOk&&vOk&&pOk&&eOk;
+var etOk = !etat || (a.etat||"").toLowerCase().indexOf(etat.toLowerCase())>=0; var veOk = !vendeur || (a.type_vendeur||"").toLowerCase().indexOf(vendeur.toLowerCase())>=0; return sOk && cOk && rOk && cbOk && vOk && pOk && eOk && etOk && veOk;&&cOk&&rOk&&cbOk&&vOk&&pOk&&eOk;
 });
 
 if(sort==="prix_asc") list.sort(function(a,b){return a.prix-b.prix;});
