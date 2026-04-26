@@ -223,7 +223,7 @@ return data.secure_url;
 </select>
 </div>
 <div class="filters-grid">
-<select class="f-sel" id="carbuSel" onchange="doFilter()">
+<select class="f-sel" id="</div> <div class="filters-grid"> <select class="f-sel" id="carbuSel" onchange="doFilter()"> <option value="">⛽ Carburant</option> <option>Essence</option> <option>Diesel</option> <option>Hybride</option> <option>Hybride rechargeable</option> <option>Electrique</option> <option>GPL</option> <option>Hydrogène</option> </select> <select class="f-sel" id="etatSel" onchange="doFilter()"> <option value="">✨ État</option> <option>Neuf</option> <option>Excellent etat</option> <option>Tres bon etat</option> <option>Bon etat</option> <option>Etat correct</option> </select> </div> <div class="filters-grid"> <select class="f-sel" id="vendeurSel" onchange="doFilter()"> <option value="">👤 Type vendeur</option> <option>Particulier</option> <option>Professionnel</option> <option>Concessionnaire</option> </select> <select class="f-sel" id="equipSel" onchange="doFilter()"> <option value="">🔧 Équipements</option> <option>Climatisation</option> <option>GPS</option> <option>Caméra de recul</option> <option>Siège chauffant</option> <option>Toit panoramique</option> </select> </div>" onchange="doFilter()">
 <option value="">⛽ Carburant</option>
 <option>Essence</option><option>Diesel</option>
 <option>Hybride</option><option>Electrique</option><option>GPL</option>
@@ -436,7 +436,7 @@ function doFilter(){
 var search=(document.getElementById("searchInput").value||"").toLowerCase();
 var cat=document.getElementById("catSel").value;
 var region=document.getElementById("regionSel").value;
-var carbu=document.getElementById("carbuSel").value;
+var carbu=document.getElementById("</div> <div class="filters-grid"> <select class="f-sel" id="carbuSel" onchange="doFilter()"> <option value="">⛽ Carburant</option> <option>Essence</option> <option>Diesel</option> <option>Hybride</option> <option>Hybride rechargeable</option> <option>Electrique</option> <option>GPL</option> <option>Hydrogène</option> </select> <select class="f-sel" id="etatSel" onchange="doFilter()"> <option value="">✨ État</option> <option>Neuf</option> <option>Excellent etat</option> <option>Tres bon etat</option> <option>Bon etat</option> <option>Etat correct</option> </select> </div> <div class="filters-grid"> <select class="f-sel" id="vendeurSel" onchange="doFilter()"> <option value="">👤 Type vendeur</option> <option>Particulier</option> <option>Professionnel</option> <option>Concessionnaire</option> </select> <select class="f-sel" id="equipSel" onchange="doFilter()"> <option value="">🔧 Équipements</option> <option>Climatisation</option> <option>GPS</option> <option>Caméra de recul</option> <option>Siège chauffant</option> <option>Toit panoramique</option> </select> </div>").value;
 var ville=(document.getElementById("villeInput").value||"").toLowerCase();
 var prixMin=parseInt(document.getElementById("prixMin").value)||0;
 var prixMax=parseInt(document.getElementById("prixMax").value)||9999999;
@@ -447,6 +447,9 @@ var sOk=!search||(a.titre||"").toLowerCase().indexOf(search)>=0||(a.ville||"").t
 var cOk=!cat||a.categorie===cat;
 var rOk=!region||(a.region||"").toLowerCase().indexOf(region.toLowerCase())>=0;
 var cbOk=!carbu||(a.carburant||"").toLowerCase().indexOf(carbu.toLowerCase())>=0;
+  var etat = document.getElementById("etatSel").value;
+var vendeur = document.getElementById("vendeurSel").value;
+var equip = document.getElementById("equipSel").value;
 var vOk=!ville||(a.ville||"").toLowerCase().indexOf(ville)>=0;
 var pOk=a.prix>=prixMin&&a.prix<=prixMax;
 var eOk=!currentElec||a.electrique===true;
