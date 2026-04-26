@@ -1148,15 +1148,19 @@ function sInscrire() {
   }).catch(function(){ alert("Erreur lors de l'inscription. Email déjà utilisé ?"); });
 }
 
-function demanderVerifSMS() {
-  if (!currentUser || !currentUser.telephone) { alert("Téléphone non renseigné."); return; }
-  codeVerifAttendu = Math.floor(100000 + Math.random() * 900000).toString();
-  // Dans une vraie app, ici on appellerait Twilio via une fonction Vercel
-  // Pour l'instant on simule : le code s'affiche en alert (à remplacer par vrai SMS)
+function demanderVerifSMS
   document.getElementById("verifyMsg").textContent = "Code envoyé au "+currentUser.telephone+" (test: "+codeVerifAttendu+")";
   document.getElementById("verifCode").value = "";
   document.getElementById("verifyScreen").classList.add("open");
-  alert("📱 SMS envoyé au "+currentUser.telephone+"\n\n(Mode test - Code: "+codeVerifAttendu+")");
+fetch('/api/brevo', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    type: 'sms',
+    smsTo: currentUser.telephone,
+    smsText: 'Le Marché Auto - Votre code de verification: ' + codeVerifAttendu
+  })
+});
 }
 
 function validerCode() {
