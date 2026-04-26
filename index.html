@@ -69,8 +69,6 @@ body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;max-width:4
 .tab-add{background:#C0392B;border-radius:14px;width:42px;height:28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;margin-bottom:2px;}
 .screen{display:none;position:fixed;inset:0;background:#080808;z-index:60;overflow-y:auto;max-width:480px;left:50%;transform:translateX(-50%);}
 .screen.open{display:block;}
-.s-hdr{background:#0A0A0A;padding:12px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #1A1A1A;position:sticky;top:0;z-index:10;}
-.back-btn{background:#141414;border:1px solid #222;border-radius:20px;padding:6px 14px;color:#fff;font-size:12px;cursor:pointer;}
 .d-img{width:100%;height:230px;object-fit:cover;background:#1A1A1A;display:flex;align-items:center;justify-content:center;font-size:80px;}
 .d-body{padding:16px;}
 .d-price{font-size:30px;font-weight:900;color:#C0392B;}
@@ -89,16 +87,6 @@ body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;max-width:4
 .contact-btn{width:100%;background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;border-radius:14px;padding:16px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;}
 .sec-btn{width:100%;background:#141414;border:1px solid #222;border-radius:14px;padding:12px;color:#888;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;}
 .red-btn{color:#C0392B;border-color:rgba(192,57,43,0.3);}
-/* ALERTES POPUP */
-.alert-popup{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:452px;background:linear-gradient(135deg,#0D2A0D,#0A3A0A);border:1px solid #27AE60;border-radius:14px;padding:14px 16px;z-index:90;display:none;animation:slideDown 0.3s ease;}
-.alert-popup.show{display:flex;align-items:center;gap:12px;}
-@keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
-.alert-popup-icon{font-size:24px;flex-shrink:0;}
-.alert-popup-text{flex:1;}
-.alert-popup-title{font-size:13px;font-weight:800;color:#27AE60;}
-.alert-popup-sub{font-size:11px;color:#888;margin-top:2px;}
-.alert-popup-close{color:#555;cursor:pointer;font-size:16px;flex-shrink:0;}
-/* ALERTES SCREEN */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;flex-direction:column;justify-content:flex-end;}
 .overlay.open{display:flex;}
 .agent-panel{background:#0D0D0D;border-radius:24px 24px 0 0;height:86vh;display:flex;flex-direction:column;border:1px solid #1A1A1A;}
@@ -118,7 +106,7 @@ body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;max-width:4
 .a-send{background:#C0392B;border:none;border-radius:10px;padding:9px 14px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;}
 .pub-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;flex-direction:column;justify-content:flex-end;}
 .pub-overlay.open{display:flex;}
-.pub-panel{background:#0D0D0D;border-radius:24px 24px 0 0;height:90vh;display:flex;flex-direction:column;border:1px solid #1A1A1A;}
+.pub-panel{background:#0D0D0D;border-radius:24px 24px 0 0;height:92vh;display:flex;flex-direction:column;border:1px solid #1A1A1A;}
 .pub-hdr{background:linear-gradient(135deg,#1A0000,#2A0000);padding:14px 18px;border-radius:24px 24px 0 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .pub-body{padding:16px;overflow-y:auto;flex:1;}
 .f-label{font-size:11px;color:#666;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:5px;display:block;}
@@ -133,790 +121,652 @@ body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;max-width:4
 .an-icon{font-size:40px;margin-bottom:10px;}
 .an-label{font-size:14px;font-weight:700;margin-bottom:6px;}
 .an-msg{font-size:12px;color:#888;line-height:1.5;}
-/* ALERTES PANEL */
-.alerts-panel{background:#0D0D0D;border-radius:24px 24px 0 0;height:80vh;display:flex;flex-direction:column;border:1px solid #1A1A1A;}
-.alerts-body{padding:16px;overflow-y:auto;flex:1;}
-.alert-item{background:#141414;border:1px solid #1E1E1E;border-radius:12px;padding:12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
-.alert-item-info .alert-item-title{font-size:13px;color:#fff;font-weight:700;}
-.alert-item-info .alert-item-sub{font-size:11px;color:#666;margin-top:2px;}
-.alert-del{background:#1A0000;border:1px solid #C0392B33;border-radius:8px;padding:4px 10px;color:#C0392B;font-size:11px;cursor:pointer;}
+/* PHOTO UPLOAD */
+.photo-upload-zone{width:100%;background:#141414;border:2px dashed #333;border-radius:12px;padding:20px;text-align:center;cursor:pointer;margin-bottom:14px;transition:border-color 0.2s;}
+.photo-upload-zone:hover{border-color:#C0392B;}
+.photo-upload-zone input{display:none;}
+.photo-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.photo-preview{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;}
+.photo-preview img{width:100%;height:100%;object-fit:cover;}
+.photo-preview .del-photo{position:absolute;top:4px;right:4px;background:rgba(192,57,43,0.9);border:none;border-radius:50%;width:20px;height:20px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.upload-progress{background:#141414;border-radius:8px;padding:10px;margin-bottom:10px;display:none;}
+.upload-bar{height:4px;background:#1A1A1A;border-radius:2px;margin-top:6px;}
+.upload-bar-fill{height:100%;background:#C0392B;border-radius:2px;width:0%;transition:width 0.3s;}
 </style>
 </head>
 <body>
 
 <script>
-var SUPABASE_URL = "https://faebnvfgqwhyizvltepw.supabase.co";
-var SUPABASE_KEY = "sb_publishable_phl5JcNdn-kxUHx2DamAoA_liVp_k6Q";
+var SUPABASE_URL="https://faebnvfgqwhyizvltepw.supabase.co";
+var SUPABASE_KEY="sb_publishable_phl5JcNdn-kxUHx2DamAoA_liVp_k6Q";
+var CLOUDINARY_CLOUD="dbngaps7z";
+var CLOUDINARY_PRESET="le-marche-auto";
 
-function sbGet(table, filters) {
-  var url = SUPABASE_URL + "/rest/v1/" + table + "?select=*&order=date_creation.desc";
-  if (filters) url += "&" + filters;
-  return fetch(url, {
-    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
-  }).then(function(r) { return r.json(); });
+function sbGet(table,filters){
+var url=SUPABASE_URL+"/rest/v1/"+table+"?select=*&order=date_creation.desc";
+if(filters) url+="&"+filters;
+return fetch(url,{headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY}}).then(function(r){return r.json();});
+}
+function sbInsert(table,data){
+return fetch(SUPABASE_URL+"/rest/v1/"+table,{
+method:"POST",
+headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":"return=representation"},
+body:JSON.stringify(data)
+}).then(function(r){return r.json();});
 }
 
-function sbInsert(table, data) {
-  return fetch(SUPABASE_URL + "/rest/v1/" + table, {
-    method: "POST",
-    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=representation" },
-    body: JSON.stringify(data)
-  }).then(function(r) { return r.json(); });
-}
-
-function sbUpdate(table, id, data) {
-  return fetch(SUPABASE_URL + "/rest/v1/" + table + "?id=eq." + id, {
-    method: "PATCH",
-    headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+async function uploadToCloudinary(file) {
+var formData = new FormData();
+formData.append("file", file);
+formData.append("upload_preset", CLOUDINARY_PRESET);
+formData.append("cloud_name", CLOUDINARY_CLOUD);
+var res = await fetch("https://api.cloudinary.com/v1_1/"+CLOUDINARY_CLOUD+"/image/upload", {
+method: "POST",
+body: formData
+});
+var data = await res.json();
+return data.secure_url;
 }
 </script>
 
 <!-- HEADER -->
 <div class="hdr">
-  <div class="logo-wrap">
-    <img class="logo-img" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
-    <div>
-      <div class="lt1">Le</div>
-      <div class="lt2">MARCHÉ</div>
-      <div class="lt3">AUTO</div>
-    </div>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;">
-    <button style="background:#141414;border:1px solid #222;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;position:relative;" onclick="openAlertes()">
-      🔔<div id="notifDot" style="display:none;position:absolute;top:4px;right:4px;width:8px;height:8px;background:#C0392B;border-radius:50%;"></div>
-    </button>
-    <button class="agent-btn" onclick="openAgent()">🛡️ Agent</button>
-  </div>
+<div class="logo-wrap">
+<img class="logo-img" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<div>
+<div class="lt1">Le</div>
+<div class="lt2">MARCHÉ</div>
+<div class="lt3">AUTO</div>
 </div>
-
-<!-- NOTIFICATION POPUP -->
-<div class="alert-popup" id="alertPopup">
-  <div class="alert-popup-icon">🔔</div>
-  <div class="alert-popup-text">
-    <div class="alert-popup-title" id="alertPopupTitle">Nouvelle annonce !</div>
-    <div class="alert-popup-sub" id="alertPopupSub">Correspond à une de vos alertes</div>
-  </div>
-  <div class="alert-popup-close" onclick="fermerPopup()">✕</div>
+</div>
+<button class="agent-btn" onclick="openAgent()">🛡️ Agent</button>
 </div>
 
 <!-- HERO -->
 <div class="hero">
-  <img class="hero-logo" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
-  <h1>La marketplace <span>N°1</span> en Europe 🇪🇺</h1>
-  <p>Voitures · Motos · Vélos · Pièces · Électriques</p>
-  <div class="hero-stats">
-    <div class="hstat"><div class="hstat-n" id="statAnnonces">...</div><div class="hstat-l">Annonces</div></div>
-    <div class="hstat"><div class="hstat-n">8 240</div><div class="hstat-l">Membres</div></div>
-    <div class="hstat"><div class="hstat-n">98%</div><div class="hstat-l">Satisfaits</div></div>
-  </div>
+<img class="hero-logo" src="https://i.imgur.com/iLRREdx.png" alt="Le Marché Auto"/>
+<h1>La marketplace <span>N°1</span> en Europe 🇪🇺</h1>
+<p>Voitures · Motos · Vélos · Pièces · Électriques</p>
+<div class="hero-stats">
+<div class="hstat"><div class="hstat-n" id="statAnnonces">...</div><div class="hstat-l">Annonces</div></div>
+<div class="hstat"><div class="hstat-n">8 240</div><div class="hstat-l">Membres</div></div>
+<div class="hstat"><div class="hstat-n">98%</div><div class="hstat-l">Satisfaits</div></div>
+</div>
 </div>
 
 <!-- SEARCH -->
 <div class="search-sec">
-  <div class="search-main">
-    <input class="s-inp" id="searchInput" placeholder="🔍 Marque, modèle, ville..." oninput="doFilter()"/>
-    <button class="s-btn" onclick="doFilter()">Chercher</button>
-  </div>
-  <div class="filters-grid">
-    <select class="f-sel" id="catSel" onchange="doFilter()">
-      <option value="">Toutes catégories</option>
-      <option value="voiture">🚗 Voitures</option>
-      <option value="moto">🏍️ Motos</option>
-      <option value="velo">🚲 Vélos</option>
-      <option value="pieces">🔧 Pièces</option>
-    </select>
-    <select class="f-sel" id="regionSel" onchange="doFilter()">
-      <option value="">🗺️ Toutes régions</option>
-      <option>Ile-de-France</option>
-      <option>Auvergne-Rhone-Alpes</option>
-      <option>Provence-Alpes-Cote Azur</option>
-      <option>Nouvelle-Aquitaine</option>
-      <option>Occitanie</option>
-      <option>Hauts-de-France</option>
-      <option>Grand Est</option>
-      <option>Bretagne</option>
-      <option>Pays de la Loire</option>
-      <option>Normandie</option>
-    </select>
-  </div>
-  <div class="filters-grid">
-    <select class="f-sel" id="carbuSel" onchange="doFilter()">
-      <option value="">⛽ Carburant</option>
-      <option>Essence</option><option>Diesel</option>
-      <option>Hybride</option><option>Electrique</option><option>GPL</option>
-    </select>
-    <input class="f-sel" id="villeInput" placeholder="📍 Ville..." oninput="doFilter()"/>
-  </div>
-  <div class="price-row">
-    <input class="p-inp" id="prixMin" placeholder="Prix min €" type="number" oninput="doFilter()"/>
-    <input class="p-inp" id="prixMax" placeholder="Prix max €" type="number" oninput="doFilter()"/>
-  </div>
-  <div class="km-row">
-    <span class="km-lbl">📏 Rayon :</span>
-    <input type="range" class="km-slider" min="5" max="500" value="500" step="5" oninput="this.nextElementSibling.textContent=this.value+' km'"/>
-    <span class="km-val">500 km</span>
-  </div>
-  <button class="loc-btn" onclick="getLocation()">📍 Utiliser ma position GPS</button>
+<div class="search-main">
+<input class="s-inp" id="searchInput" placeholder="🔍 Marque, modèle, ville..." oninput="doFilter()"/>
+<button class="s-btn" onclick="doFilter()">Chercher</button>
+</div>
+<div class="filters-grid">
+<select class="f-sel" id="catSel" onchange="doFilter()">
+<option value="">Toutes catégories</option>
+<option value="voiture">🚗 Voitures</option>
+<option value="moto">🏍️ Motos</option>
+<option value="velo">🚲 Vélos</option>
+<option value="pieces">🔧 Pièces</option>
+</select>
+<select class="f-sel" id="regionSel" onchange="doFilter()">
+<option value="">🗺️ Toutes régions</option>
+<option>Ile-de-France</option>
+<option>Auvergne-Rhone-Alpes</option>
+<option>Provence-Alpes-Cote Azur</option>
+<option>Nouvelle-Aquitaine</option>
+<option>Occitanie</option>
+<option>Hauts-de-France</option>
+<option>Grand Est</option>
+<option>Bretagne</option>
+<option>Pays de la Loire</option>
+<option>Normandie</option>
+</select>
+</div>
+<div class="filters-grid">
+<select class="f-sel" id="carbuSel" onchange="doFilter()">
+<option value="">⛽ Carburant</option>
+<option>Essence</option><option>Diesel</option>
+<option>Hybride</option><option>Electrique</option><option>GPL</option>
+</select>
+<input class="f-sel" id="villeInput" placeholder="📍 Ville..." oninput="doFilter()"/>
+</div>
+<div class="price-row">
+<input class="p-inp" id="prixMin" placeholder="Prix min €" type="number" oninput="doFilter()"/>
+<input class="p-inp" id="prixMax" placeholder="Prix max €" type="number" oninput="doFilter()"/>
+</div>
+<div class="km-row">
+<span class="km-lbl">📏 Rayon :</span>
+<input type="range" class="km-slider" min="5" max="500" value="500" step="5" oninput="this.nextElementSibling.textContent=this.value+' km'"/>
+<span class="km-val">500 km</span>
+</div>
+<button class="loc-btn" onclick="getLocation()">📍 Utiliser ma position GPS</button>
 </div>
 
 <!-- CATS -->
 <div class="cats">
-  <div class="cat active" onclick="setCat('',this)">🔥 Tous</div>
-  <div class="cat" onclick="setCat('voiture',this)">🚗 Voitures</div>
-  <div class="cat" onclick="setCat('moto',this)">🏍️ Motos</div>
-  <div class="cat" onclick="setCat('velo',this)">🚲 Vélos</div>
-  <div class="cat" onclick="setCat('pieces',this)">🔧 Pièces</div>
-  <div class="cat" onclick="filterElec()">⚡ Électriques</div>
+<div class="cat active" onclick="setCat('',this)">🔥 Tous</div>
+<div class="cat" onclick="setCat('voiture',this)">🚗 Voitures</div>
+<div class="cat" onclick="setCat('moto',this)">🏍️ Motos</div>
+<div class="cat" onclick="setCat('velo',this)">🚲 Vélos</div>
+<div class="cat" onclick="setCat('pieces',this)">🔧 Pièces</div>
+<div class="cat" onclick="filterElec()">⚡ Électriques</div>
 </div>
 
-<!-- RESULTS -->
 <div class="results-bar">
-  <div class="r-count"><span id="resCount">0</span> annonce(s)</div>
-  <select class="sort-sel" id="sortSel" onchange="doFilter()">
-    <option value="date_creation.desc">Plus récentes</option>
-    <option value="prix.asc">Prix croissant</option>
-    <option value="prix.desc">Prix décroissant</option>
-    <option value="kilometrage.asc">Km croissant</option>
-  </select>
+<div class="r-count"><span id="resCount">0</span> annonce(s)</div>
+<select class="sort-sel" id="sortSel" onchange="doFilter()">
+<option value="date">Plus récentes</option>
+<option value="prix_asc">Prix ↑</option>
+<option value="prix_desc">Prix ↓</option>
+<option value="km_asc">Km ↑</option>
+</select>
 </div>
 
 <div class="grid" id="grid">
-  <div class="loading">⏳ Chargement des annonces...</div>
+<div class="loading">⏳ Chargement des annonces...</div>
 </div>
 
 <!-- TAB BAR -->
 <div class="tab-bar">
-  <button class="tab active" onclick="showHome()"><span class="ti">🏠</span>Accueil</button>
-  <button class="tab" onclick="document.getElementById('searchInput').focus()"><span class="ti">🔍</span>Chercher</button>
-  <button class="tab" onclick="openPublish()"><div class="tab-add">+</div><span style="color:#C0392B;font-weight:700;font-size:9px;">Vendre</span></button>
-  <button class="tab" onclick="openAlertes()"><span class="ti">🔔</span>Alertes</button>
-  <button class="tab" onclick="openAgent()"><span class="ti">🛡️</span>Agent</button>
+<button class="tab active" onclick="showHome()"><span class="ti">🏠</span>Accueil</button>
+<button class="tab" onclick="document.getElementById('searchInput').focus()"><span class="ti">🔍</span>Chercher</button>
+<button class="tab" onclick="openPublish()"><div class="tab-add">+</div><span style="color:#C0392B;font-weight:700;font-size:9px;">Vendre</span></button>
+<button class="tab" onclick="openAgent()"><span class="ti">🛡️</span>Agent</button>
+<button class="tab"><span class="ti">👤</span>Profil</button>
 </div>
 
-<!-- DETAIL SCREEN -->
+<!-- DETAIL -->
 <div class="screen" id="detailScreen">
-  <div id="detailContent"></div>
+<div id="detailContent"></div>
 </div>
 
 <!-- AGENT -->
 <div class="overlay" id="agentOverlay" onclick="if(event.target===this)closeAgent()">
-  <div class="agent-panel">
-    <div class="a-hdr">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img class="a-hdr-logo" src="https://i.imgur.com/iLRREdx.png" alt="logo"/>
-        <div>
-          <div style="color:#fff;font-weight:800;font-size:14px;">🛡️ Agent Marché Auto</div>
-          <div style="color:rgba(255,255,255,0.6);font-size:10px;">Anti-fraude · Conseils · 24h/24</div>
-        </div>
-      </div>
-      <button class="close-x" onclick="closeAgent()">✕</button>
-    </div>
-    <div class="a-msgs" id="agentMsgs"></div>
-    <div class="typing" id="typingInd" style="display:none">⏳ Agent en train d'écrire...</div>
-    <div class="a-suggs">
-      <button class="sugg" onclick="askQ('Comment vendre ?')">Vendre ?</button>
-      <button class="sugg" onclick="askQ('Paiement securise ?')">Paiement ?</button>
-      <button class="sugg" onclick="askQ('Signaler une fraude ?')">Fraude ?</button>
-      <button class="sugg" onclick="askQ('Aides electrique ?')">Aides ?</button>
-      <button class="sugg" onclick="askQ('C est gratuit ?')">Gratuit ?</button>
-    </div>
-    <div class="a-inp-row">
-      <input class="a-inp" id="agentInp" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
-      <button class="a-send" onclick="sendMsg()">→</button>
-    </div>
-  </div>
+<div class="agent-panel">
+<div class="a-hdr">
+<div style="display:flex;align-items:center;gap:10px;">
+<img class="a-hdr-logo" src="https://i.imgur.com/iLRREdx.png" alt="logo"/>
+<div>
+<div style="color:#fff;font-weight:800;font-size:14px;">🛡️ Agent Marché Auto</div>
+<div style="color:rgba(255,255,255,0.6);font-size:10px;">Anti-fraude · Conseils · 24h/24</div>
 </div>
-
-<!-- ALERTES PANEL -->
-<div class="overlay" id="alertesOverlay" onclick="if(event.target===this)closeAlertes()">
-  <div class="alerts-panel">
-    <div style="background:linear-gradient(135deg,#0D2A0D,#0A3A0A);padding:14px 18px;border-radius:24px 24px 0 0;display:flex;align-items:center;justify-content:space-between;">
-      <div>
-        <div style="color:#27AE60;font-weight:800;font-size:14px;">🔔 Mes Alertes</div>
-        <div style="color:rgba(255,255,255,0.5);font-size:10px;">Soyez notifié des nouvelles annonces</div>
-      </div>
-      <button class="close-x" onclick="closeAlertes()">✕</button>
-    </div>
-    <div class="alerts-body">
-      <!-- Créer alerte -->
-      <div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;padding:16px;margin-bottom:16px;">
-        <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:12px;">➕ Créer une alerte</div>
-        <label class="f-label">Marque / Modèle recherché</label>
-        <input class="f-input" id="alert-search" placeholder="Ex: Renault Clio"/>
-        <label class="f-label">Budget maximum (€)</label>
-        <input class="f-input" id="alert-budget" type="number" placeholder="Ex: 15000"/>
-        <label class="f-label">Région</label>
-        <select class="f-select" id="alert-region">
-          <option value="">Toutes régions</option>
-          <option>Ile-de-France</option>
-          <option>Auvergne-Rhone-Alpes</option>
-          <option>Provence-Alpes-Cote Azur</option>
-          <option>Occitanie</option>
-          <option>Hauts-de-France</option>
-          <option>Grand Est</option>
-          <option>Bretagne</option>
-          <option>Nouvelle-Aquitaine</option>
-        </select>
-        <button class="pri-btn" onclick="creerAlerte()">🔔 Créer cette alerte</button>
-      </div>
-      <!-- Liste alertes -->
-      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">Mes alertes actives</div>
-      <div id="alertesList"></div>
-    </div>
-  </div>
+</div>
+<button class="close-x" onclick="closeAgent()">✕</button>
+</div>
+<div class="a-msgs" id="agentMsgs"></div>
+<div class="typing" id="typingInd" style="display:none">⏳ Agent en train d'écrire...</div>
+<div class="a-suggs">
+<button class="sugg" onclick="askQ('Comment vendre ?')">Vendre ?</button>
+<button class="sugg" onclick="askQ('Paiement securise ?')">Paiement ?</button>
+<button class="sugg" onclick="askQ('Signaler une fraude ?')">Fraude ?</button>
+<button class="sugg" onclick="askQ('Aides electrique ?')">Aides ?</button>
+<button class="sugg" onclick="askQ('C est gratuit ?')">Gratuit ?</button>
+</div>
+<div class="a-inp-row">
+<input class="a-inp" id="agentInp" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+<button class="a-send" onclick="sendMsg()">→</button>
+</div>
+</div>
 </div>
 
 <!-- PUBLISH -->
 <div class="pub-overlay" id="pubOverlay" onclick="if(event.target===this)closePub()">
-  <div class="pub-panel">
-    <div class="pub-hdr">
-      <div><div style="color:#C0392B;font-size:11px;font-weight:700;">PUBLIER UNE ANNONCE</div><div style="color:#fff;font-size:15px;font-weight:800;">Le Marché Auto</div></div>
-      <button class="close-x" onclick="closePub()">✕</button>
-    </div>
-    <div class="pub-body">
-      <div class="prog-bar"><div class="prog-seg done" id="p1"></div><div class="prog-seg" id="p2"></div><div class="prog-seg" id="p3"></div></div>
-      <div id="pubStep1">
-        <div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 1 SUR 3</div>
-        <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Informations principales</div>
-        <label class="f-label">Votre nom *</label>
-        <input class="f-input" id="pub-nom" placeholder="Ex: Marc Dupont"/>
-        <label class="f-label">Votre email *</label>
-        <input class="f-input" id="pub-email" placeholder="Ex: marc@gmail.com" type="email"/>
-        <label class="f-label">Catégorie *</label>
-        <select class="f-select" id="pub-cat">
-          <option value="voiture">🚗 Voiture</option>
-          <option value="moto">🏍️ Moto</option>
-          <option value="velo">🚲 Vélo</option>
-          <option value="pieces">🔧 Pièces</option>
-        </select>
-        <label class="f-label">Marque *</label>
-        <select class="f-select" id="pub-marque">
-          <option value="">Choisir...</option>
-          <option>Audi</option><option>BMW</option><option>Citroën</option>
-          <option>Dacia</option><option>Fiat</option><option>Ford</option>
-          <option>Honda</option><option>Hyundai</option><option>Kia</option>
-          <option>Mercedes-Benz</option><option>Nissan</option><option>Opel</option>
-          <option>Peugeot</option><option>Renault</option><option>SEAT</option>
-          <option>Skoda</option><option>Tesla</option><option>Toyota</option>
-          <option>Volkswagen</option><option>Volvo</option><option>Yamaha</option>
-          <option>Kawasaki</option><option>Autre</option>
-        </select>
-        <label class="f-label">Titre complet *</label>
-        <input class="f-input" id="pub-titre" placeholder="Ex: Renault Clio V 2021 - 30 000 km"/>
-        <label class="f-label">Prix (€) *</label>
-        <input class="f-input" id="pub-prix" type="number" placeholder="Ex: 12500"/>
-        <label class="f-label">Ville *</label>
-        <input class="f-input" id="pub-ville" placeholder="Ex: Lyon"/>
-        <button class="pri-btn" onclick="pubStep(2)">Continuer →</button>
-      </div>
-      <div id="pubStep2" style="display:none;">
-        <div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 2 SUR 3</div>
-        <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Description & Détails</div>
-        <label class="f-label">Kilométrage</label>
-        <input class="f-input" id="pub-km" type="number" placeholder="Ex: 45000"/>
-        <label class="f-label">Année</label>
-        <input class="f-input" id="pub-annee" type="number" placeholder="Ex: 2021"/>
-        <label class="f-label">Carburant</label>
-        <select class="f-select" id="pub-carbu">
-          <option>Essence</option><option>Diesel</option><option>Hybride</option>
-          <option>Electrique</option><option>GPL</option>
-        </select>
-        <label class="f-label">État</label>
-        <select class="f-select" id="pub-etat">
-          <option>Excellent etat</option><option>Tres bon etat</option>
-          <option>Bon etat</option><option>Etat correct</option>
-        </select>
-        <label class="f-label">Description *</label>
-        <textarea class="f-input" id="pub-desc" style="min-height:80px;resize:none;" placeholder="Décrivez votre véhicule..."></textarea>
-        <label class="f-label">Téléphone *</label>
-        <input class="f-input" id="pub-tel" placeholder="Ex: 06 12 34 56 78"/>
-        <div style="display:flex;gap:8px;">
-          <button class="sec-btn2" onclick="pubStep(1)" style="margin:0;flex:1;">← Retour</button>
-          <button class="pri-btn" onclick="pubStep(3)" style="margin:0;flex:2;">🛡️ Analyser & Publier</button>
-        </div>
-      </div>
-      <div id="pubStep3" style="display:none;">
-        <div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 3 SUR 3</div>
-        <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Vérification Agent IA 🛡️</div>
-        <div class="an-box">
-          <div class="an-icon" id="anIcon">🛡️</div>
-          <div class="an-label" id="anLabel" style="color:#E74C3C;">Analyse en cours...</div>
-          <div class="an-msg" id="anMsg">L'agent IA vérifie votre annonce</div>
-        </div>
-        <button class="sec-btn2" id="pubRetour" onclick="pubStep(2)" style="display:none;margin-top:10px;">← Modifier</button>
-        <button class="pri-btn" id="pubConfirm" onclick="confirmerPub()" style="display:none;margin-top:10px;">🚀 Publier maintenant</button>
-      </div>
-    </div>
-  </div>
+<div class="pub-panel">
+<div class="pub-hdr">
+<div><div style="color:#C0392B;font-size:11px;font-weight:700;">PUBLIER UNE ANNONCE</div><div style="color:#fff;font-size:15px;font-weight:800;">Le Marché Auto</div></div>
+<button class="close-x" onclick="closePub()">✕</button>
+</div>
+<div class="pub-body">
+<div class="prog-bar"><div class="prog-seg done" id="p1"></div><div class="prog-seg" id="p2"></div><div class="prog-seg" id="p3"></div></div>
+
+<div id="pubStep1">
+<div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 1 SUR 3</div>
+<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Informations principales</div>
+<label class="f-label">Votre nom *</label>
+<input class="f-input" id="pub-nom" placeholder="Ex: Marc Dupont"/>
+<label class="f-label">Votre email *</label>
+<input class="f-input" id="pub-email" placeholder="Ex: marc@gmail.com" type="email"/>
+<label class="f-label">Catégorie *</label>
+<select class="f-select" id="pub-cat">
+<option value="voiture">🚗 Voiture</option>
+<option value="moto">🏍️ Moto</option>
+<option value="velo">🚲 Vélo</option>
+<option value="pieces">🔧 Pièces</option>
+</select>
+<label class="f-label">Marque *</label>
+<select class="f-select" id="pub-marque">
+<option value="">Choisir...</option>
+<option>Audi</option><option>BMW</option><option>Citroën</option>
+<option>Dacia</option><option>Fiat</option><option>Ford</option>
+<option>Honda</option><option>Hyundai</option><option>Kia</option>
+<option>Mercedes-Benz</option><option>Nissan</option><option>Opel</option>
+<option>Peugeot</option><option>Renault</option><option>SEAT</option>
+<option>Skoda</option><option>Tesla</option><option>Toyota</option>
+<option>Volkswagen</option><option>Volvo</option><option>Yamaha</option>
+<option>Kawasaki</option><option>Autre</option>
+</select>
+<label class="f-label">Titre complet *</label>
+<input class="f-input" id="pub-titre" placeholder="Ex: Renault Clio V 2021 - 30 000 km"/>
+<label class="f-label">Prix (€) *</label>
+<input class="f-input" id="pub-prix" type="number" placeholder="Ex: 12500"/>
+<label class="f-label">Ville *</label>
+<input class="f-input" id="pub-ville" placeholder="Ex: Lyon"/>
+<button class="pri-btn" onclick="pubStep(2)">Continuer →</button>
+</div>
+
+<div id="pubStep2" style="display:none;">
+<div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 2 SUR 3</div>
+<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Photos & Détails</div>
+
+<!-- PHOTO UPLOAD -->
+<label class="f-label">📸 Photos du véhicule (max 6)</label>
+<div class="photo-upload-zone" onclick="document.getElementById('photoInput').click()">
+<input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotos(this)"/>
+<div style="font-size:32px;margin-bottom:8px;">📸</div>
+<div style="color:#888;font-size:13px;font-weight:700;">Appuyer pour ajouter des photos</div>
+<div style="color:#555;font-size:11px;margin-top:4px;">JPG, PNG · Max 6 photos</div>
+</div>
+<div class="upload-progress" id="uploadProgress">
+<div style="font-size:12px;color:#C0392B;font-weight:700;" id="uploadLabel">Upload en cours...</div>
+<div class="upload-bar"><div class="upload-bar-fill" id="uploadBarFill"></div></div>
+</div>
+<div class="photo-preview-grid" id="photoPreviewGrid"></div>
+
+<label class="f-label">Kilométrage</label>
+<input class="f-input" id="pub-km" type="number" placeholder="Ex: 45000"/>
+<label class="f-label">Année</label>
+<input class="f-input" id="pub-annee" type="number" placeholder="Ex: 2021"/>
+<label class="f-label">Carburant</label>
+<select class="f-select" id="pub-carbu">
+<option>Essence</option><option>Diesel</option><option>Hybride</option>
+<option>Electrique</option><option>GPL</option>
+</select>
+<label class="f-label">État</label>
+<select class="f-select" id="pub-etat">
+<option>Excellent etat</option><option>Tres bon etat</option>
+<option>Bon etat</option><option>Etat correct</option>
+</select>
+<label class="f-label">Description *</label>
+<textarea class="f-input" id="pub-desc" style="min-height:80px;resize:none;" placeholder="Decrivez votre vehicule..."></textarea>
+<label class="f-label">Téléphone *</label>
+<input class="f-input" id="pub-tel" placeholder="Ex: 06 12 34 56 78"/>
+<div style="display:flex;gap:8px;">
+<button class="sec-btn2" onclick="pubStep(1)" style="margin:0;flex:1;">← Retour</button>
+<button class="pri-btn" onclick="pubStep(3)" style="margin:0;flex:2;">🛡️ Analyser & Publier</button>
+</div>
+</div>
+
+<div id="pubStep3" style="display:none;">
+<div style="font-size:11px;color:#C0392B;font-weight:700;margin-bottom:4px;">ÉTAPE 3 SUR 3</div>
+<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;">Vérification Agent IA 🛡️</div>
+<div class="an-box">
+<div class="an-icon" id="anIcon">🛡️</div>
+<div class="an-label" id="anLabel" style="color:#E74C3C;">Analyse en cours...</div>
+<div class="an-msg" id="anMsg">L'agent IA vérifie votre annonce</div>
+</div>
+<button class="sec-btn2" id="pubRetour" onclick="pubStep(2)" style="display:none;margin-top:10px;">← Modifier</button>
+<button class="pri-btn" id="pubConfirm" onclick="confirmerPub()" style="display:none;margin-top:10px;">🚀 Publier maintenant</button>
+</div>
+</div>
+</div>
 </div>
 
 <script>
-var allAnnonces = [];
-var agentMsgs = [];
-var currentElec = false;
-var alertes = JSON.parse(localStorage.getItem("alertes") || "[]");
-var pubStatutFinal = "valide"; // statut par défaut si IA approuve
+var allAnnonces=[];
+var agentMsgs=[];
+var currentElec=false;
+var uploadedPhotos=[];
 
-// ══════════════════════════════
-// CHARGEMENT SUPABASE
-// ══════════════════════════════
-function loadAnnonces() {
-  document.getElementById("grid").innerHTML = '<div class="loading">⏳ Chargement des annonces...</div>';
-  sbGet("annonces", "statut=eq.valide")
-    .then(function(data) {
-      if (Array.isArray(data)) {
-        allAnnonces = data;
-        document.getElementById("statAnnonces").textContent = data.length;
-        doFilter();
-        verifierAlertes(data);
-      } else {
-        document.getElementById("grid").innerHTML = '<div class="no-res"><p>Erreur de chargement.</p></div>';
-      }
-    })
-    .catch(function() {
-      document.getElementById("grid").innerHTML = '<div class="no-res"><p>Connexion impossible.</p></div>';
-    });
+// ══ SUPABASE ══
+function loadAnnonces(){
+document.getElementById("grid").innerHTML='<div class="loading">⏳ Chargement des annonces...</div>';
+sbGet("annonces","statut=eq.valide").then(function(data){
+if(Array.isArray(data)){
+allAnnonces=data;
+document.getElementById("statAnnonces").textContent=data.length;
+doFilter();
+}
+}).catch(function(){
+document.getElementById("grid").innerHTML='<div class="no-res"><p>Erreur de connexion.</p></div>';
+});
 }
 
-// ══════════════════════════════
-// SYSTÈME D'ALERTES
-// ══════════════════════════════
-function sauvegarderAlertes() {
-  localStorage.setItem("alertes", JSON.stringify(alertes));
+// ══ FILTER ══
+function doFilter(){
+var search=(document.getElementById("searchInput").value||"").toLowerCase();
+var cat=document.getElementById("catSel").value;
+var region=document.getElementById("regionSel").value;
+var carbu=document.getElementById("carbuSel").value;
+var ville=(document.getElementById("villeInput").value||"").toLowerCase();
+var prixMin=parseInt(document.getElementById("prixMin").value)||0;
+var prixMax=parseInt(document.getElementById("prixMax").value)||9999999;
+var sort=document.getElementById("sortSel").value;
+
+var list=allAnnonces.filter(function(a){
+var sOk=!search||(a.titre||"").toLowerCase().indexOf(search)>=0||(a.ville||"").toLowerCase().indexOf(search)>=0||(a.marque||"").toLowerCase().indexOf(search)>=0;
+var cOk=!cat||a.categorie===cat;
+var rOk=!region||(a.region||"").toLowerCase().indexOf(region.toLowerCase())>=0;
+var cbOk=!carbu||(a.carburant||"").toLowerCase().indexOf(carbu.toLowerCase())>=0;
+var vOk=!ville||(a.ville||"").toLowerCase().indexOf(ville)>=0;
+var pOk=a.prix>=prixMin&&a.prix<=prixMax;
+var eOk=!currentElec||a.electrique===true;
+return sOk&&cOk&&rOk&&cbOk&&vOk&&pOk&&eOk;
+});
+
+if(sort==="prix_asc") list.sort(function(a,b){return a.prix-b.prix;});
+else if(sort==="prix_desc") list.sort(function(a,b){return b.prix-a.prix;});
+else if(sort==="km_asc") list.sort(function(a,b){return (a.kilometrage||0)-(b.kilometrage||0);});
+
+document.getElementById("resCount").textContent=list.length;
+renderGrid(list);
 }
 
-function creerAlerte() {
-  var search = document.getElementById("alert-search").value.trim();
-  var budget = parseInt(document.getElementById("alert-budget").value) || 999999;
-  var region = document.getElementById("alert-region").value || "Toutes";
-  if (!search) { alert("Entrez un terme de recherche."); return; }
-  var alerte = { id: Date.now(), search: search, budget: budget, region: region };
-  alertes.push(alerte);
-  sauvegarderAlertes();
-  renderAlertes();
-  document.getElementById("alert-search").value = "";
-  document.getElementById("alert-budget").value = "";
-  // Vérifier immédiatement si des annonces correspondent
-  var matches = allAnnonces.filter(function(a) {
-    return (a.titre||"").toLowerCase().indexOf(search.toLowerCase()) >= 0 && a.prix <= budget;
-  });
-  if (matches.length > 0) {
-    afficherPopup("🔔 " + matches.length + " annonce(s) trouvée(s) !", search + " · Budget " + budget.toLocaleString("fr-FR") + " €");
-  } else {
-    alert("✅ Alerte créée ! Vous serez notifié dès qu'une annonce correspond.");
-  }
+function renderGrid(list){
+var g=document.getElementById("grid");
+if(!list.length){g.innerHTML='<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">🔍</div><p>Aucune annonce trouvée</p></div>';return;}
+var h="";
+list.forEach(function(a){
+var ico={voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
+var imgHtml=a.image_url?
+'<img src="'+a.image_url+'" style="width:100%;height:110px;object-fit:cover;" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=font-size:36px;display:flex;align-items:center;justify-content:center;height:110px>'+ico+'</div>\'"/>':
+'<div style="font-size:36px;display:flex;align-items:center;justify-content:center;height:110px;">'+ico+'</div>';
+h+='<div class="card" onclick="showDetail(\''+a.id+'\')">'+
+'<div class="card-img-w">'+
+'<div class="card-img">'+imgHtml+'</div>'+
+'<div class="c-badge '+(a.statut==="valide"?"b-ok":"b-new")+'">'+(a.statut==="valide"?"✓ Vérifié":"⚡ Nouveau")+'</div>'+
+(a.electrique?'<div class="c-badge b-elec" style="top:28px;">⚡</div>':'')+
+'<button class="c-fav" onclick="event.stopPropagation();this.textContent=this.textContent===\'🤍\'?\'❤️\':\'🤍\'">🤍</button>'+
+'</div><div class="card-body">'+
+'<div class="c-title">'+a.titre+'</div>'+
+'<div class="c-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>'+
+'<div class="c-meta">'+
+'<span>📍 '+(a.ville||"—")+'</span>'+
+(a.kilometrage>0?'<span>⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>':'')+
+(a.annee?'<span>📅 '+a.annee+(a.carburant?' · '+a.carburant:'')+'</span>':'')+
+'</div></div></div>';
+});
+g.innerHTML=h;
 }
 
-function supprimerAlerte(id) {
-  alertes = alertes.filter(function(a) { return a.id !== id; });
-  sauvegarderAlertes();
-  renderAlertes();
+function setCat(cat,el){
+document.getElementById("catSel").value=cat;
+document.querySelectorAll(".cat").forEach(function(c){c.classList.remove("active");});
+el.classList.add("active");
+currentElec=false;
+doFilter();
 }
 
-function renderAlertes() {
-  var h = "";
-  if (!alertes.length) {
-    h = '<div style="text-align:center;padding:30px;color:#555;"><div style="font-size:36px;margin-bottom:10px;">🔔</div><p>Aucune alerte créée</p></div>';
-  } else {
-    alertes.forEach(function(al) {
-      h += '<div class="alert-item">' +
-        '<div class="alert-item-info">' +
-        '<div class="alert-item-title">🔍 ' + al.search + '</div>' +
-        '<div class="alert-item-sub">Budget max : ' + al.budget.toLocaleString("fr-FR") + ' € · ' + al.region + '</div>' +
-        '</div>' +
-        '<button class="alert-del" onclick="supprimerAlerte(' + al.id + ')">🗑️</button>' +
-        '</div>';
-    });
-  }
-  document.getElementById("alertesList").innerHTML = h;
-  // Mettre à jour le badge notification
-  document.getElementById("notifDot").style.display = alertes.length > 0 ? "block" : "none";
+function filterElec(){
+currentElec=!currentElec;
+doFilter();
 }
 
-function verifierAlertes(annonces) {
-  if (!alertes.length) return;
-  alertes.forEach(function(al) {
-    var matches = annonces.filter(function(a) {
-      var titreMatch = (a.titre||"").toLowerCase().indexOf(al.search.toLowerCase()) >= 0 ||
-                       (a.marque||"").toLowerCase().indexOf(al.search.toLowerCase()) >= 0;
-      var prixOk = a.prix <= al.budget;
-      var regionOk = !al.region || al.region === "Toutes" || (a.region||"").toLowerCase().indexOf(al.region.toLowerCase()) >= 0;
-      return titreMatch && prixOk && regionOk;
-    });
-    if (matches.length > 0) {
-      document.getElementById("notifDot").style.display = "block";
-      afficherPopup(
-        "⚡ " + matches.length + " annonce(s) pour : " + al.search,
-        "Budget " + al.budget.toLocaleString("fr-FR") + " € · " + al.region
-      );
-    }
-  });
+function getLocation(){
+if(!navigator.geolocation){alert("Géolocalisation non disponible.");return;}
+navigator.geolocation.getCurrentPosition(function(){alert("📍 Position détectée !");},function(){alert("Position non disponible.");});
 }
 
-function afficherPopup(titre, sub) {
-  document.getElementById("alertPopupTitle").textContent = titre;
-  document.getElementById("alertPopupSub").textContent = sub;
-  var popup = document.getElementById("alertPopup");
-  popup.classList.add("show");
-  setTimeout(function() { popup.classList.remove("show"); }, 5000);
+// ══ DETAIL ══
+function showDetail(id){
+var a=allAnnonces.find(function(x){return x.id===id;});
+if(!a) return;
+var ico={voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
+var imgHtml=a.image_url?'<img src="'+a.image_url+'" style="width:100%;height:230px;object-fit:cover;"/>':'<div class="d-img">'+ico+'</div>';
+var loa=Math.round((a.prix||0)/60*1.045);
+var h='<div style="position:relative;">'+imgHtml;
+h+='<button style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.65);border:1px solid #333;border-radius:20px;padding:6px 14px;color:#fff;font-size:12px;cursor:pointer;" onclick="closeScreen(\'detailScreen\')">← Retour</button>';
+h+='</div><div class="d-body">';
+h+='<div class="d-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>';
+h+='<div class="d-title">'+(a.titre||"")+'</div>';
+h+='<div class="d-tags">';
+if(a.ville) h+='<span class="d-tag">📍 '+a.ville+'</span>';
+if(a.kilometrage>0) h+='<span class="d-tag">⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>';
+if(a.annee) h+='<span class="d-tag">📅 '+a.annee+'</span>';
+if(a.carburant) h+='<span class="d-tag">⛽ '+a.carburant+'</span>';
+if(a.etat) h+='<span class="d-tag">✨ '+a.etat+'</span>';
+h+='</div>';
+h+='<div class="d-sec"><div class="d-sec-t">Caractéristiques</div><div class="d-specs">';
+h+='<div class="d-spec"><div class="d-spec-l">Marque</div><div class="d-spec-v">'+(a.marque||"—")+'</div></div>';
+h+='<div class="d-spec"><div class="d-spec-l">Année</div><div class="d-spec-v">'+(a.annee||"—")+'</div></div>';
+if(a.kilometrage>0) h+='<div class="d-spec"><div class="d-spec-l">Kilométrage</div><div class="d-spec-v">'+(a.kilometrage||0).toLocaleString("fr-FR")+' km</div></div>';
+h+='<div class="d-spec"><div class="d-spec-l">Carburant</div><div class="d-spec-v">'+(a.carburant||"—")+'</div></div>';
+h+='<div class="d-spec"><div class="d-spec-l">État</div><div class="d-spec-v">'+(a.etat||"—")+'</div></div>';
+h+='<div class="d-spec"><div class="d-spec-l">Région</div><div class="d-spec-v">'+(a.region||"—")+'</div></div>';
+h+='</div></div>';
+if(a.description) h+='<div class="d-sec"><div class="d-sec-t">Description</div><div class="d-desc">'+(a.description||"")+'</div></div>';
+if(a.categorie==="voiture"){
+h+='<div class="d-sec"><div class="d-sec-t">Financement estimé</div>';
+h+='<div style="background:#0D1A2A;border:1px solid #3498DB33;border-radius:12px;padding:14px;">';
+h+='<div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;color:#888;">Mensualité (60 mois)</span><span style="font-size:14px;color:#fff;font-weight:700;">~'+loa+' €/mois</span></div>';
+h+='<div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:#888;">Taux indicatif</span><span style="font-size:14px;color:#fff;font-weight:700;">4.5%</span></div>';
+h+='</div>';
+if(a.electrique){
+h+='<div style="background:#0D2A0D;border:1px solid #27AE6033;border-radius:12px;padding:14px;margin-top:8px;">';
+h+='<div style="color:#27AE60;font-weight:700;font-size:12px;margin-bottom:8px;">🎁 Aides disponibles</div>';
+h+='<div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:11px;color:#888;">Bonus écologique</span><span style="color:#27AE60;font-size:11px;font-weight:700;">jusqu\'à 6 000 €</span></div>';
+h+='<div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:#888;">Prime conversion</span><span style="color:#27AE60;font-size:11px;font-weight:700;">jusqu\'à 5 000 €</span></div>';
+h+='</div>';
+}
+h+='</div>';
+}
+h+='<div class="d-sec"><div class="d-sec-t">Vendeur</div>';
+h+='<div class="seller-box"><div class="seller-av">👤</div>';
+h+='<div><div style="font-weight:700;color:#fff;font-size:14px;">'+(a.vendeur_nom||"Vendeur")+'</div>';
+h+='<div style="font-size:11px;color:#666;">Vendeur particulier</div></div>';
+if(a.statut==="valide") h+='<div style="margin-left:auto;background:#0D3D26;border:1px solid #27AE6044;border-radius:8px;padding:4px 10px;font-size:10px;color:#27AE60;font-weight:700;">✓ Vérifié</div>';
+h+='</div></div>';
+h+='<button class="contact-btn" onclick="alert(\'Appeler '+(a.vendeur_nom||"Vendeur")+' : '+(a.telephone||"Non renseigné")+'\')">📞 Contacter le vendeur</button>';
+h+='<button class="sec-btn" onclick="signalerAnnonce(\''+a.id+'\')">🚩 Signaler cette annonce</button>';
+h+='<button class="sec-btn red-btn" onclick="closeScreen(\'detailScreen\');openAgent()">🛡️ Consulter l\'Agent Anti-Fraude</button>';
+h+='</div>';
+document.getElementById("detailContent").innerHTML=h;
+document.getElementById("detailScreen").classList.add("open");
+document.getElementById("detailScreen").scrollTop=0;
 }
 
-function fermerPopup() {
-  document.getElementById("alertPopup").classList.remove("show");
+function signalerAnnonce(id){
+sbInsert("signalements",{annonce_id:id,raison:"Signalement utilisateur"}).then(function(){alert("✅ Signalement envoyé !");});
 }
 
-function openAlertes() {
-  renderAlertes();
-  document.getElementById("alertesOverlay").classList.add("open");
+// ══ PHOTO UPLOAD ══
+async function handlePhotos(input) {
+var files = Array.from(input.files).slice(0, 6 - uploadedPhotos.length);
+if (!files.length) return;
+
+document.getElementById("uploadProgress").style.display = "block";
+document.getElementById("uploadBarFill").style.width = "0%";
+
+for (var i = 0; i < files.length; i++) {
+document.getElementById("uploadLabel").textContent = "Upload photo " + (i+1) + "/" + files.length + "...";
+document.getElementById("uploadBarFill").style.width = ((i/files.length)*100) + "%";
+try {
+var url = await uploadToCloudinary(files[i]);
+uploadedPhotos.push(url);
+renderPhotoPreviews();
+} catch(e) {
+console.error("Erreur upload:", e);
 }
-function closeAlertes() { document.getElementById("alertesOverlay").classList.remove("open"); }
-
-// ══════════════════════════════
-// FILTRAGE
-// ══════════════════════════════
-function doFilter() {
-  var search = (document.getElementById("searchInput").value || "").toLowerCase();
-  var cat = document.getElementById("catSel").value;
-  var region = document.getElementById("regionSel").value;
-  var carbu = document.getElementById("carbuSel").value;
-  var ville = (document.getElementById("villeInput").value || "").toLowerCase();
-  var prixMin = parseInt(document.getElementById("prixMin").value) || 0;
-  var prixMax = parseInt(document.getElementById("prixMax").value) || 9999999;
-  var sort = document.getElementById("sortSel").value;
-
-  var list = allAnnonces.filter(function(a) {
-    var sOk = !search || (a.titre||"").toLowerCase().indexOf(search)>=0 || (a.ville||"").toLowerCase().indexOf(search)>=0 || (a.marque||"").toLowerCase().indexOf(search)>=0;
-    var cOk = !cat || a.categorie === cat;
-    var rOk = !region || (a.region||"").toLowerCase().indexOf(region.toLowerCase())>=0;
-    var cbOk = !carbu || (a.carburant||"").toLowerCase().indexOf(carbu.toLowerCase())>=0;
-    var vOk = !ville || (a.ville||"").toLowerCase().indexOf(ville)>=0;
-    var pOk = a.prix >= prixMin && a.prix <= prixMax;
-    var eOk = !currentElec || a.electrique === true;
-    return sOk && cOk && rOk && cbOk && vOk && pOk && eOk;
-  });
-
-  if (sort === "prix.asc") list.sort(function(a,b){return a.prix-b.prix;});
-  else if (sort === "prix.desc") list.sort(function(a,b){return b.prix-a.prix;});
-  else if (sort === "kilometrage.asc") list.sort(function(a,b){return (a.kilometrage||0)-(b.kilometrage||0);});
-
-  document.getElementById("resCount").textContent = list.length;
-  renderGrid(list);
 }
 
-function renderGrid(list) {
-  var g = document.getElementById("grid");
-  if (!list.length) {
-    g.innerHTML = '<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">🔍</div><p>Aucune annonce trouvée</p></div>';
-    return;
-  }
-  var h = "";
-  list.forEach(function(a) {
-    var ico = {voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
-    var img = a.image_url
-      ? '<img src="'+a.image_url+'" style="width:100%;height:110px;object-fit:cover;" onerror="this.parentElement.innerHTML=\'<div style=font-size:36px;display:flex;align-items:center;justify-content:center;height:110px>'+ico+'</div>\'"/>'
-      : '<div style="font-size:36px;display:flex;align-items:center;justify-content:center;height:110px;">'+ico+'</div>';
-    h += '<div class="card" onclick="showDetail(\''+a.id+'\')">'+
-      '<div class="card-img-w">'+
-      '<div class="card-img">'+img+'</div>'+
-      '<div class="c-badge b-ok">✓ Vérifié</div>'+
-      (a.electrique?'<div class="c-badge b-elec" style="top:28px;">⚡</div>':'')+
-      '<button class="c-fav" onclick="event.stopPropagation();this.textContent=this.textContent===\'🤍\'?\'❤️\':\'🤍\'">🤍</button>'+
-      '</div><div class="card-body">'+
-      '<div class="c-title">'+a.titre+'</div>'+
-      '<div class="c-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>'+
-      '<div class="c-meta">'+
-      '<span>📍 '+(a.ville||"—")+'</span>'+
-      (a.kilometrage>0?'<span>⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>':'')+
-      (a.annee?'<span>📅 '+a.annee+(a.carburant?' · '+a.carburant:'')+'</span>':'')+
-      '</div></div></div>';
-  });
-  g.innerHTML = h;
+document.getElementById("uploadBarFill").style.width = "100%";
+document.getElementById("uploadLabel").textContent = "✅ " + uploadedPhotos.length + " photo(s) ajoutée(s)";
+setTimeout(function(){document.getElementById("uploadProgress").style.display="none";}, 2000);
+input.value = "";
 }
 
-function getCatIco(c){return{voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[c]||"🚗";}
-
-function setCat(cat, el) {
-  document.getElementById("catSel").value = cat;
-  document.querySelectorAll(".cat").forEach(function(c){c.classList.remove("active");});
-  el.classList.add("active");
-  currentElec = false;
-  doFilter();
+function renderPhotoPreviews() {
+var grid = document.getElementById("photoPreviewGrid");
+var h = "";
+uploadedPhotos.forEach(function(url, i) {
+h += '<div class="photo-preview"><img src="'+url+'" alt="Photo '+i+'"/><button class="del-photo" onclick="deletePhoto('+i+')">✕</button></div>';
+});
+if (uploadedPhotos.length < 6) {
+h += '<div style="background:#141414;border:2px dashed #333;border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:24px;color:#555;" onclick="document.getElementById(\'photoInput\').click()">+</div>';
+}
+grid.innerHTML = h;
 }
 
-function filterElec() {
-  currentElec = !currentElec;
-  doFilter();
+function deletePhoto(index) {
+uploadedPhotos.splice(index, 1);
+renderPhotoPreviews();
 }
 
-function getLocation() {
-  if (!navigator.geolocation) { alert("Géolocalisation non disponible."); return; }
-  navigator.geolocation.getCurrentPosition(
-    function() { alert("📍 Position détectée !"); },
-    function() { alert("Position non disponible."); }
-  );
+// ══ PUBLISH ══
+function openPublish(){
+document.getElementById("pubOverlay").classList.add("open");
+uploadedPhotos=[];
+renderPhotoPreviews();
+pubStep(1);
 }
-
-// ══════════════════════════════
-// DETAIL
-// ══════════════════════════════
-function showDetail(id) {
-  var a = allAnnonces.find(function(x){return x.id === id;});
-  if (!a) return;
-  var ico = getCatIco(a.categorie);
-  var img = a.image_url
-    ? '<img src="'+a.image_url+'" style="width:100%;height:230px;object-fit:cover;"/>'
-    : '<div class="d-img">'+ico+'</div>';
-  var loa = Math.round((a.prix||0)/60*1.045);
-  var h = '<div style="position:relative;">'+img+
-    '<button style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.65);border:1px solid #333;border-radius:20px;padding:6px 14px;color:#fff;font-size:12px;cursor:pointer;" onclick="closeScreen(\'detailScreen\')">← Retour</button></div>';
-  h += '<div class="d-body">';
-  h += '<div class="d-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>';
-  h += '<div class="d-title">'+(a.titre||"")+'</div>';
-  h += '<div class="d-tags">';
-  if(a.ville) h += '<span class="d-tag">📍 '+a.ville+'</span>';
-  if(a.kilometrage>0) h += '<span class="d-tag">⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>';
-  if(a.annee) h += '<span class="d-tag">📅 '+a.annee+'</span>';
-  if(a.carburant) h += '<span class="d-tag">⛽ '+a.carburant+'</span>';
-  if(a.etat) h += '<span class="d-tag">✨ '+a.etat+'</span>';
-  h += '</div>';
-  h += '<div class="d-sec"><div class="d-sec-t">Caractéristiques</div><div class="d-specs">';
-  h += '<div class="d-spec"><div class="d-spec-l">Marque</div><div class="d-spec-v">'+(a.marque||"—")+'</div></div>';
-  h += '<div class="d-spec"><div class="d-spec-l">Année</div><div class="d-spec-v">'+(a.annee||"—")+'</div></div>';
-  if(a.kilometrage>0) h += '<div class="d-spec"><div class="d-spec-l">Kilométrage</div><div class="d-spec-v">'+(a.kilometrage||0).toLocaleString("fr-FR")+' km</div></div>';
-  h += '<div class="d-spec"><div class="d-spec-l">Carburant</div><div class="d-spec-v">'+(a.carburant||"—")+'</div></div>';
-  h += '<div class="d-spec"><div class="d-spec-l">État</div><div class="d-spec-v">'+(a.etat||"—")+'</div></div>';
-  h += '<div class="d-spec"><div class="d-spec-l">Région</div><div class="d-spec-v">'+(a.region||"—")+'</div></div>';
-  h += '</div></div>';
-  if(a.description) h += '<div class="d-sec"><div class="d-sec-t">Description</div><div class="d-desc">'+(a.description||"")+'</div></div>';
-  if(a.categorie==="voiture") {
-    h += '<div class="d-sec"><div class="d-sec-t">Financement estimé</div>';
-    h += '<div style="background:#0D1A2A;border:1px solid #3498DB33;border-radius:12px;padding:14px;">';
-    h += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;color:#888;">Mensualité (60 mois)</span><span style="font-size:14px;color:#fff;font-weight:700;">~'+loa+' €/mois</span></div>';
-    h += '<div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:#888;">Taux indicatif</span><span style="font-size:14px;color:#fff;font-weight:700;">4.5%</span></div></div>';
-    if(a.electrique) {
-      h += '<div style="background:#0D2A0D;border:1px solid #27AE6033;border-radius:12px;padding:14px;margin-top:8px;">';
-      h += '<div style="color:#27AE60;font-weight:700;font-size:12px;margin-bottom:8px;">🎁 Aides disponibles</div>';
-      h += '<div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:11px;color:#888;">Bonus écologique</span><span style="color:#27AE60;font-size:11px;font-weight:700;">jusqu\'à 6 000 €</span></div>';
-      h += '<div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:#888;">Prime conversion</span><span style="color:#27AE60;font-size:11px;font-weight:700;">jusqu\'à 5 000 €</span></div></div>';
-    }
-    h += '</div>';
-  }
-  h += '<div class="d-sec"><div class="d-sec-t">Vendeur</div>';
-  h += '<div class="seller-box"><div class="seller-av">👤</div>';
-  h += '<div><div style="font-weight:700;color:#fff;font-size:14px;">'+(a.vendeur_nom||"Vendeur")+'</div>';
-  h += '<div style="font-size:11px;color:#666;">Vendeur particulier</div></div>';
-  h += '<div style="margin-left:auto;background:#0D3D26;border:1px solid #27AE6044;border-radius:8px;padding:4px 10px;font-size:10px;color:#27AE60;font-weight:700;">✓ Vérifié IA</div>';
-  h += '</div></div>';
-  h += '<button class="contact-btn" onclick="alert(\'Appeler '+(a.vendeur_nom||"Vendeur")+' : '+(a.telephone||"Non renseigné")+'\')">📞 Contacter le vendeur</button>';
-  h += '<button class="sec-btn" onclick="signalerAnnonce(\''+a.id+'\')">🚩 Signaler cette annonce</button>';
-  h += '<button class="sec-btn red-btn" onclick="closeScreen(\'detailScreen\');openAgent()">🛡️ Consulter l\'Agent Anti-Fraude</button>';
-  h += '</div>';
-  document.getElementById("detailContent").innerHTML = h;
-  document.getElementById("detailScreen").classList.add("open");
-  document.getElementById("detailScreen").scrollTop = 0;
-}
-
-function signalerAnnonce(id) {
-  sbInsert("signalements", { annonce_id: id, raison: "Signalement utilisateur" })
-    .then(function() { alert("✅ Signalement envoyé. Merci !"); });
-}
-
-// ══════════════════════════════
-// PUBLICATION + VALIDATION IA
-// ══════════════════════════════
-function openPublish(){document.getElementById("pubOverlay").classList.add("open");pubStep(1);}
 function closePub(){document.getElementById("pubOverlay").classList.remove("open");}
 
-function pubStep(s) {
-  ["pubStep1","pubStep2","pubStep3"].forEach(function(id,i){
-    document.getElementById(id).style.display = i+1===s?"block":"none";
-  });
-  ["p1","p2","p3"].forEach(function(id,i){
-    document.getElementById(id).className="prog-seg"+(i<s?" done":"");
-  });
-  if (s===3) analyzeAndPublish();
+function pubStep(s){
+["pubStep1","pubStep2","pubStep3"].forEach(function(id,i){document.getElementById(id).style.display=i+1===s?"block":"none";});
+["p1","p2","p3"].forEach(function(id,i){document.getElementById(id).className="prog-seg"+(i<s?" done":"");});
+if(s===3) analyzeAndPublish();
 }
 
-function analyzeAndPublish() {
-  var titre = document.getElementById("pub-titre").value;
-  var desc = document.getElementById("pub-desc").value;
-  var prix = document.getElementById("pub-prix").value;
-  pubStatutFinal = "valide"; // reset
+function analyzeAndPublish(){
+var titre=document.getElementById("pub-titre").value;
+var desc=document.getElementById("pub-desc").value;
+var prix=document.getElementById("pub-prix").value;
+document.getElementById("anIcon").textContent="🛡️";
+document.getElementById("anLabel").style.color="#E74C3C";
+document.getElementById("anLabel").textContent="Analyse en cours...";
+document.getElementById("anMsg").textContent="L'agent IA vérifie votre annonce";
+document.getElementById("pubRetour").style.display="none";
+document.getElementById("pubConfirm").style.display="none";
 
-  document.getElementById("anIcon").textContent="🛡️";
-  document.getElementById("anLabel").style.color="#E74C3C";
-  document.getElementById("anLabel").textContent="Analyse en cours...";
-  document.getElementById("anMsg").textContent="L'agent IA vérifie votre annonce";
-  document.getElementById("pubRetour").style.display="none";
-  document.getElementById("pubConfirm").style.display="none";
-
-  fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 200,
-      system: "Moderateur marketplace automobile. Reponds UNIQUEMENT en JSON sans markdown: {\"status\":\"VALIDE\" ou \"BLOQUE\",\"message\":\"explication courte\"}. VALIDE si annonce vehicule/piece legitime. BLOQUE si fraude, arnaque, contenu hors-sujet ou dangereux.",
-      messages: [{ role: "user", content: "Titre:" + titre + ". Description:" + desc + ". Prix:" + prix + "EUR" }]
-    })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    try {
-      var t = (d.content[0].text||"{}").replace(/```json|```/g,"").trim();
-      var res = JSON.parse(t);
-      if (res.status === "VALIDE") {
-        pubStatutFinal = "valide"; // ✅ IA approuve → publie directement
-        document.getElementById("anIcon").textContent="✅";
-        document.getElementById("anLabel").style.color="#27AE60";
-        document.getElementById("anLabel").textContent="Annonce approuvée par l'IA !";
-        document.getElementById("anMsg").textContent=res.message||"Votre annonce est conforme. Elle sera publiée immédiatement.";
-        document.getElementById("pubConfirm").style.display="block";
-      } else {
-        pubStatutFinal = "bloque"; // ❌ IA refuse
-        document.getElementById("anIcon").textContent="🚨";
-        document.getElementById("anLabel").style.color="#E74C3C";
-        document.getElementById("anLabel").textContent="Annonce bloquée";
-        document.getElementById("anMsg").textContent=res.message||"Votre annonce ne respecte pas nos conditions.";
-        document.getElementById("pubRetour").style.display="block";
-      }
-    } catch(e) {
-      // En cas d'erreur de parsing → on laisse passer
-      pubStatutFinal = "valide";
-      document.getElementById("anIcon").textContent="✅";
-      document.getElementById("anLabel").style.color="#27AE60";
-      document.getElementById("anLabel").textContent="Annonce approuvée !";
-      document.getElementById("anMsg").textContent="Votre annonce est conforme.";
-      document.getElementById("pubConfirm").style.display="block";
-    }
-  })
-  .catch(function(){
-    // Pas de connexion API → on laisse passer
-    pubStatutFinal = "valide";
-    document.getElementById("anIcon").textContent="✅";
-    document.getElementById("anLabel").style.color="#27AE60";
-    document.getElementById("anLabel").textContent="Annonce approuvée !";
-    document.getElementById("anMsg").textContent="Votre annonce est conforme.";
-    document.getElementById("pubConfirm").style.display="block";
-  });
+fetch("https://api.anthropic.com/v1/messages",{
+method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,
+system:"Moderateur marketplace automobile. Reponds UNIQUEMENT JSON: {\"status\":\"VALIDE\" ou \"BLOQUE\",\"message\":\"explication\"}",
+messages:[{role:"user",content:"Titre:"+titre+". Desc:"+desc+". Prix:"+prix+"EUR"}]})
+}).then(function(r){return r.json();}).then(function(d){
+try{
+var t=(d.content[0].text||"{}").replace(/```json|```/g,"").trim();
+var res=JSON.parse(t);
+if(res.status==="VALIDE"){
+document.getElementById("anIcon").textContent="✅";
+document.getElementById("anLabel").style.color="#27AE60";
+document.getElementById("anLabel").textContent="Annonce approuvée !";
+document.getElementById("anMsg").textContent=res.message;
+document.getElementById("pubConfirm").style.display="block";
+} else {
+document.getElementById("anIcon").textContent="🚨";
+document.getElementById("anLabel").style.color="#E74C3C";
+document.getElementById("anLabel").textContent="Annonce bloquée";
+document.getElementById("anMsg").textContent=res.message;
+document.getElementById("pubRetour").style.display="block";
+}
+} catch(e){
+document.getElementById("anIcon").textContent="✅";
+document.getElementById("anLabel").style.color="#27AE60";
+document.getElementById("anLabel").textContent="Annonce approuvée !";
+document.getElementById("pubConfirm").style.display="block";
+}
+}).catch(function(){
+document.getElementById("anIcon").textContent="✅";
+document.getElementById("anLabel").style.color="#27AE60";
+document.getElementById("anLabel").textContent="Annonce approuvée !";
+document.getElementById("pubConfirm").style.display="block";
+});
 }
 
-function confirmerPub() {
-  var estElec = document.getElementById("pub-carbu").value === "Electrique";
-  var data = {
-    titre: document.getElementById("pub-titre").value,
-    marque: document.getElementById("pub-marque").value,
-    prix: parseFloat(document.getElementById("pub-prix").value)||0,
-    categorie: document.getElementById("pub-cat").value,
-    ville: document.getElementById("pub-ville").value,
-    kilometrage: parseFloat(document.getElementById("pub-km").value)||0,
-    annee: parseInt(document.getElementById("pub-annee").value)||null,
-    carburant: document.getElementById("pub-carbu").value,
-    etat: document.getElementById("pub-etat").value,
-    description: document.getElementById("pub-desc").value,
-    telephone: document.getElementById("pub-tel").value,
-    vendeur_nom: document.getElementById("pub-nom").value,
-    vendeur_email: document.getElementById("pub-email").value,
-    statut: pubStatutFinal, // ← "valide" si IA a approuvé
-    electrique: estElec,
-    note: 5.0,
-    nb_avis: 0
-  };
-
-  sbInsert("annonces", data)
-    .then(function() {
-      closePub();
-      alert("🎉 Votre annonce est publiée et visible immédiatement !");
-      loadAnnonces(); // recharge la liste
-    })
-    .catch(function(){
-      alert("Erreur lors de la publication. Réessayez.");
-    });
+function confirmerPub(){
+var data={
+titre:document.getElementById("pub-titre").value,
+marque:document.getElementById("pub-marque").value,
+prix:parseFloat(document.getElementById("pub-prix").value)||0,
+categorie:document.getElementById("pub-cat").value,
+ville:document.getElementById("pub-ville").value,
+kilometrage:parseFloat(document.getElementById("pub-km").value)||0,
+annee:parseInt(document.getElementById("pub-annee").value)||null,
+carburant:document.getElementById("pub-carbu").value,
+etat:document.getElementById("pub-etat").value,
+description:document.getElementById("pub-desc").value,
+telephone:document.getElementById("pub-tel").value,
+vendeur_nom:document.getElementById("pub-nom").value,
+vendeur_email:document.getElementById("pub-email").value,
+image_url:uploadedPhotos.length>0?uploadedPhotos[0]:null,
+statut:"en_attente",
+electrique:document.getElementById("pub-carbu").value==="Electrique",
+note:5.0,
+nb_avis:0
+};
+sbInsert("annonces",data).then(function(){
+closePub();
+uploadedPhotos=[];
+alert("🎉 Annonce publiée !\n\nElle sera visible après validation.");
+loadAnnonces();
+}).catch(function(){alert("Erreur. Réessayez.");});
 }
 
-// ══════════════════════════════
-// AGENT IA
-// ══════════════════════════════
-var FAQ = [
-  {q:["vendre","publier"],r:"📋 Pour vendre :\n\n1️⃣ Bouton + Vendre\n2️⃣ Formulaire 3 étapes\n3️⃣ Agent IA vérifie\n4️⃣ Publication immédiate si approuvé !\n\n✅ 100% gratuit !"},
-  {q:["payer","paiement","securite"],r:"💳 Paiements sécurisés :\n\n✅ Virement bancaire\n✅ Espèces en main propre\n\n🚨 JAMAIS :\n❌ Western Union\n❌ Bitcoin\n❌ PayPal Amis"},
-  {q:["fraude","arnaque","signaler"],r:"🚨 Signaler : bouton 🚩 sur l'annonce.\nNotre IA analyse et bloque si fraude.\nSurveillance 24h/24 !"},
-  {q:["gratuit","cout"],r:"✅ Le Marché Auto est 100% GRATUIT !\nPublication, contact, agent anti-fraude : tout est gratuit !"},
-  {q:["electrique","hybride","bonus","aide"],r:"⚡ Aides véhicules électriques 2026 :\n\n✅ Bonus écologique : jusqu'à 6 000 €\n✅ Prime conversion : jusqu'à 5 000 €\n✅ Leasing social : dès 100 €/mois"},
-  {q:["alerte","notification"],r:"🔔 Créez une alerte !\n\nOnglet 🔔 Alertes en bas.\nEntrez votre recherche + budget.\nVous serez notifié dès qu'une annonce correspond !"},
+// ══ AGENT ══
+var FAQ=[
+{q:["vendre","publier"],r:"Pour vendre : bouton + Vendre, formulaire 3 etapes avec upload photos, agent IA verifie. Gratuit !"},
+{q:["payer","paiement","securite"],r:"Paiements securises : virement bancaire, especes. JAMAIS Western Union, Bitcoin, PayPal Amis !"},
+{q:["fraude","arnaque","signaler"],r:"Signaler : bouton Signaler sur l annonce. IA analyse et bloque si fraude. 24h/24 !"},
+{q:["gratuit","cout"],r:"100% GRATUIT ! Publication, contact, photos, agent anti-fraude, tout est gratuit !"},
+{q:["electrique","hybride","bonus","aide"],r:"Aides electrique 2026 : Bonus jusqu a 6000 EUR, Prime conversion jusqu a 5000 EUR, Leasing social des 100 EUR/mois"},
+{q:["photo","image"],r:"Pour les photos : dans le formulaire de publication, etape 2, vous pouvez uploader jusqu a 6 photos. Les photos sont hebergees sur Cloudinary !"},
 ];
 
-function addMsg(role, text) {
-  agentMsgs.push({role:role, text:text});
-  var el = document.getElementById("agentMsgs");
-  var h = "";
-  agentMsgs.forEach(function(m) {
-    h += '<div class="bubble '+m.role+'">';
-    if (m.role==="agent") h += '<div class="b-lbl">AGENT MARCHÉ AUTO</div>';
-    h += m.text + '</div>';
-  });
-  el.innerHTML = h;
-  el.scrollTop = el.scrollHeight;
+function addMsg(role,text){
+agentMsgs.push({role:role,text:text});
+var el=document.getElementById("agentMsgs");
+var h="";
+agentMsgs.forEach(function(m){
+h+='<div class="bubble '+m.role+'">';
+if(m.role==="agent") h+='<div class="b-lbl">AGENT MARCHE AUTO</div>';
+h+=m.text+'</div>';
+});
+el.innerHTML=h;
+el.scrollTop=el.scrollHeight;
 }
 
-function openAgent() {
-  document.getElementById("agentOverlay").classList.add("open");
-  if (!agentMsgs.length) addMsg("agent", "👋 Bonjour ! Je suis l'Agent Marché Auto 🛡️\n\nJe peux vous aider pour :\n💰 Estimer votre véhicule\n🛡️ Détecter les fraudes\n🔔 Configurer vos alertes\n⚡ Aides électriques\n\nComment puis-je vous aider ?");
+function openAgent(){
+document.getElementById("agentOverlay").classList.add("open");
+if(!agentMsgs.length) addMsg("agent","Bonjour ! Je suis l Agent Marche Auto.\n\nNouveau : les vendeurs peuvent maintenant uploader des vraies photos !\n\nComment puis-je vous aider ?");
 }
-function closeAgent(){ document.getElementById("agentOverlay").classList.remove("open"); }
+function closeAgent(){document.getElementById("agentOverlay").classList.remove("open");}
 
-function askQ(q) {
-  addMsg("user", q);
-  document.getElementById("typingInd").style.display = "block";
-  var lower = q.toLowerCase();
-  for (var i=0; i<FAQ.length; i++) {
-    var found = false;
-    for (var j=0; j<FAQ[i].q.length; j++) { if (lower.indexOf(FAQ[i].q[j])>=0) { found=true; break; } }
-    if (found) {
-      (function(r){ setTimeout(function(){ document.getElementById("typingInd").style.display="none"; addMsg("agent",r); }, 600); })(FAQ[i].r);
-      return;
-    }
-  }
-  fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 500,
-      system: "Tu es l'Agent Marché Auto, assistant anti-fraude de la marketplace automobile Le Marché Auto. Réponds en français, sois chaleureux et professionnel, utilise des emojis.",
-      messages: [{ role: "user", content: q }]
-    })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    document.getElementById("typingInd").style.display = "none";
-    addMsg("agent", d.content&&d.content[0] ? d.content[0].text : "Désolé, réessayez !");
-  })
-  .catch(function(){
-    document.getElementById("typingInd").style.display = "none";
-    addMsg("agent", "❌ Connexion impossible. Réessayez !");
-  });
+function askQ(q){
+addMsg("user",q);
+document.getElementById("typingInd").style.display="block";
+var lower=q.toLowerCase();
+for(var i=0;i<FAQ.length;i++){
+var found=false;
+for(var j=0;j<FAQ[i].q.length;j++){if(lower.indexOf(FAQ[i].q[j])>=0){found=true;break;}}
+if(found){(function(r){setTimeout(function(){document.getElementById("typingInd").style.display="none";addMsg("agent",r);},600);})(FAQ[i].r);return;}
+}
+fetch("https://api.anthropic.com/v1/messages",{
+method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:500,
+system:"Tu es l Agent Marche Auto. Reponds en francais, sois chaleureux.",
+messages:[{role:"user",content:q}]})
+}).then(function(r){return r.json();}).then(function(d){
+document.getElementById("typingInd").style.display="none";
+addMsg("agent",d.content&&d.content[0]?d.content[0].text:"Desole, reessayez !");
+}).catch(function(){
+document.getElementById("typingInd").style.display="none";
+addMsg("agent","Connexion impossible. Reessayez !");
+});
 }
 
-function sendMsg() {
-  var inp = document.getElementById("agentInp");
-  var txt = inp.value.trim();
-  if (!txt) return;
-  inp.value = "";
-  askQ(txt);
+function sendMsg(){
+var inp=document.getElementById("agentInp");
+var txt=inp.value.trim();
+if(!txt) return;
+inp.value="";
+askQ(txt);
 }
 
-function showHome() {
-  document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("open"); });
-  closePub(); closeAgent(); closeAlertes();
-}
-function closeScreen(id){ document.getElementById(id).classList.remove("open"); }
+function showHome(){document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("open");});closePub();closeAgent();}
+function closeScreen(id){document.getElementById(id).classList.remove("open");}
 
-// INIT
 loadAnnonces();
-renderAlertes();
 </script>
 </body>
 </html>
+
