@@ -1274,7 +1274,18 @@ function confirmerPub() {
   sbInsert("annonces", data).then(function() {
     closePub();
     loadAnnonces();
-    alert("🎉 Votre annonce est en ligne !\n\nElle est maintenant visible par tous les membres.");
+   fetch('/api/brevo', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    type: 'email',
+    to: document.getElementById("pub-email").value,
+    toName: document.getElementById("pub-nom").value,
+    subject: '✅ Votre annonce est en ligne — Le Marché Auto',
+    html: '<h2>Bonjour ' + document.getElementById("pub-nom").value + ' !</h2><p>Votre annonce <strong>' + document.getElementById("pub-titre").value + '</strong> est maintenant visible sur Le Marché Auto.</p><p>Prix : <strong>' + document.getElementById("pub-prix").value + ' €</strong></p><p>Bonne chance pour votre vente !</p><br><p>L\'équipe Le Marché Auto 🚗</p>'
+  })
+});
+alert("🎉 Votre annonce est en ligne !\n\nUn email de confirmation vous a été envoyé.");
   }).catch(function(){
     alert("Erreur lors de la publication. Réessayez.");
   });
