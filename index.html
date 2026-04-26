@@ -1271,20 +1271,24 @@ function confirmerPub() {
     note: 5.0,
     nb_avis: 0
   };
-  sbInsert("annonces", data).then(function() {
+sbInsert("annonces", data).then(function() {
     closePub();
     loadAnnonces();
-   fetch('/api/brevo', {
-  method: 'POST',
-  headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify({
-    type: 'email',
-    to: document.getElementById("pub-email").value,
-    toName: document.getElementById("pub-nom").value,
-    subject: '✅ Votre annonce est en ligne — Le Marché Auto',
-    html: '<h2>Bonjour ' + document.getElementById("pub-nom").value + ' !</h2><p>Votre annonce <strong>' + document.getElementById("pub-titre").value + '</strong> est maintenant visible sur Le Marché Auto.</p><p>Prix : <strong>' + document.getElementById("pub-prix").value + ' €</strong></p><p>Bonne chance pour votre vente !</p><br><p>L\'équipe Le Marché Auto 🚗</p>'
-  })
-});
+    fetch('/api/brevo', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        type: 'email',
+        to: document.getElementById("pub-email").value,
+        toName: document.getElementById("pub-nom").value,
+        subject: 'Votre annonce est en ligne - Le Marche Auto',
+        html: '<h2>Bonjour ' + document.getElementById("pub-nom").value + ' !</h2><p>Votre annonce <strong>' + document.getElementById("pub-titre").value + '</strong> est maintenant visible sur Le Marche Auto.</p><p>Bonne chance pour votre vente !</p>'
+      })
+    });
+    alert("Votre annonce est en ligne ! Un email de confirmation vous a ete envoye.");
+  }).catch(function(){
+    alert("Erreur lors de la publication. Reessayez.");
+  });
 alert("🎉 Votre annonce est en ligne !\n\nUn email de confirmation vous a été envoyé.");
   }).catch(function(){
     alert("Erreur lors de la publication. Réessayez.");
