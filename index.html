@@ -1186,7 +1186,7 @@ function askQ(q) {
   for(var i=0;i<FAQ.length;i++){
     var found=false;
     for(var j=0;j<FAQ[i].q.length;j++){if(lower.indexOf(FAQ[i].q[j])>=0){found=true;break;}}
-    if(found){(function(r){setTimeout(function(){document.getElementById("typingInd").style.display="none";addAgentMsg("agent",r);},600);})(FAQ[i].r];return;}
+    if(found){(function(r){setTimeout(function(){document.getElementById("typingInd").style.display="none";addAgentMsg("agent",r);},600);})(FAQ[i].r);return;}
   }
   fetch("/api/claude",{
     method:"POST",headers:{"Content-Type":"application/json"},
