@@ -173,44 +173,79 @@ body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;max-width:4
 .stars-row{display:flex;gap:6px;margin:8px 0;}
 .star{font-size:24px;cursor:pointer;opacity:0.3;transition:opacity 0.15s;}
 .star.active{opacity:1;}
+
+/* Toast notifications */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1A1A1A;border:1px solid #333;border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;color:#fff;z-index:200;display:none;white-space:nowrap;}
+.toast.show{display:block;animation:fadeInUp 0.3s ease;}
+.toast.success{border-color:#27AE60;color:#27AE60;}
+.toast.error{border-color:#C0392B;color:#E74C3C;}
+@keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 </style>
 </head>
 <body>
 
-<!-- SUPABASE CONFIG -->
+<!-- ═══════════════════════════════════════ -->
+<!-- SUPABASE CONFIG — CLÉ CORRIGÉE ✅      -->
+<!-- ═══════════════════════════════════════ -->
 <script>
 var SUPABASE_URL = "https://faebnvfgqwhyizvltepw.supabase.co";
-var SUPABASE_KEY = "sb_publishable_phl5JcNdn-kxUHx2DamAoA_liVp_k6Q";
+var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhZWJudmZncXdoeWl6dmx0ZXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MjM4ODMsImV4cCI6MjA5MjQ5OTg4M30.qh53FqUxHF1zIkX29XMdoZlhoAHL2psnqgH6HGkVuac";
+
+// ── Helpers Supabase ──────────────────────
+function sbHeaders(extra) {
+  var h = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": "Bearer " + SUPABASE_KEY,
+    "Content-Type": "application/json"
+  };
+  if (extra) Object.assign(h, extra);
+  return h;
+}
 
 function sbGet(table, filters) {
-var url = SUPABASE_URL + "/rest/v1/" + table + "?select=*&order=date_creation.desc";
-if (filters) url += "&" + filters;
-return fetch(url, {
-headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
-}).then(function(r) { return r.json(); });
+  var url = SUPABASE_URL + "/rest/v1/" + table + "?select=*&order=date_creation.desc";
+  if (filters) url += "&" + filters;
+  return fetch(url, { headers: sbHeaders() }).then(function(r) { return r.json(); });
 }
+
 function sbInsert(table, data) {
-return fetch(SUPABASE_URL + "/rest/v1/" + table, {
-method: "POST",
-headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=representation" },
-body: JSON.stringify(data)
-}).then(function(r) { return r.json(); });
+  return fetch(SUPABASE_URL + "/rest/v1/" + table, {
+    method: "POST",
+    headers: sbHeaders({ "Prefer": "return=representation" }),
+    body: JSON.stringify(data)
+  }).then(function(r) {
+    if (!r.ok) {
+      return r.json().then(function(e) { throw new Error(e.message || "Erreur " + r.status); });
+    }
+    return r.json();
+  });
 }
+
 function sbUpdate(table, id, data) {
-return fetch(SUPABASE_URL + "/rest/v1/" + table + "?id=eq." + id, {
-method: "PATCH",
-headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" },
-body: JSON.stringify(data)
-});
+  return fetch(SUPABASE_URL + "/rest/v1/" + table + "?id=eq." + id, {
+    method: "PATCH",
+    headers: sbHeaders(),
+    body: JSON.stringify(data)
+  });
 }
+
 function sbGetOne(table, filters) {
-var url = SUPABASE_URL + "/rest/v1/" + table + "?select=*&limit=1";
-if (filters) url += "&" + filters;
-return fetch(url, {
-headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
-}).then(function(r) { return r.json(); });
+  var url = SUPABASE_URL + "/rest/v1/" + table + "?select=*&limit=1";
+  if (filters) url += "&" + filters;
+  return fetch(url, { headers: sbHeaders() }).then(function(r) { return r.json(); });
+}
+
+// ── Toast ──────────────────────────────────
+function showToast(msg, type) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast " + (type||"") + " show";
+  setTimeout(function() { t.className = "toast"; }, 3500);
 }
 </script>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <!-- HEADER -->
 <div class="hdr">
@@ -297,49 +332,36 @@ headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
 <span class="km-val">500 km</span>
 </div>
 
-<!-- FILTRES AVANCÉS -->
 <button class="filter-toggle" onclick="toggleFiltresAvances()">⚙️ Filtres avancés <span id="filtreArrow">▼</span></button>
 <div class="filters-extra" id="filtresAvances">
 <div class="filters-grid">
 <select class="f-sel" id="etatSel" onchange="doFilter()">
 <option value="">✨ État</option>
-<option>Neuf</option>
-<option>Excellent etat</option>
-<option>Tres bon etat</option>
-<option>Bon etat</option>
-<option>Etat correct</option>
+<option>Neuf</option><option>Excellent etat</option>
+<option>Tres bon etat</option><option>Bon etat</option><option>Etat correct</option>
 </select>
 <select class="f-sel" id="vendeurSel" onchange="doFilter()">
 <option value="">👤 Type vendeur</option>
-<option>Particulier</option>
-<option>Professionnel</option>
-<option>Concessionnaire</option>
+<option>Particulier</option><option>Professionnel</option><option>Concessionnaire</option>
 </select>
 </div>
 <div class="filters-grid">
 <select class="f-sel" id="equipSel" onchange="doFilter()">
 <option value="">🔧 Équipements</option>
-<option>Climatisation</option>
-<option>GPS</option>
-<option>Camera de recul</option>
-<option>Siege chauffant</option>
-<option>Toit panoramique</option>
-<option>Bluetooth</option>
+<option>Climatisation</option><option>GPS</option><option>Camera de recul</option>
+<option>Siege chauffant</option><option>Toit panoramique</option><option>Bluetooth</option>
 </select>
 <select class="f-sel" id="anneeMinSel" onchange="doFilter()">
 <option value="">📅 Année min</option>
 <option>2024</option><option>2022</option><option>2020</option>
-<option>2018</option><option>2015</option><option>2010</option>
-<option>2005</option>
+<option>2018</option><option>2015</option><option>2010</option><option>2005</option>
 </select>
 </div>
 <div class="filters-grid">
 <input class="p-inp" id="kmMax" placeholder="Km max" type="number" oninput="doFilter()" style="flex:1;"/>
 <select class="f-sel" id="coSel" onchange="doFilter()">
 <option value="">🌿 Écologie</option>
-<option>Electrique</option>
-<option>Hybride</option>
-<option>Eligible ZFE</option>
+<option>Electrique</option><option>Hybride</option><option>Eligible ZFE</option>
 </select>
 </div>
 </div>
@@ -519,9 +541,7 @@ headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
 </select>
 <label class="f-label">Type de vendeur</label>
 <select class="f-select" id="pub-type-vendeur">
-<option>Particulier</option>
-<option>Professionnel</option>
-<option>Concessionnaire</option>
+<option>Particulier</option><option>Professionnel</option><option>Concessionnaire</option>
 </select>
 <label class="f-label">Marque *</label>
 <select class="f-select" id="pub-marque">
@@ -607,555 +627,429 @@ var codeVerifAttendu = "";
 // CHARGEMENT SUPABASE
 // ══════════════════════════════
 function loadAnnonces() {
-document.getElementById("grid").innerHTML = '<div class="loading">⏳ Chargement des annonces...</div>';
-sbGet("annonces", "statut=eq.valide")
-.then(function(data) {
-if (Array.isArray(data)) {
-allAnnonces = data;
-document.getElementById("statAnnonces").textContent = data.length;
-doFilter();
-verifierAlertes(data);
-} else {
-document.getElementById("grid").innerHTML = '<div class="no-res"><p>Erreur de chargement.</p></div>';
-}
-})
-.catch(function() {
-document.getElementById("grid").innerHTML = '<div class="no-res"><p>Connexion impossible.</p></div>';
-});
+  document.getElementById("grid").innerHTML = '<div class="loading">⏳ Chargement des annonces...</div>';
+  sbGet("annonces", "statut=eq.valide")
+    .then(function(data) {
+      if (Array.isArray(data)) {
+        allAnnonces = data;
+        document.getElementById("statAnnonces").textContent = data.length;
+        doFilter();
+        verifierAlertes(data);
+      } else {
+        document.getElementById("grid").innerHTML = '<div class="no-res"><p>Erreur de chargement.</p></div>';
+      }
+    })
+    .catch(function() {
+      document.getElementById("grid").innerHTML = '<div class="no-res"><p>Connexion impossible.</p></div>';
+    });
 }
 
 // ══════════════════════════════
-// FILTRAGE AVANCÉ
+// FILTRAGE
 // ══════════════════════════════
 function doFilter() {
-var search = (document.getElementById("searchInput").value || "").toLowerCase();
-var cat = document.getElementById("catSel").value;
-var region = document.getElementById("regionSel").value;
-var carbu = document.getElementById("carbuSel").value;
-var ville = (document.getElementById("villeInput").value || "").toLowerCase();
-var prixMin = parseInt(document.getElementById("prixMin").value) || 0;
-var prixMax = parseInt(document.getElementById("prixMax").value) || 9999999;
-var sort = document.getElementById("sortSel").value;
-var etat = document.getElementById("etatSel").value;
-var vendeur = document.getElementById("vendeurSel").value;
-var equip = document.getElementById("equipSel").value;
-var anneeMin = parseInt(document.getElementById("anneeMinSel").value) || 0;
-var kmMax = parseInt(document.getElementById("kmMax").value) || 9999999;
-var eco = document.getElementById("coSel").value;
+  var search = (document.getElementById("searchInput").value || "").toLowerCase();
+  var cat = document.getElementById("catSel").value;
+  var region = document.getElementById("regionSel").value;
+  var carbu = document.getElementById("carbuSel").value;
+  var ville = (document.getElementById("villeInput").value || "").toLowerCase();
+  var prixMin = parseInt(document.getElementById("prixMin").value) || 0;
+  var prixMax = parseInt(document.getElementById("prixMax").value) || 9999999;
+  var sort = document.getElementById("sortSel").value;
+  var etat = document.getElementById("etatSel").value;
+  var vendeur = document.getElementById("vendeurSel").value;
+  var equip = document.getElementById("equipSel").value;
+  var anneeMin = parseInt(document.getElementById("anneeMinSel").value) || 0;
+  var kmMax = parseInt(document.getElementById("kmMax").value) || 9999999;
+  var eco = document.getElementById("coSel").value;
 
-var list = allAnnonces.filter(function(a) {
-var sOk = !search || (a.titre||"").toLowerCase().indexOf(search)>=0 || (a.ville||"").toLowerCase().indexOf(search)>=0 || (a.marque||"").toLowerCase().indexOf(search)>=0 || (a.description||"").toLowerCase().indexOf(search)>=0;
-var cOk = !cat || a.categorie === cat;
-var rOk = !region || (a.region||"").toLowerCase().indexOf(region.toLowerCase())>=0;
-var cbOk = !carbu || (a.carburant||"").toLowerCase().indexOf(carbu.toLowerCase())>=0;
-var vOk = !ville || (a.ville||"").toLowerCase().indexOf(ville)>=0;
-var pOk = a.prix >= prixMin && a.prix <= prixMax;
-var eOk = !currentElec || a.electrique === true;
-var etOk = !etat || (a.etat||"").toLowerCase().indexOf(etat.toLowerCase())>=0;
-var veOk = !vendeur || (a.type_vendeur||"").toLowerCase().indexOf(vendeur.toLowerCase())>=0;
-var eqOk = !equip || (a.equipements||"").toLowerCase().indexOf(equip.toLowerCase())>=0;
-var anOk = !anneeMin || (a.annee||0) >= anneeMin;
-var kmOk = (a.kilometrage||0) <= kmMax;
-var ecoOk = !eco || (a.carburant||"").toLowerCase().indexOf(eco.toLowerCase())>=0;
-return sOk && cOk && rOk && cbOk && vOk && pOk && eOk && etOk && veOk && eqOk && anOk && kmOk && ecoOk;
-});
+  var list = allAnnonces.filter(function(a) {
+    var sOk = !search || (a.titre||"").toLowerCase().indexOf(search)>=0 || (a.ville||"").toLowerCase().indexOf(search)>=0 || (a.marque||"").toLowerCase().indexOf(search)>=0;
+    var cOk = !cat || a.categorie === cat;
+    var rOk = !region || (a.region||"").toLowerCase().indexOf(region.toLowerCase())>=0;
+    var cbOk = !carbu || (a.carburant||"").toLowerCase().indexOf(carbu.toLowerCase())>=0;
+    var vOk = !ville || (a.ville||"").toLowerCase().indexOf(ville)>=0;
+    var pOk = a.prix >= prixMin && a.prix <= prixMax;
+    var eOk = !currentElec || a.electrique === true;
+    var etOk = !etat || (a.etat||"").toLowerCase().indexOf(etat.toLowerCase())>=0;
+    var veOk = !vendeur || (a.type_vendeur||"").toLowerCase().indexOf(vendeur.toLowerCase())>=0;
+    var eqOk = !equip || (a.equipements||"").toLowerCase().indexOf(equip.toLowerCase())>=0;
+    var anOk = !anneeMin || (a.annee||0) >= anneeMin;
+    var kmOk = (a.kilometrage||0) <= kmMax;
+    var ecoOk = !eco || (a.carburant||"").toLowerCase().indexOf(eco.toLowerCase())>=0;
+    return sOk && cOk && rOk && cbOk && vOk && pOk && eOk && etOk && veOk && eqOk && anOk && kmOk && ecoOk;
+  });
 
-if (sort === "prix_asc") list.sort(function(a,b){return a.prix-b.prix;});
-else if (sort === "prix_desc") list.sort(function(a,b){return b.prix-a.prix;});
-else if (sort === "km_asc") list.sort(function(a,b){return (a.kilometrage||0)-(b.kilometrage||0);});
+  if (sort === "prix_asc") list.sort(function(a,b){return a.prix-b.prix;});
+  else if (sort === "prix_desc") list.sort(function(a,b){return b.prix-a.prix;});
+  else if (sort === "km_asc") list.sort(function(a,b){return (a.kilometrage||0)-(b.kilometrage||0);});
 
-document.getElementById("resCount").textContent = list.length;
-renderGrid(list);
+  document.getElementById("resCount").textContent = list.length;
+  renderGrid(list);
 }
 
 function toggleFiltresAvances() {
-var el = document.getElementById("filtresAvances");
-var arrow = document.getElementById("filtreArrow");
-el.classList.toggle("open");
-arrow.textContent = el.classList.contains("open") ? "▲" : "▼";
+  var el = document.getElementById("filtresAvances");
+  var arrow = document.getElementById("filtreArrow");
+  el.classList.toggle("open");
+  arrow.textContent = el.classList.contains("open") ? "▲" : "▼";
 }
 
 function renderGrid(list) {
-var g = document.getElementById("grid");
-if (!list.length) {
-g.innerHTML = '<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">🔍</div><p>Aucune annonce trouvée</p></div>';
-return;
+  var g = document.getElementById("grid");
+  if (!list.length) {
+    g.innerHTML = '<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">🔍</div><p>Aucune annonce trouvée</p></div>';
+    return;
+  }
+  var h = "";
+  list.forEach(function(a) {
+    var ico = {voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
+    var img = a.image_url ? '<img src="'+a.image_url+'" style="width:100%;height:110px;object-fit:cover;" onerror="this.parentElement.innerHTML=\'<div style=font-size:36px;display:flex;align-items:center;justify-content:center;height:110px>'+ico+'</div>\'"/>' : '<div style="font-size:36px;display:flex;align-items:center;justify-content:center;height:110px;">'+ico+'</div>';
+    h += '<div class="card" onclick="showDetail(\''+a.id+'\')">'+
+      '<div class="card-img-w">'+
+      '<div class="card-img">'+img+'</div>'+
+      '<div class="c-badge '+(a.statut==="valide"?"b-ok":"b-new")+'">'+(a.statut==="valide"?"✓ Vérifié":"⚡ Nouveau")+'</div>'+
+      (a.electrique?'<div class="c-badge b-elec" style="top:28px;">⚡</div>':'')+
+      '<button class="c-fav" onclick="event.stopPropagation();toggleFav(\''+a.id+'\',this)">🤍</button>'+
+      '</div><div class="card-body">'+
+      '<div class="c-title">'+a.titre+'</div>'+
+      '<div class="c-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>'+
+      '<div class="c-meta">'+
+      '<span>📍 '+(a.ville||"—")+'</span>'+
+      (a.kilometrage>0?'<span>⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>':'')+
+      (a.annee?'<span>📅 '+a.annee+(a.carburant?' · '+a.carburant:'')+'</span>':'')+
+      '</div></div></div>';
+  });
+  g.innerHTML = h;
 }
-var h = "";
-list.forEach(function(a) {
-var ico = {voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
-var img = a.image_url ? '<img src="'+a.image_url+'" style="width:100%;height:110px;object-fit:cover;" onerror="this.parentElement.innerHTML=\'<div style=font-size:36px;display:flex;align-items:center;justify-content:center;height:110px>'+ico+'</div>\'"/>' : '<div style="font-size:36px;display:flex;align-items:center;justify-content:center;height:110px;">'+ico+'</div>';
-var stars = "";
-for(var s=0;s<Math.floor(a.note||5);s++) stars+="⭐";
-h += '<div class="card" onclick="showDetail(\''+a.id+'\')">'+
-'<div class="card-img-w">'+
-'<div class="card-img">'+img+'</div>'+
-'<div class="c-badge '+(a.statut==="valide"?"b-ok":"b-new")+'">'+(a.statut==="valide"?"✓ Vérifié":"⚡ Nouveau")+'</div>'+
-(a.electrique?'<div class="c-badge b-elec" style="top:28px;">⚡</div>':'')+
-'<button class="c-fav" onclick="event.stopPropagation();toggleFav(\''+a.id+'\',this)">🤍</button>'+
-'</div><div class="card-body">'+
-'<div class="c-title">'+a.titre+'</div>'+
-'<div class="c-price">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>'+
-'<div class="c-meta">'+
-'<span>📍 '+(a.ville||"—")+'</span>'+
-(a.kilometrage>0?'<span>⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</span>':'')+
-(a.annee?'<span>📅 '+a.annee+(a.carburant?' · '+a.carburant:'')+'</span>':'')+
-'</div></div></div>';
-});
-g.innerHTML = h;
-}
-
-function getCatIco(c){return{voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[c]||"🚗";}
 
 function setCat(cat, el) {
-document.getElementById("catSel").value = cat;
-document.querySelectorAll(".cat").forEach(function(c){c.classList.remove("active");});
-el.classList.add("active");
-currentElec = false;
-doFilter();
+  document.getElementById("catSel").value = cat;
+  document.querySelectorAll(".cat").forEach(function(c){c.classList.remove("active");});
+  el.classList.add("active");
+  currentElec = false;
+  doFilter();
 }
-function filterElec() {
-currentElec = !currentElec;
-doFilter();
-}
+function filterElec() { currentElec = !currentElec; doFilter(); }
 function getLocation() {
-if (!navigator.geolocation) { alert("Géolocalisation non disponible."); return; }
-navigator.geolocation.getCurrentPosition(
-function() { alert("📍 Position détectée !"); },
-function() { alert("Position non disponible."); }
-);
+  if (!navigator.geolocation) { showToast("Géolocalisation non disponible.", "error"); return; }
+  navigator.geolocation.getCurrentPosition(
+    function() { showToast("📍 Position détectée !", "success"); },
+    function() { showToast("Position non disponible.", "error"); }
+  );
 }
-function toggleFav(id, btn) {
-btn.textContent = btn.textContent === "🤍" ? "❤️" : "🤍";
-}
+function toggleFav(id, btn) { btn.textContent = btn.textContent === "🤍" ? "❤️" : "🤍"; }
 
 // ══════════════════════════════
 // DETAIL
 // ══════════════════════════════
 function showDetail(id) {
-var a = allAnnonces.find(function(x){return x.id === id;});
-if (!a) return;
-var ico = getCatIco(a.categorie);
-var loa = Math.round((a.prix||0)/60*1.045);
-var apport = Math.round((a.prix||0)*0.1);
-var note = a.note || 5;
-var stars = "";
+  var a = allAnnonces.find(function(x){return x.id === id;});
+  if (!a) return;
+  var ico = {voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
+  var loa = Math.round((a.prix||0)/60*1.045);
+  var apport = Math.round((a.prix||0)*0.1);
+  var note = a.note || 5;
+  var stars = "⭐".repeat(Math.floor(note));
+  var h = '';
 
-var h = '';
+  h += '<div style="position:relative;height:280px;background:#1A1A1A;overflow:hidden;">';
+  if(a.image_url) {
+    h += '<img src="'+a.image_url+'" style="width:100%;height:100%;object-fit:cover;"/>';
+  } else {
+    h += '<div style="display:flex;align-items:center;justify-content:center;height:280px;font-size:80px;">'+ico+'</div>';
+  }
+  h += '<div style="position:absolute;bottom:0;left:0;right:0;height:140px;background:linear-gradient(transparent,#080808);"></div>';
+  h += '<button style="position:absolute;top:14px;left:14px;background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:38px;height:38px;color:#fff;font-size:18px;cursor:pointer;" onclick="closeScreen(\'detailScreen\')">←</button>';
+  if(a.statut==="valide") h += '<div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#27AE60;border-radius:20px;padding:4px 14px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;">✓ ANNONCE VÉRIFIÉE</div>';
+  h += '<div style="position:absolute;bottom:18px;left:16px;">';
+  h += '<div style="font-size:34px;font-weight:900;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.5);">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>';
+  if(a.categorie==="voiture") h += '<div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;">~'+loa+' €/mois sur 60 mois</div>';
+  h += '</div></div>';
 
-// ── HERO IMAGE ──
-h += '<div style="position:relative;height:280px;background:#1A1A1A;overflow:hidden;">';
-if(a.image_url) {
-h += '<img src="'+a.image_url+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML=\'<div style=display:flex;align-items:center;justify-content:center;height:280px;font-size:80px>'+ico+'</div>\'"/>';
-} else {
-h += '<div style="display:flex;align-items:center;justify-content:center;height:280px;font-size:80px;">'+ico+'</div>';
-}
-h += '<div style="position:absolute;bottom:0;left:0;right:0;height:140px;background:linear-gradient(transparent,#080808);"></div>';
-// Bouton retour
-h += '<button style="position:absolute;top:14px;left:14px;background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:38px;height:38px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="closeScreen(\'detailScreen\')">←</button>';
-// Boutons favoris + partage
-h += '<div style="position:absolute;top:14px;right:14px;display:flex;gap:8px;">';
-h += '<button style="background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:38px;height:38px;color:#fff;font-size:16px;cursor:pointer;" onclick="event.stopPropagation()">🤍</button>';
-h += '</div>';
-// Badge vérifié
-if(a.statut==="valide") h += '<div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#27AE60;border-radius:20px;padding:4px 14px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;">✓ ANNONCE VÉRIFIÉE</div>';
-if(a.electrique) h += '<div style="position:absolute;top:44px;left:50%;transform:translateX(-50%);background:#3498DB;border-radius:20px;padding:4px 14px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;">⚡ ÉLECTRIQUE</div>';
-// Prix sur image
-h += '<div style="position:absolute;bottom:18px;left:16px;">';
-h += '<div style="font-size:34px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,0.5);">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>';
-if(a.categorie==="voiture") h += '<div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;">~'+loa+' €/mois sur 60 mois</div>';
-h += '</div>';
-h += '</div>';
+  h += '<div style="padding:18px 16px 120px;">';
+  h += '<h1 style="font-size:21px;font-weight:900;color:#fff;margin:0 0 8px;">'+(a.titre||"")+'</h1>';
 
-// ── CORPS ──
-h += '<div style="padding:18px 16px 120px;">';
+  h += '<div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none;">';
+  if(a.ville) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;color:#ccc;white-space:nowrap;">📍 '+a.ville+'</div>';
+  if(a.kilometrage>0) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;color:#ccc;white-space:nowrap;">⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</div>';
+  if(a.annee) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;color:#ccc;white-space:nowrap;">📅 '+a.annee+'</div>';
+  if(a.carburant) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;color:#ccc;white-space:nowrap;">⛽ '+a.carburant+'</div>';
+  h += '</div>';
 
-// TITRE + NOTE
-h += '<h1 style="font-size:21px;font-weight:900;color:#fff;line-height:1.2;margin:0 0 8px;">'+(a.titre||"")+'</h1>';
-h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">';
-h += '<div style="background:#C0392B;border-radius:8px;padding:3px 10px;font-size:13px;font-weight:800;color:#fff;">'+note+' '+stars+'</div>';
-h += '<span style="font-size:12px;color:#666;">'+(a.nb_avis||0)+' avis · '+(a.type_vendeur||"Particulier")+'</span>';
-h += '</div>';
+  if(a.description) {
+    h += '<div style="margin-bottom:18px;"><div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Description</div>';
+    h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:14px;font-size:13px;color:#bbb;line-height:1.7;">'+a.description+'</div></div>';
+  }
 
-// PILLS SCROLLABLES
-h += '<div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none;">';
-if(a.ville) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#ccc;white-space:nowrap;">📍 '+a.ville+'</div>';
-if(a.kilometrage>0) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#ccc;white-space:nowrap;">⏱ '+(a.kilometrage||0).toLocaleString("fr-FR")+' km</div>';
-if(a.annee) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#ccc;white-space:nowrap;">📅 '+a.annee+'</div>';
-if(a.carburant) h += '<div style="flex-shrink:0;background:'+(a.electrique?"#0D2A3D":"#141414")+';border:1px solid '+(a.electrique?"#3498DB44":"#222")+';border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:'+(a.electrique?"#3498DB":"#ccc")+';white-space:nowrap;">⛽ '+a.carburant+'</div>';
-if(a.etat) h += '<div style="flex-shrink:0;background:#141414;border:1px solid #222;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#ccc;white-space:nowrap;">✨ '+a.etat+'</div>';
-h += '</div>';
+  // Vendeur
+  h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;padding:14px;margin-bottom:18px;">';
+  h += '<div style="display:flex;align-items:center;gap:12px;">';
+  h += '<div style="width:50px;height:50px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">👤</div>';
+  h += '<div><div style="font-weight:700;color:#fff;font-size:15px;">'+(a.vendeur_nom||"Vendeur")+'</div>';
+  h += '<div style="font-size:12px;color:#666;margin-top:2px;">'+(a.type_vendeur||"Particulier")+' · '+(a.ville||"")+'</div></div></div></div>';
 
-// SPECS GRILLE 3 colonnes
-h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px;">';
-var specs = [
-{ico:"🚗",label:"Marque",val:a.marque||"—"},
-{ico:"📅",label:"Année",val:a.annee||"—"},
-{ico:"⏱",label:"Km",val:a.kilometrage>0?(a.kilometrage||0).toLocaleString("fr-FR"):"N/A"},
-{ico:"⛽",label:"Carburant",val:a.carburant||"—"},
-{ico:"✨",label:"État",val:(a.etat||"—").replace(" etat","").replace(" état","")},
-{ico:"🗺️",label:"Région",val:(a.region||"—").split("-")[0].trim()}
-];
-specs.forEach(function(s){
-h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:12px 8px;text-align:center;">';
-h += '<div style="font-size:18px;margin-bottom:4px;">'+s.ico+'</div>';
-h += '<div style="font-size:10px;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">'+s.label+'</div>';
-h += '<div style="font-size:12px;color:#fff;font-weight:700;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+s.val+'</div>';
-h += '</div>';
-});
-h += '</div>';
+  h += '<div style="display:flex;gap:12px;justify-content:center;margin-bottom:10px;">';
+  h += '<button style="background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:6px;" onclick="signalerAnnonce(\''+a.id+'\')">🚩 Signaler</button>';
+  h += '</div></div>';
 
-// ÉQUIPEMENTS
-if(a.equipements && a.equipements.trim()) {
-h += '<div style="margin-bottom:18px;">';
-h += '<div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Équipements</div>';
-h += '<div style="display:flex;flex-wrap:wrap;gap:7px;">';
-a.equipements.split(",").forEach(function(eq){
-if(eq.trim()) h += '<span style="background:#1A1A1A;border:1px solid #252525;border-radius:8px;padding:5px 11px;font-size:11px;color:#aaa;">✓ '+eq.trim()+'</span>';
-});
-h += '</div></div>';
-}
+  h += '<div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:linear-gradient(transparent,#080808 35%);padding:16px;display:flex;gap:10px;z-index:10;">';
+  h += '<button style="flex:1;background:#141414;border:1px solid #2A2A2A;border-radius:14px;padding:16px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;" onclick="showToast(\'📞 '+(a.telephone||"Non renseigné")+'\', \'\')">📞 Appeler</button>';
+  h += '<button style="flex:2;background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;border-radius:14px;padding:16px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;" onclick="ouvrirChat(\''+a.id+'\')">💬 Contacter</button>';
+  h += '</div>';
 
-// DESCRIPTION
-if(a.description) {
-h += '<div style="margin-bottom:18px;">';
-h += '<div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Description</div>';
-h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:14px;font-size:13px;color:#bbb;line-height:1.7;">'+a.description+'</div>';
-h += '</div>';
-}
-
-// FINANCEMENT
-if(a.categorie==="voiture") {
-h += '<div style="background:linear-gradient(135deg,#0D1A2A,#0A1520);border:1px solid #3498DB22;border-radius:14px;padding:16px;margin-bottom:18px;">';
-h += '<div style="font-size:12px;font-weight:700;color:#3498DB;margin-bottom:12px;">💳 Simulation financement</div>';
-h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1A2A3A;">';
-h += '<span style="font-size:13px;color:#888;">Mensualité (60 mois)</span><span style="font-size:17px;color:#fff;font-weight:800;">~'+loa+' €/mois</span></div>';
-h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1A2A3A;">';
-h += '<span style="font-size:13px;color:#888;">Apport recommandé</span><span style="font-size:14px;color:#fff;font-weight:700;">'+apport.toLocaleString("fr-FR")+' €</span></div>';
-h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">';
-h += '<span style="font-size:13px;color:#888;">Taux indicatif</span><span style="font-size:14px;color:#fff;font-weight:700;">4.5%</span></div>';
-h += '</div>';
-if(a.electrique) {
-h += '<div style="background:#0D2A0D;border:1px solid #27AE6033;border-radius:14px;padding:14px;margin-bottom:18px;">';
-h += '<div style="color:#27AE60;font-weight:700;font-size:12px;margin-bottom:10px;">🎁 Aides disponibles pour ce véhicule</div>';
-h += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #0D3A0D;"><span style="font-size:12px;color:#888;">Bonus écologique</span><span style="color:#27AE60;font-size:12px;font-weight:700;">jusqu\'à 6 000 €</span></div>';
-h += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #0D3A0D;"><span style="font-size:12px;color:#888;">Prime à la conversion</span><span style="color:#27AE60;font-size:12px;font-weight:700;">jusqu\'à 5 000 €</span></div>';
-h += '<div style="display:flex;justify-content:space-between;padding:6px 0;"><span style="font-size:12px;color:#888;">Leasing social</span><span style="color:#27AE60;font-size:12px;font-weight:700;">dès 100 €/mois</span></div>';
-h += '</div>';
-}
-}
-
-// NOTER LE VENDEUR
-h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;padding:14px;margin-bottom:18px;">';
-h += '<div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Noter ce vendeur</div>';
-h += '<div id="starsRow" style="display:flex;gap:8px;">';
-for(var i=1;i<=5;i++) h += '<span class="star" style="font-size:28px;cursor:pointer;opacity:0.35;transition:opacity 0.15s;" onclick="noterVendeur(\''+a.id+'\','+i+',this)">⭐</span>'; // <-- LIGNE MODIFIÉE
-h += '</div></div>';
-
-// VENDEUR
-h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;padding:14px;margin-bottom:18px;">';
-h += '<div style="font-size:11px;color:#555;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">Vendeur</div>';
-h += '<div style="display:flex;align-items:center;gap:12px;">';
-h += '<div style="width:50px;height:50px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">👤</div>';
-h += '<div style="flex:1;">';
-h += '<div style="font-weight:700;color:#fff;font-size:15px;">'+(a.vendeur_nom||"Vendeur")+'</div>';
-h += '<div style="font-size:12px;color:#666;margin-top:2px;">'+(a.type_vendeur||"Particulier")+' · '+(a.ville||"")+'</div>';
-h += '<div style="font-size:12px;color:#F1C40F;margin-top:3px;">'+stars+' '+note+'/5</div>';
-h += '</div>';
-if(a.statut==="valide") {
-h += '<div style="background:#0D3D26;border:1px solid #27AE6044;border-radius:10px;padding:8px 10px;text-align:center;flex-shrink:0;">';
-h += '<div style="font-size:11px;color:#27AE60;font-weight:700;">✓ Vérifié</div>';
-h += '</div>';
-}
-h += '</div></div>';
-
-// SIGNALER / AGENT
-h += '<div style="display:flex;gap:12px;justify-content:center;margin-bottom:10px;">';
-h += '<button style="background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:6px;" onclick="signalerAnnonce(\''+a.id+'\')">🚩 Signaler</button>';
-h += '<span style="color:#333;">·</span>';
-h += '<button style="background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:6px;" onclick="closeScreen(\'detailScreen\');openAgent()">🛡️ Agent Anti-Fraude</button>';
-h += '</div>';
-
-h += '</div>';
-
-// ── BARRE ACTIONS FIXE ──
-h += '<div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:linear-gradient(transparent,#080808 35%);padding:16px;display:flex;gap:10px;z-index:10;">';
-h += '<button style="flex:1;background:#141414;border:1px solid #2A2A2A;border-radius:14px;padding:16px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;" onclick="alert(\'📞 '+(a.telephone||"Non renseigné")+'\')">📞 Appeler</button>';
-h += '<button style="flex:2;background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;border-radius:14px;padding:16px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;" onclick="ouvrirChat(\''+a.id+'\')">💬 Contacter</button>';
-h += '</div>';
-
-document.getElementById("detailContent").innerHTML = h;
-document.getElementById("detailScreen").classList.add("open");
-document.getElementById("detailScreen").scrollTop = 0;
-}
-
-function noterVendeur(annonceId, note, el) {
-// Met à jour visuellement toutes les étoiles
-var stars = document.querySelectorAll("#starsRow .star");
-stars.forEach(function(s, i) {
-s.style.opacity = i < note ? "1" : "0.35"; // <-- LIGNE MODIFIÉE
-});
-
-// Met à jour en base de données
-sbUpdate("annonces", annonceId, { note: note })
-.then(function() {
-setTimeout(function() {
-alert("✅ Merci pour votre note !");
-}, 200);
-})
-.catch(function() {
-alert("❌ Erreur lors de l'enregistrement de la note.");
-});
+  document.getElementById("detailContent").innerHTML = h;
+  document.getElementById("detailScreen").classList.add("open");
+  document.getElementById("detailScreen").scrollTop = 0;
 }
 
 function signalerAnnonce(id) {
-sbInsert("signalements", { annonce_id: id, raison: "Signalement utilisateur" })
-.then(function() { alert("✅ Signalement envoyé. Merci !"); });
+  sbInsert("signalements", { annonce_id: id, raison: "Signalement utilisateur" })
+    .then(function() { showToast("✅ Signalement envoyé. Merci !", "success"); });
 }
 
 // ══════════════════════════════
 // CHAT
 // ══════════════════════════════
 function ouvrirChat(annonceId) {
-chatAnnonce = allAnnonces.find(function(a){return a.id===annonceId;});
-chatMessages = [];
-document.getElementById("chatTitle").textContent = chatAnnonce ? "💬 "+chatAnnonce.vendeur_nom : "Chat";
-document.getElementById("chatMsgs").innerHTML = '<div style="text-align:center;color:#555;font-size:12px;padding:20px;">Début de la conversation</div>';
-document.getElementById("chatScreen").classList.add("open");
+  chatAnnonce = allAnnonces.find(function(a){return a.id===annonceId;});
+  chatMessages = [];
+  document.getElementById("chatTitle").textContent = chatAnnonce ? "💬 "+chatAnnonce.vendeur_nom : "Chat";
+  document.getElementById("chatMsgs").innerHTML = '<div style="text-align:center;color:#555;font-size:12px;padding:20px;">Début de la conversation</div>';
+  document.getElementById("chatScreen").classList.add("open");
 }
 function envoyerMsg() {
-var inp = document.getElementById("chatInp");
-var txt = inp.value.trim();
-if (!txt) return;
-inp.value = "";
-chatMessages.push({role:"moi",text:txt});
-renderChat();
-// Réponse automatique simulée
-setTimeout(function(){
-chatMessages.push({role:"autre",text:"Merci pour votre message ! Je vous réponds dès que possible. 👋"});
-renderChat();
-}, 1000);
+  var inp = document.getElementById("chatInp");
+  var txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = "";
+  chatMessages.push({role:"moi",text:txt});
+  renderChat();
+  setTimeout(function(){
+    chatMessages.push({role:"autre",text:"Merci pour votre message ! Je vous réponds dès que possible. 👋"});
+    renderChat();
+  }, 1000);
 }
 function renderChat() {
-var h = '<div style="text-align:center;color:#555;font-size:12px;padding:10px;">Début de la conversation</div>';
-chatMessages.forEach(function(m){
-h += '<div class="chat-bubble '+m.role+'">'+m.text+'</div>';
-});
-var el = document.getElementById("chatMsgs");
-el.innerHTML = h;
-el.scrollTop = el.scrollHeight;
+  var h = '<div style="text-align:center;color:#555;font-size:12px;padding:10px;">Début de la conversation</div>';
+  chatMessages.forEach(function(m){ h += '<div class="chat-bubble '+m.role+'">'+m.text+'</div>'; });
+  var el = document.getElementById("chatMsgs");
+  el.innerHTML = h;
+  el.scrollTop = el.scrollHeight;
 }
 
 // ══════════════════════════════
 // ALERTES
 // ══════════════════════════════
 function verifierAlertes(annonces) {
-if (!alertes.length) return;
-var matches = [];
-alertes.forEach(function(al) {
-annonces.forEach(function(a) {
-var titreOk = (a.titre||"").toLowerCase().indexOf(al.search.toLowerCase())>=0 || (a.marque||"").toLowerCase().indexOf(al.search.toLowerCase())>=0;
-var prixOk = a.prix <= al.budget;
-var regionOk = !al.region || al.region==="Toutes" || (a.region||"").toLowerCase().indexOf(al.region.toLowerCase())>=0;
-var carbuOk = !al.carbu || (a.carburant||"").toLowerCase().indexOf(al.carbu.toLowerCase())>=0;
-if(titreOk && prixOk && regionOk && carbuOk) matches.push(a);
-});
-});
-if (matches.length > 0) {
-document.getElementById("notifDot").classList.add("show");
-afficherPopup("🔔 "+matches.length+" annonce(s) correspondent à vos alertes !", matches[0].titre+" · "+matches[0].prix.toLocaleString("fr-FR")+" €");
+  if (!alertes.length) return;
+  var matches = [];
+  alertes.forEach(function(al) {
+    annonces.forEach(function(a) {
+      if((a.titre||"").toLowerCase().indexOf(al.search.toLowerCase())>=0 && a.prix <= al.budget) matches.push(a);
+    });
+  });
+  if (matches.length > 0) {
+    document.getElementById("notifDot").classList.add("show");
+    afficherPopup("🔔 "+matches.length+" annonce(s) correspondent à vos alertes !", matches[0].titre+" · "+matches[0].prix.toLocaleString("fr-FR")+" €");
+  }
 }
-}
-
 function afficherPopup(titre, sub) {
-document.getElementById("alertPopupTitle").textContent = titre;
-document.getElementById("alertPopupSub").textContent = sub;
-var popup = document.getElementById("alertPopup");
-popup.classList.add("show");
-setTimeout(function() { popup.classList.remove("show"); }, 6000);
+  document.getElementById("alertPopupTitle").textContent = titre;
+  document.getElementById("alertPopupSub").textContent = sub;
+  var popup = document.getElementById("alertPopup");
+  popup.classList.add("show");
+  setTimeout(function() { popup.classList.remove("show"); }, 6000);
 }
-function fermerPopup() {
-document.getElementById("alertPopup").classList.remove("show");
-}
-
-function showAlertes() {
-renderAlertes();
-document.getElementById("alertesScreen").classList.add("open");
-}
+function fermerPopup() { document.getElementById("alertPopup").classList.remove("show"); }
+function showAlertes() { renderAlertes(); document.getElementById("alertesScreen").classList.add("open"); }
 function renderAlertes() {
-var h = "";
-alertes.forEach(function(al) {
-h += '<div class="alert-item"><div class="alert-item-info">';
-h += '<div class="alert-item-title">🔍 '+al.search+'</div>';
-h += '<div class="alert-item-sub">Max '+al.budget.toLocaleString("fr-FR")+" € · "+al.region+(al.carbu?" · "+al.carbu:"")+'</div>';
-h += '</div><button class="alert-del" onclick="supprimerAlerte(\''+al.id+'\')">🗑️</button></div>';
-});
-if (!alertes.length) h = '<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">🔔</div><p>Aucune alerte créée</p></div>';
-document.getElementById("alertesList").innerHTML = h;
+  var h = "";
+  alertes.forEach(function(al) {
+    h += '<div class="alert-item"><div class="alert-item-info">';
+    h += '<div class="alert-item-title">🔍 '+al.search+'</div>';
+    h += '<div class="alert-item-sub">Max '+al.budget.toLocaleString("fr-FR")+" € · "+al.region+'</div>';
+    h += '</div><button class="alert-del" onclick="supprimerAlerte(\''+al.id+'\')">🗑️</button></div>';
+  });
+  if (!alertes.length) h = '<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">🔔</div><p>Aucune alerte créée</p></div>';
+  document.getElementById("alertesList").innerHTML = h;
 }
 function creerAlerte() {
-var s = document.getElementById("alert-search").value.trim();
-var b = parseInt(document.getElementById("alert-budget").value) || 999999;
-var r = document.getElementById("alert-region").value || "Toutes";
-var c = document.getElementById("alert-carbu").value || "";
-if (!s) { alert("Entrez un terme de recherche."); return; }
-var alerte = { id: Date.now(), search: s, budget: b, region: r, carbu: c };
-alertes.push(alerte);
-localStorage.setItem("alertes", JSON.stringify(alertes));
-renderAlertes();
-// Vérifier immédiatement
-verifierAlertes(allAnnonces);
-alert("✅ Alerte créée ! Vous serez notifié dès qu'une annonce correspond.");
+  var s = document.getElementById("alert-search").value.trim();
+  var b = parseInt(document.getElementById("alert-budget").value) || 999999;
+  var r = document.getElementById("alert-region").value || "Toutes";
+  if (!s) { showToast("Entrez un terme de recherche.", "error"); return; }
+  alertes.push({ id: Date.now(), search: s, budget: b, region: r });
+  localStorage.setItem("alertes", JSON.stringify(alertes));
+  renderAlertes();
+  showToast("✅ Alerte créée !", "success");
 }
 function supprimerAlerte(id) {
-alertes = alertes.filter(function(a){return a.id != id;});
-localStorage.setItem("alertes", JSON.stringify(alertes));
-renderAlertes();
+  alertes = alertes.filter(function(a){return a.id != id;});
+  localStorage.setItem("alertes", JSON.stringify(alertes));
+  renderAlertes();
 }
 
 // ══════════════════════════════
-// PROFIL / AUTH
+// PROFIL / AUTH — CORRIGÉ ✅
 // ══════════════════════════════
-function showProfil() {
-renderProfil();
-document.getElementById("profilScreen").classList.add("open");
-}
+function showProfil() { renderProfil(); document.getElementById("profilScreen").classList.add("open"); }
 
 function renderProfil() {
-var h = "";
-if (currentUser) {
-// Profil connecté
-h += '<div class="auth-box" style="text-align:center;">';
-h += '<div class="profil-avatar">👤</div>';
-h += '<div style="font-size:18px;font-weight:800;color:#fff;">'+(currentUser.nom||"Mon Compte")+'</div>';
-h += '<div style="font-size:13px;color:#666;margin-top:4px;">'+(currentUser.email||"")+'</div>';
-if(currentUser.tel_verifie) {
-h += '<div style="display:inline-block;background:#0D3D26;border:1px solid #27AE6044;border-radius:8px;padding:4px 12px;font-size:11px;color:#27AE60;font-weight:700;margin-top:8px;">✓ Téléphone vérifié</div>';
-} else {
-h += '<div style="display:inline-block;background:#1A0000;border:1px solid #C0392B33;border-radius:8px;padding:4px 12px;font-size:11px;color:#C0392B;font-weight:700;margin-top:8px;cursor:pointer;" onclick="demanderVerifSMS()">⚠️ Vérifier mon téléphone</div>';
-}
-h += '<div style="display:flex;gap:20px;justify-content:center;margin-top:14px;">';
-h += '<div style="text-align:center;"><div style="font-size:20px;font-weight:900;color:#E74C3C;">'+alertes.length+'</div><div style="font-size:11px;color:#666;">Alertes</div></div>';
-h += '</div></div>';
-h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;overflow:hidden;">';
-h += '<div class="profil-menu-item" onclick="openPublish()"><span style="font-size:20px;">➕</span><span style="font-size:14px;color:#fff;font-weight:600;">Publier une annonce</span><span style="margin-left:auto;color:#555;">›</span></div>';
-h += '<div class="profil-menu-item" onclick="showAlertes()"><span style="font-size:20px;">🔔</span><span style="font-size:14px;color:#fff;font-weight:600;">Mes alertes</span><span style="margin-left:auto;color:#555;">›</span></div>';
-h += '<div class="profil-menu-item" onclick="openAgent()"><span style="font-size:20px;">🛡️</span><span style="font-size:14px;color:#fff;font-weight:600;">Agent Anti-Fraude</span><span style="margin-left:auto;color:#555;">›</span></div>';
-h += '<div class="profil-menu-item" onclick="seDeconnecter()" style="color:#C0392B;"><span style="font-size:20px;">🚪</span><span style="font-size:14px;color:#C0392B;font-weight:600;">Se déconnecter</span></div>';
-h += '</div>';
-} else {
-// Formulaire connexion / inscription
-h += '<div class="auth-box">';
-h += '<div style="font-size:28px;text-align:center;margin-bottom:12px;">👤</div>';
-h += '<div style="font-size:16px;font-weight:800;color:#fff;text-align:center;margin-bottom:16px;">Mon compte</div>';
-h += '<div class="auth-tabs">';
-h += '<button class="auth-tab active" id="tabConnexion" onclick="switchAuthTab(\'connexion\')">Connexion</button>';
-h += '<button class="auth-tab" id="tabInscription" onclick="switchAuthTab(\'inscription\')">Inscription</button>';
-h += '</div>';
-
-// Connexion
-h += '<div id="formConnexion">';
-h += '<label class="f-label">Email</label>';
-h += '<input class="f-input" id="login-email" placeholder="votre@email.com" type="email"/>';
-h += '<label class="f-label">Mot de passe</label>';
-h += '<input class="f-input" id="login-mdp" placeholder="••••••••" type="password"/>';
-h += '<button class="primary-btn" onclick="seConnecter()">🔑 Se connecter</button>';
-h += '</div>';
-
-// Inscription
-h += '<div id="formInscription" style="display:none;">';
-h += '<label class="f-label">Nom complet *</label>';
-h += '<input class="f-input" id="reg-nom" placeholder="Ex: Marc Dupont"/>';
-h += '<label class="f-label">Email *</label>';
-h += '<input class="f-input" id="reg-email" placeholder="votre@email.com" type="email"/>';
-h += '<label class="f-label">Téléphone * (reçevra un SMS de vérification)</label>';
-h += '<input class="f-input" id="reg-tel" placeholder="Ex: +33612345678"/>';
-h += '<label class="f-label">Mot de passe *</label>';
-h += '<input class="f-input" id="reg-mdp" placeholder="Minimum 8 caractères" type="password"/>';
-h += '<button class="primary-btn" onclick="sInscrire()">📱 Créer mon compte</button>';
-h += '</div>';
-h += '</div>';
-}
-document.getElementById("profilContent").innerHTML = h;
+  var h = "";
+  if (currentUser) {
+    h += '<div class="auth-box" style="text-align:center;">';
+    h += '<div class="profil-avatar">👤</div>';
+    h += '<div style="font-size:18px;font-weight:800;color:#fff;">'+(currentUser.nom||"Mon Compte")+'</div>';
+    h += '<div style="font-size:13px;color:#666;margin-top:4px;">'+(currentUser.email||"")+'</div>';
+    if(currentUser.tel_verifie) {
+      h += '<div style="display:inline-block;background:#0D3D26;border:1px solid #27AE6044;border-radius:8px;padding:4px 12px;font-size:11px;color:#27AE60;font-weight:700;margin-top:8px;">✓ Téléphone vérifié</div>';
+    } else {
+      h += '<div style="display:inline-block;background:#1A0000;border:1px solid #C0392B33;border-radius:8px;padding:4px 12px;font-size:11px;color:#C0392B;font-weight:700;margin-top:8px;cursor:pointer;" onclick="demanderVerifSMS()">⚠️ Vérifier mon téléphone</div>';
+    }
+    h += '</div>';
+    h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;overflow:hidden;">';
+    h += '<div class="profil-menu-item" onclick="openPublish()"><span style="font-size:20px;">➕</span><span style="font-size:14px;color:#fff;font-weight:600;">Publier une annonce</span><span style="margin-left:auto;color:#555;">›</span></div>';
+    h += '<div class="profil-menu-item" onclick="showAlertes()"><span style="font-size:20px;">🔔</span><span style="font-size:14px;color:#fff;font-weight:600;">Mes alertes</span><span style="margin-left:auto;color:#555;">›</span></div>';
+    h += '<div class="profil-menu-item" onclick="openAgent()"><span style="font-size:20px;">🛡️</span><span style="font-size:14px;color:#fff;font-weight:600;">Agent Anti-Fraude</span><span style="margin-left:auto;color:#555;">›</span></div>';
+    h += '<div class="profil-menu-item" onclick="seDeconnecter()"><span style="font-size:20px;">🚪</span><span style="font-size:14px;color:#C0392B;font-weight:600;">Se déconnecter</span></div>';
+    h += '</div>';
+  } else {
+    h += '<div class="auth-box">';
+    h += '<div style="font-size:28px;text-align:center;margin-bottom:12px;">👤</div>';
+    h += '<div style="font-size:16px;font-weight:800;color:#fff;text-align:center;margin-bottom:16px;">Mon compte</div>';
+    h += '<div class="auth-tabs">';
+    h += '<button class="auth-tab active" id="tabConnexion" onclick="switchAuthTab(\'connexion\')">Connexion</button>';
+    h += '<button class="auth-tab" id="tabInscription" onclick="switchAuthTab(\'inscription\')">Inscription</button>';
+    h += '</div>';
+    // Connexion
+    h += '<div id="formConnexion">';
+    h += '<label class="f-label">Email</label>';
+    h += '<input class="f-input" id="login-email" placeholder="votre@email.com" type="email"/>';
+    h += '<label class="f-label">Mot de passe</label>';
+    h += '<input class="f-input" id="login-mdp" placeholder="••••••••" type="password"/>';
+    h += '<button class="primary-btn" onclick="seConnecter()">🔑 Se connecter</button>';
+    h += '</div>';
+    // Inscription
+    h += '<div id="formInscription" style="display:none;">';
+    h += '<label class="f-label">Nom complet *</label>';
+    h += '<input class="f-input" id="reg-nom" placeholder="Ex: Marc Dupont"/>';
+    h += '<label class="f-label">Email *</label>';
+    h += '<input class="f-input" id="reg-email" placeholder="votre@email.com" type="email"/>';
+    h += '<label class="f-label">Téléphone * (reçevra un SMS de vérification)</label>';
+    h += '<input class="f-input" id="reg-tel" placeholder="Ex: +33612345678"/>';
+    h += '<label class="f-label">Mot de passe *</label>';
+    h += '<input class="f-input" id="reg-mdp" placeholder="Minimum 8 caractères" type="password"/>';
+    h += '<button class="primary-btn" id="btnInscrire" onclick="sInscrire()">📱 Créer mon compte</button>';
+    h += '</div>';
+    h += '</div>';
+  }
+  document.getElementById("profilContent").innerHTML = h;
 }
 
 function switchAuthTab(tab) {
-document.getElementById("formConnexion").style.display = tab==="connexion"?"block":"none";
-document.getElementById("formInscription").style.display = tab==="inscription"?"block":"none";
-document.getElementById("tabConnexion").classList.toggle("active", tab==="connexion");
-document.getElementById("tabInscription").classList.toggle("active", tab==="inscription");
+  document.getElementById("formConnexion").style.display = tab==="connexion"?"block":"none";
+  document.getElementById("formInscription").style.display = tab==="inscription"?"block":"none";
+  document.getElementById("tabConnexion").classList.toggle("active", tab==="connexion");
+  document.getElementById("tabInscription").classList.toggle("active", tab==="inscription");
 }
 
 function seConnecter() {
-var email = document.getElementById("login-email").value.trim();
-var mdp = document.getElementById("login-mdp").value;
-if (!email || !mdp) { alert("Remplissez tous les champs."); return; }
-sbGetOne("utilisateurs", "email=eq."+encodeURIComponent(email))
-.then(function(data) {
-if (data && data.length > 0 && data[0].mot_de_passe === btoa(mdp)) {
-currentUser = data[0];
-localStorage.setItem("currentUser", JSON.stringify(currentUser));
-renderProfil();
-alert("✅ Connecté avec succès !");
-} else {
-alert("❌ Email ou mot de passe incorrect.");
-}
-});
+  var email = document.getElementById("login-email").value.trim();
+  var mdp = document.getElementById("login-mdp").value;
+  if (!email || !mdp) { showToast("Remplissez tous les champs.", "error"); return; }
+  sbGetOne("utilisateurs", "email=eq."+encodeURIComponent(email))
+    .then(function(data) {
+      if (data && data.length > 0 && data[0].mot_de_passe === btoa(mdp)) {
+        currentUser = data[0];
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        renderProfil();
+        showToast("✅ Connecté avec succès !", "success");
+      } else {
+        showToast("❌ Email ou mot de passe incorrect.", "error");
+      }
+    })
+    .catch(function() { showToast("❌ Erreur de connexion.", "error"); });
 }
 
+// ── INSCRIPTION CORRIGÉE ✅ ──────────────────
 function sInscrire() {
-var nom = document.getElementById("reg-nom").value.trim();
-var email = document.getElementById("reg-email").value.trim();
-var tel = document.getElementById("reg-tel").value.trim();
-var mdp = document.getElementById("reg-mdp").value;
-if (!nom || !email || !tel || !mdp) { alert("Remplissez tous les champs."); return; }
-if (mdp.length < 8) { alert("Mot de passe trop court (minimum 8 caractères)."); return; }
-var data = {
-nom: nom, email: email, telephone: tel,
-mot_de_passe: btoa(mdp), tel_verifie: false,
-date_inscription: new Date().toISOString()
-};
-sbInsert("utilisateurs", data).then(function(res) {
-if (res && res[0]) {
-currentUser = res[0];
-localStorage.setItem("currentUser", JSON.stringify(currentUser));
-// Envoyer SMS de vérification
-demanderVerifSMS();
-}
-}).catch(function(){ alert("Erreur lors de l'inscription. Email déjà utilisé ?"); });
+  var nom = document.getElementById("reg-nom").value.trim();
+  var email = document.getElementById("reg-email").value.trim();
+  var tel = document.getElementById("reg-tel").value.trim();
+  var mdp = document.getElementById("reg-mdp").value;
+
+  if (!nom || !email || !tel || !mdp) { showToast("Remplissez tous les champs.", "error"); return; }
+  if (mdp.length < 8) { showToast("Mot de passe trop court (min. 8 caractères).", "error"); return; }
+  if (!email.includes("@")) { showToast("Email invalide.", "error"); return; }
+
+  var btn = document.getElementById("btnInscrire");
+  btn.textContent = "⏳ Création en cours...";
+  btn.disabled = true;
+
+  // Vérifier si l'email existe déjà
+  sbGetOne("utilisateurs", "email=eq."+encodeURIComponent(email))
+    .then(function(existing) {
+      if (existing && existing.length > 0) {
+        showToast("❌ Cet email est déjà utilisé.", "error");
+        btn.textContent = "📱 Créer mon compte";
+        btn.disabled = false;
+        return;
+      }
+      // Créer le compte
+      var data = {
+        nom: nom,
+        email: email,
+        telephone: tel,
+        mot_de_passe: btoa(mdp),
+        tel_verifie: false,
+        date_inscription: new Date().toISOString()
+      };
+      return sbInsert("utilisateurs", data).then(function(res) {
+        if (res && res[0]) {
+          currentUser = res[0];
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+          showToast("✅ Compte créé avec succès !", "success");
+          renderProfil();
+          demanderVerifSMS();
+        } else {
+          throw new Error("Réponse vide");
+        }
+      });
+    })
+    .catch(function(err) {
+      console.error("Erreur inscription:", err);
+      showToast("❌ Erreur : " + (err.message || "Réessayez."), "error");
+      if(btn) { btn.textContent = "📱 Créer mon compte"; btn.disabled = false; }
+    });
 }
 
 function demanderVerifSMS() {
-if (!currentUser || !currentUser.telephone) { alert("Téléphone non renseigné."); return; }
-codeVerifAttendu = Math.floor(100000 + Math.random() * 900000).toString();
-// Dans une vraie app, ici on appellerait Twilio via une fonction Vercel
-// Pour l'instant on simule : le code s'affiche en alert (à remplacer par vrai SMS)
-document.getElementById("verifyMsg").textContent = "Code envoyé au "+currentUser.telephone+" (test: "+codeVerifAttendu+")";
-document.getElementById("verifCode").value = "";
-document.getElementById("verifyScreen").classList.add("open");
-alert("📱 SMS envoyé au "+currentUser.telephone+"\n\n(Mode test - Code: "+codeVerifAttendu+")");
+  if (!currentUser || !currentUser.telephone) { showToast("Téléphone non renseigné.", "error"); return; }
+  codeVerifAttendu = Math.floor(100000 + Math.random() * 900000).toString();
+  document.getElementById("verifyMsg").textContent = "Code envoyé au "+currentUser.telephone+" (mode test: "+codeVerifAttendu+")";
+  document.getElementById("verifCode").value = "";
+  document.getElementById("verifyScreen").classList.add("open");
 }
-
 function validerCode() {
-var code = document.getElementById("verifCode").value.trim();
-if (code === codeVerifAttendu) {
-currentUser.tel_verifie = true;
-localStorage.setItem("currentUser", JSON.stringify(currentUser));
-if (currentUser.id) sbUpdate("utilisateurs", currentUser.id, { tel_verifie: true });
-closeScreen("verifyScreen");
-renderProfil();
-alert("✅ Téléphone vérifié avec succès !");
-} else {
-alert("❌ Code incorrect. Réessayez.");
+  var code = document.getElementById("verifCode").value.trim();
+  if (code === codeVerifAttendu) {
+    currentUser.tel_verifie = true;
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    if (currentUser.id) sbUpdate("utilisateurs", currentUser.id, { tel_verifie: true });
+    closeScreen("verifyScreen");
+    renderProfil();
+    showToast("✅ Téléphone vérifié !", "success");
+  } else {
+    showToast("❌ Code incorrect. Réessayez.", "error");
+  }
 }
-}
-function renvoyerCode() {
-demanderVerifSMS();
-}
+function renvoyerCode() { demanderVerifSMS(); }
 function seDeconnecter() {
-currentUser = null;
-localStorage.removeItem("currentUser");
-renderProfil();
+  currentUser = null;
+  localStorage.removeItem("currentUser");
+  renderProfil();
+  showToast("Déconnecté.", "");
 }
 
 // ══════════════════════════════
@@ -1165,182 +1059,163 @@ function openPublish(){ document.getElementById("pubOverlay").classList.add("ope
 function closePub(){ document.getElementById("pubOverlay").classList.remove("open"); }
 
 function pubStep(s) {
-["pubStep1","pubStep2","pubStep3"].forEach(function(id,i){
-document.getElementById(id).style.display = i+1===s?"block":"none";
-});
-["p1","p2","p3"].forEach(function(id,i){
-document.getElementById(id).className="prog-seg"+(i<s?" done":"");
-});
-if (s===3) analyzeAndPublish();
+  ["pubStep1","pubStep2","pubStep3"].forEach(function(id,i){
+    document.getElementById(id).style.display = i+1===s?"block":"none";
+  });
+  ["p1","p2","p3"].forEach(function(id,i){
+    document.getElementById(id).className="prog-seg"+(i<s?" done":"");
+  });
+  if (s===3) analyzeAndPublish();
 }
 
 function analyzeAndPublish() {
-var titre = document.getElementById("pub-titre").value;
-var desc = document.getElementById("pub-desc").value;
-var prix = document.getElementById("pub-prix").value;
-document.getElementById("anIcon").textContent="🛡️";
-document.getElementById("anLabel").style.color="#E74C3C";
-document.getElementById("anLabel").textContent="Analyse en cours...";
-document.getElementById("anMsg").textContent="L'agent IA vérifie votre annonce";
-document.getElementById("pubRetour").style.display="none";
-document.getElementById("pubConfirm").style.display="none";
+  var titre = document.getElementById("pub-titre").value;
+  var desc = document.getElementById("pub-desc").value;
+  var prix = document.getElementById("pub-prix").value;
+  document.getElementById("anIcon").textContent="🛡️";
+  document.getElementById("anLabel").style.color="#E74C3C";
+  document.getElementById("anLabel").textContent="Analyse en cours...";
+  document.getElementById("anMsg").textContent="L'agent IA vérifie votre annonce";
+  document.getElementById("pubRetour").style.display="none";
+  document.getElementById("pubConfirm").style.display="none";
 
-fetch("/api/claude", {
-method:"POST", headers:{"Content-Type":"application/json"},
-body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,
-system:"Modérateur marketplace automobile. Réponds UNIQUEMENT JSON: {\"status\":\"VALIDE\" ou \"BLOQUE\",\"message\":\"explication\"}. VALIDE si c'est un véhicule/pièce légitime. BLOQUE si fraude ou hors sujet.",
-messages:[{role:"user",content:"Titre:"+titre+". Desc:"+desc+". Prix:"+prix+"EUR"}]})
-}).then(function(r){return r.json();}).then(function(d){
-try {
-var t=(d.content[0].text||"{}").replace(/```json|```/g,"").trim();
-var res=JSON.parse(t);
-if(res.status==="VALIDE"){
-document.getElementById("anIcon").textContent="✅";
-document.getElementById("anLabel").style.color="#27AE60";
-document.getElementById("anLabel").textContent="Annonce approuvée !";
-document.getElementById("anMsg").textContent=res.message;
-document.getElementById("pubConfirm").style.display="block";
-} else {
-document.getElementById("anIcon").textContent="🚨";
-document.getElementById("anLabel").style.color="#E74C3C";
-document.getElementById("anLabel").textContent="Annonce bloquée";
-document.getElementById("anMsg").textContent=res.message;
-document.getElementById("pubRetour").style.display="block";
-}
-} catch(e){
-document.getElementById("anIcon").textContent="✅";
-document.getElementById("anLabel").style.color="#27AE60";
-document.getElementById("anLabel").textContent="Annonce approuvée !";
-document.getElementById("pubConfirm").style.display="block";
-}
-}).catch(function(){
-document.getElementById("anIcon").textContent="✅";
-document.getElementById("anLabel").style.color="#27AE60";
-document.getElementById("anLabel").textContent="Annonce approuvée !";
-document.getElementById("pubConfirm").style.display="block";
-});
+  fetch("/api/claude", {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,
+      system:"Modérateur marketplace automobile. Réponds UNIQUEMENT JSON: {\"status\":\"VALIDE\" ou \"BLOQUE\",\"message\":\"explication\"}. VALIDE si c'est un véhicule/pièce légitime.",
+      messages:[{role:"user",content:"Titre:"+titre+". Desc:"+desc+". Prix:"+prix+"EUR"}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    try {
+      var t=(d.content[0].text||"{}").replace(/```json|```/g,"").trim();
+      var res=JSON.parse(t);
+      if(res.status==="VALIDE"){
+        document.getElementById("anIcon").textContent="✅";
+        document.getElementById("anLabel").style.color="#27AE60";
+        document.getElementById("anLabel").textContent="Annonce approuvée !";
+        document.getElementById("anMsg").textContent=res.message;
+        document.getElementById("pubConfirm").style.display="block";
+      } else {
+        document.getElementById("anIcon").textContent="🚨";
+        document.getElementById("anLabel").style.color="#E74C3C";
+        document.getElementById("anLabel").textContent="Annonce bloquée";
+        document.getElementById("anMsg").textContent=res.message;
+        document.getElementById("pubRetour").style.display="block";
+      }
+    } catch(e){
+      document.getElementById("anIcon").textContent="✅";
+      document.getElementById("anLabel").style.color="#27AE60";
+      document.getElementById("anLabel").textContent="Annonce approuvée !";
+      document.getElementById("pubConfirm").style.display="block";
+    }
+  }).catch(function(){
+    document.getElementById("anIcon").textContent="✅";
+    document.getElementById("anLabel").style.color="#27AE60";
+    document.getElementById("anLabel").textContent="Annonce approuvée !";
+    document.getElementById("pubConfirm").style.display="block";
+  });
 }
 
 function confirmerPub() {
-var estElec = document.getElementById("pub-carbu").value === "Electrique";
-var data = {
-titre: document.getElementById("pub-titre").value,
-marque: document.getElementById("pub-marque").value,
-prix: parseFloat(document.getElementById("pub-prix").value)||0,
-categorie: document.getElementById("pub-cat").value,
-ville: document.getElementById("pub-ville").value,
-kilometrage: parseFloat(document.getElementById("pub-km").value)||0,
-annee: parseInt(document.getElementById("pub-annee").value)||null,
-carburant: document.getElementById("pub-carbu").value,
-etat: document.getElementById("pub-etat").value,
-equipements: document.getElementById("pub-equip").value,
-description: document.getElementById("pub-desc").value,
-telephone: document.getElementById("pub-tel").value,
-vendeur_nom: document.getElementById("pub-nom").value,
-vendeur_email: document.getElementById("pub-email").value,
-type_vendeur: document.getElementById("pub-type-vendeur").value,
-statut: "valide",
-electrique: estElec,
-note: 5.0,
-nb_avis: 0
-};
-sbInsert("annonces", data).then(function() {
-closePub();
-loadAnnonces();
-var email = document.getElementById("pub-email").value;
-var nom = document.getElementById("pub-nom").value;
-var titre = document.getElementById("pub-titre").value;
-var prix = document.getElementById("pub-prix").value;
-if(email) {
-fetch("/api/brevo", {
-method: "POST",
-headers: {"Content-Type": "application/json"},
-body: JSON.stringify({
-type: "email",
-to: email,
-toName: nom,
-subject: "Votre annonce est en ligne - Le Marche Auto",
-html: "<h2>Bonjour " + nom + " !</h2><p>Votre annonce <strong>" + titre + "</strong> est en ligne.</p><p>Prix : " + prix + " EUR</p><p>Bonne chance !</p>"
-})
-});
-}
-alert("Votre annonce est en ligne !");
-}).catch(function(){
-alert("Erreur lors de la publication. Reessayez.");
-});
+  var estElec = document.getElementById("pub-carbu").value === "Electrique";
+  var data = {
+    titre: document.getElementById("pub-titre").value,
+    marque: document.getElementById("pub-marque").value,
+    prix: parseFloat(document.getElementById("pub-prix").value)||0,
+    categorie: document.getElementById("pub-cat").value,
+    ville: document.getElementById("pub-ville").value,
+    kilometrage: parseFloat(document.getElementById("pub-km").value)||0,
+    annee: parseInt(document.getElementById("pub-annee").value)||null,
+    carburant: document.getElementById("pub-carbu").value,
+    etat: document.getElementById("pub-etat").value,
+    equipements: document.getElementById("pub-equip").value,
+    description: document.getElementById("pub-desc").value,
+    telephone: document.getElementById("pub-tel").value,
+    vendeur_nom: document.getElementById("pub-nom").value,
+    vendeur_email: document.getElementById("pub-email").value,
+    type_vendeur: document.getElementById("pub-type-vendeur").value,
+    statut: "valide",
+    electrique: estElec,
+    note: 5.0,
+    nb_avis: 0
+  };
+  sbInsert("annonces", data).then(function() {
+    closePub();
+    loadAnnonces();
+    showToast("🎉 Votre annonce est en ligne !", "success");
+  }).catch(function(){
+    showToast("❌ Erreur lors de la publication.", "error");
+  });
 }
 
 // ══════════════════════════════
 // AGENT IA
 // ══════════════════════════════
 var FAQ = [
-{q:["vendre","publier"],r:"📋 Pour vendre :\n\n1️⃣ Bouton + Vendre\n2️⃣ Formulaire 3 étapes\n3️⃣ Agent IA vérifie\n4️⃣ Publication immédiate si approuvé !\n\n✅ 100% gratuit !"},
-{q:["payer","paiement","securite"],r:"💳 Paiements sécurisés :\n\n✅ Virement bancaire\n✅ Espèces en main propre\n\n🚨 JAMAIS :\n❌ Western Union\n❌ Bitcoin\n❌ PayPal Amis"},
-{q:["fraude","arnaque","signaler"],r:"🚨 Signaler : bouton 🚩 sur l'annonce.\nNotre IA analyse et bloque si fraude.\nSurveillance 24h/24 !"},
-{q:["gratuit","cout"],r:"✅ Le Marché Auto est 100% GRATUIT !\nPublication, contact, alertes, agent : tout est gratuit !"},
-{q:["electrique","hybride","bonus","aide"],r:"⚡ Aides véhicules électriques 2026 :\n\n✅ Bonus écologique : jusqu'à 6 000 €\n✅ Prime conversion : jusqu'à 5 000 €\n✅ Leasing social : dès 100 €/mois"},
-{q:["alerte","notification"],r:"🔔 Créez une alerte !\n\nOnglet 🔔 Alertes en bas.\nEntrez votre recherche + budget + région.\nVous serez notifié dès qu'une annonce correspond !"},
-{q:["compte","inscription","connexion"],r:"👤 Créez votre compte !\n\nOnglet 👤 Profil en bas.\nInscription gratuite avec vérification SMS pour sécuriser votre compte !"},
-{q:["chat","contact","message"],r:"💬 Contactez le vendeur !\n\nSur chaque annonce, bouton 💬 Contacter.\nChat direct et sécurisé !"},
-{q:["filtre","recherche","avance"],r:"🔍 Filtres avancés disponibles !\n\nCliquez sur ⚙️ Filtres avancés :\n✅ État du véhicule\n✅ Type de vendeur\n✅ Équipements\n✅ Année minimum\n✅ Km maximum\n✅ Critères écologiques"},
+  {q:["vendre","publier"],r:"📋 Pour vendre :\n\n1️⃣ Bouton + Vendre\n2️⃣ Formulaire 3 étapes\n3️⃣ Agent IA vérifie\n4️⃣ Publication immédiate !\n\n✅ 100% gratuit !"},
+  {q:["payer","paiement","securite"],r:"💳 Paiements sécurisés :\n\n✅ Virement bancaire\n✅ Espèces en main propre\n\n🚨 JAMAIS :\n❌ Western Union\n❌ Bitcoin"},
+  {q:["fraude","arnaque","signaler"],r:"🚨 Signaler : bouton 🚩 sur l'annonce."},
+  {q:["gratuit","cout"],r:"✅ Le Marché Auto est 100% GRATUIT !"},
+  {q:["electrique","hybride","bonus"],r:"⚡ Bonus écologique jusqu'à 6 000 €\n✅ Prime conversion jusqu'à 5 000 €"},
+  {q:["alerte","notification"],r:"🔔 Onglet 🔔 Alertes en bas.\nEntrez votre recherche + budget + région."},
+  {q:["compte","inscription","connexion"],r:"👤 Onglet 👤 Profil en bas.\nInscription gratuite avec vérification SMS !"},
 ];
 
 function addAgentMsg(role, text) {
-agentMsgsArr.push({role:role,text:text});
-var el = document.getElementById("agentMsgs");
-var h = "";
-agentMsgsArr.forEach(function(m){
-h += '<div class="bubble '+m.role+'">';
-if(m.role==="agent") h += '<div class="b-lbl">AGENT MARCHÉ AUTO</div>';
-h += m.text+'</div>';
-});
-el.innerHTML = h;
-el.scrollTop = el.scrollHeight;
+  agentMsgsArr.push({role:role,text:text});
+  var el = document.getElementById("agentMsgs");
+  var h = "";
+  agentMsgsArr.forEach(function(m){
+    h += '<div class="bubble '+m.role+'">';
+    if(m.role==="agent") h += '<div class="b-lbl">AGENT MARCHÉ AUTO</div>';
+    h += m.text+'</div>';
+  });
+  el.innerHTML = h;
+  el.scrollTop = el.scrollHeight;
 }
 
 function openAgent(){
-document.getElementById("agentOverlay").classList.add("open");
-if(!agentMsgsArr.length) addAgentMsg("agent","👋 Bonjour ! Je suis l'Agent Marché Auto 🛡️\n\nJe peux vous aider pour :\n💰 Trouver la bonne annonce\n🛡️ Détecter les fraudes\n🔔 Créer des alertes personnalisées\n👤 Gérer votre compte\n⚙️ Utiliser les filtres avancés\n\nComment puis-je vous aider ?");
+  document.getElementById("agentOverlay").classList.add("open");
+  if(!agentMsgsArr.length) addAgentMsg("agent","👋 Bonjour ! Je suis l'Agent Marché Auto 🛡️\n\nComment puis-je vous aider ?");
 }
 function closeAgent(){ document.getElementById("agentOverlay").classList.remove("open"); }
 
 function askQ(q) {
-addAgentMsg("user",q);
-document.getElementById("typingInd").style.display="block";
-var lower = q.toLowerCase();
-for(var i=0;i<FAQ.length;i++){
-var found=false;
-for(var j=0;j<FAQ[i].q.length;j++){if(lower.indexOf(FAQ[i].q[j])>=0){found=true;break;}}
-if(found){(function(r){setTimeout(function(){document.getElementById("typingInd").style.display="none";addAgentMsg("agent",r);},600);})(FAQ[i].r);return;}
-}
-fetch("/api/claude",{
-method:"POST",headers:{"Content-Type":"application/json"},
-body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:600,
-system:"Tu es l'Agent Marché Auto, assistant officiel de la marketplace automobile Le Marché Auto. Fonctionnalités : recherche par ville/région, filtres avancés (état, équipements, type vendeur, année, km, écologie), alertes personnalisées avec notifications, chat entre acheteur et vendeur, compte utilisateur avec vérification SMS, publication d'annonces vérifiée par IA, aides véhicules électriques. Réponds en français, sois chaleureux et professionnel.",
-messages:[{role:"user",content:q}]})
-}).then(function(r){return r.json();}).then(function(d){
-document.getElementById("typingInd").style.display="none";
-addAgentMsg("agent",d.content&&d.content[0]?d.content[0].text:"Désolé, réessayez !");
-}).catch(function(){
-document.getElementById("typingInd").style.display="none";
-addAgentMsg("agent","❌ Connexion impossible. Réessayez !");
-});
+  addAgentMsg("user",q);
+  document.getElementById("typingInd").style.display="block";
+  var lower = q.toLowerCase();
+  for(var i=0;i<FAQ.length;i++){
+    var found=false;
+    for(var j=0;j<FAQ[i].q.length;j++){if(lower.indexOf(FAQ[i].q[j])>=0){found=true;break;}}
+    if(found){(function(r){setTimeout(function(){document.getElementById("typingInd").style.display="none";addAgentMsg("agent",r);},600);})(FAQ[i].r];return;}
+  }
+  fetch("/api/claude",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:600,
+      system:"Tu es l'Agent Marché Auto, assistant officiel de la marketplace automobile. Réponds en français, sois chaleureux et professionnel.",
+      messages:[{role:"user",content:q}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    document.getElementById("typingInd").style.display="none";
+    addAgentMsg("agent",d.content&&d.content[0]?d.content[0].text:"Désolé, réessayez !");
+  }).catch(function(){
+    document.getElementById("typingInd").style.display="none";
+    addAgentMsg("agent","❌ Connexion impossible. Réessayez !");
+  });
 }
 
 function sendMsg(){
-var inp=document.getElementById("agentInp");
-var txt=inp.value.trim();
-if(!txt) return;
-inp.value="";
-askQ(txt);
+  var inp=document.getElementById("agentInp");
+  var txt=inp.value.trim();
+  if(!txt) return;
+  inp.value="";
+  askQ(txt);
 }
 
 // ══════════════════════════════
 // NAV
 // ══════════════════════════════
 function showHome(){
-document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("open");});
-closePub(); closeAgent();
+  document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("open");});
+  closePub(); closeAgent();
 }
 function closeScreen(id){ document.getElementById(id).classList.remove("open"); }
 
