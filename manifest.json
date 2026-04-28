@@ -1,0 +1,43 @@
+{
+  "name": "Le Marché Auto",
+  "short_name": "Marché Auto",
+  "description": "La marketplace automobile N°1 en Europe",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#C0392B",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/iLRREdx.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.imgur.com/iLRREdx.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "automotive"],
+  "lang": "fr",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Publier une annonce",
+      "short_name": "Vendre",
+      "description": "Publier une nouvelle annonce",
+      "url": "/?action=publish",
+      "icons": [{ "src": "https://i.imgur.com/iLRREdx.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mes alertes",
+      "short_name": "Alertes",
+      "description": "Voir mes alertes",
+      "url": "/?action=alertes",
+      "icons": [{ "src": "https://i.imgur.com/iLRREdx.png", "sizes": "192x192" }]
+    }
+  ]
+}
