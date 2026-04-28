@@ -339,7 +339,7 @@ function showToast(msg, type) {
 </div>
 <div class="km-row">
 <span class="km-lbl">📏 Rayon :</span>
-<input type="range" class="km-slider" min="5" max="500" value="500" step="5" oninput="this.nextElementSibling.textContent=this.value+' km'"/>
+<input type="range" class="km-slider" id="rayonSlider" min="5" max="500" value="500" step="5" oninput="this.nextElementSibling.textContent=this.value+' km';doFilter()"/>
 <span class="km-val">500 km</span>
 </div>
 
@@ -592,7 +592,13 @@ function showToast(msg, type) {
 </div>
 </div>
 <label class="f-label">Ville *</label>
-<input class="f-input" id="pub-ville" placeholder="Ex: Lyon"/>
+<div style="position:relative;">
+<input class="f-input" id="pub-ville" placeholder="Ex: Lyon" oninput="geocoderVilleAnnonce()"/>
+<button type="button" onclick="gpsAnnonce()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:#27AE60;border:none;border-radius:8px;padding:6px 10px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">📍 GPS</button>
+</div>
+<input type="hidden" id="pub-lat"/>
+<input type="hidden" id="pub-lng"/>
+<div id="geo-status" style="font-size:11px;color:#666;margin-bottom:8px;display:none;"></div>
 <button class="pri-btn" onclick="pubStep(2)">Continuer →</button>
 </div>
 
@@ -708,6 +714,9 @@ function doFilter() {
   var kmMax = parseInt(document.getElementById("kmMax").value) || 9999999;
   var eco = document.getElementById("coSel").value;
 
+  // Rayon GPS
+  var rayon = parseInt(document.getElementById("rayonSlider") ? document.getElementById("rayonSlider").value : 500) || 500;
+
   var list = allAnnonces.filter(function(a) {
     var sOk = !search || (a.titre||"").toLowerCase().indexOf(search)>=0 || (a.ville||"").toLowerCase().indexOf(search)>=0 || (a.marque||"").toLowerCase().indexOf(search)>=0;
     var cOk = !cat || a.categorie === cat;
@@ -722,7 +731,14 @@ function doFilter() {
     var anOk = !anneeMin || (a.annee||0) >= anneeMin;
     var kmOk = (a.kilometrage||0) <= kmMax;
     var ecoOk = !eco || (a.carburant||"").toLowerCase().indexOf(eco.toLowerCase())>=0;
-    return sOk && cOk && rOk && cbOk && vOk && pOk && eOk && etOk && veOk && eqOk && anOk && kmOk && ecoOk;
+    // Filtre GPS par rayon
+    var gpsOk = true;
+    if(userLat && userLng && rayon < 500 && a.latitude && a.longitude) {
+      var dist = calculerDistance(userLat, userLng, a.latitude, a.longitude);
+      gpsOk = dist <= rayon;
+      a._distance = Math.round(dist);
+    }
+    return sOk && cOk && rOk && cbOk && vOk && pOk && eOk && etOk && veOk && eqOk && anOk && kmOk && ecoOk && gpsOk;
   });
 
   if (sort === "prix_asc") list.sort(function(a,b){return a.prix-b.prix;});
@@ -776,12 +792,51 @@ function setCat(cat, el) {
   doFilter();
 }
 function filterElec() { currentElec = !currentElec; doFilter(); }
+// GEOLOCALISATION
+var userLat = null;
+var userLng = null;
+
 function getLocation() {
   if (!navigator.geolocation) { showToast("Géolocalisation non disponible.", "error"); return; }
+  showToast("📍 Détection en cours...", "");
   navigator.geolocation.getCurrentPosition(
-    function() { showToast("📍 Position détectée !", "success"); },
-    function() { showToast("Position non disponible.", "error"); }
+    function(pos) {
+      userLat = pos.coords.latitude;
+      userLng = pos.coords.longitude;
+      showToast("📍 Position détectée ! Filtrage par proximité actif.", "success");
+      doFilter();
+    },
+    function() { showToast("❌ Position non disponible.", "error"); }
   );
+}
+
+// Calcul distance entre deux points GPS (formule Haversine)
+function calculerDistance(lat1, lng1, lat2, lng2) {
+  var R = 6371; // Rayon Terre en km
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLng = (lng2 - lng1) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng/2) * Math.sin(dLng/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// Géocoder une ville en coordonnées GPS
+async function geocoderVille(ville) {
+  try {
+    var response = await fetch(
+      'https://nominatim.openstreetmap.org/search?q=' + 
+      encodeURIComponent(ville + ', France') + 
+      '&format=json&limit=1',
+      { headers: { 'Accept-Language': 'fr' } }
+    );
+    var data = await response.json();
+    if(data && data[0]) {
+      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    }
+  } catch(e) {}
+  return null;
 }
 function toggleFav(id, btn) { btn.textContent = btn.textContent === "🤍" ? "❤️" : "🤍"; }
 
@@ -1226,6 +1281,8 @@ async function confirmerPub() {
     prix: parseFloat(document.getElementById("pub-prix").value)||0,
     categorie: document.getElementById("pub-cat").value,
     ville: document.getElementById("pub-ville").value,
+    latitude: parseFloat(document.getElementById("pub-lat").value) || null,
+    longitude: parseFloat(document.getElementById("pub-lng").value) || null,
     kilometrage: parseFloat(document.getElementById("pub-km").value)||0,
     annee: parseInt(document.getElementById("pub-annee").value)||null,
     carburant: document.getElementById("pub-carbu").value,
@@ -2170,5 +2227,46 @@ function reinitialiserRecherche() {
   document.getElementById("kmMax").value = "";
   doFilter();
   showToast("🔄 Recherche réinitialisée", "");
+}
+</script>
+<script>
+// GPS ANNONCE — lors de la publication
+function gpsAnnonce() {
+  if(!navigator.geolocation) { showToast("GPS non disponible.", "error"); return; }
+  var status = document.getElementById("geo-status");
+  status.style.display = "block";
+  status.textContent = "📍 Détection GPS...";
+  status.style.color = "#888";
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      document.getElementById("pub-lat").value = pos.coords.latitude;
+      document.getElementById("pub-lng").value = pos.coords.longitude;
+      status.textContent = "✅ Position GPS enregistrée !";
+      status.style.color = "#27AE60";
+    },
+    function() {
+      status.textContent = "❌ GPS non disponible. Entrez la ville manuellement.";
+      status.style.color = "#E74C3C";
+    }
+  );
+}
+
+// Geocoder la ville automatiquement quand le vendeur la tape
+var geoTimer = null;
+function geocoderVilleAnnonce() {
+  var ville = document.getElementById("pub-ville").value.trim();
+  if(ville.length < 3) return;
+  clearTimeout(geoTimer);
+  geoTimer = setTimeout(async function() {
+    var coords = await geocoderVille(ville);
+    if(coords) {
+      document.getElementById("pub-lat").value = coords.lat;
+      document.getElementById("pub-lng").value = coords.lng;
+      var status = document.getElementById("geo-status");
+      status.style.display = "block";
+      status.textContent = "📍 " + ville + " localisé";
+      status.style.color = "#27AE60";
+    }
+  }, 800);
 }
 </script>
