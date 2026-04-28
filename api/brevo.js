@@ -1,37 +1,70 @@
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const BREVO_KEY = process.env.BREVO_API_KEY;
-  const { to, toName, subject, html, type } = req.body;
+  const ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+  const AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+  const VERIFY_SID = process.env.TWILIO_VERIFY_SID;
 
-  if (!to || !subject || !html) {
-    return res.status(400).json({ error: "Champs manquants" });
-  }
+  const { action, telephone, code } = req.body;
+
+  if (!telephone) return res.status(400).json({ error: 'Numéro de téléphone requis' });
+
+  const credentials = Buffer.from(`${ACCOUNT_SID}:${AUTH_TOKEN}`).toString('base64');
 
   try {
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "api-key": BREVO_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        sender: {
-          name: "Le Marché Auto",
-          email: "rezg.contact@gmail.com"
-        },
-        to: [{ email: to, name: toName || to }],
-        subject: subject,
-        htmlContent: html
-      })
-    });
+    if (action === 'send') {
+      // Envoyer le code SMS
+      const response = await fetch(
+        `https://verify.twilio.com/v2/Services/${VERIFY_SID}/Verifications`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Basic ${credentials}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            To: telephone,
+            Channel: 'sms'
+          }).toString()
+        }
+      );
+      const data = await response.json();
+      if (data.status === 'pending') {
+        return res.status(200).json({ success: true, message: 'SMS envoyé !' });
+      } else {
+        return res.status(400).json({ error: data.message || 'Erreur envoi SMS' });
+      }
 
-    if (!response.ok) {
-      const err = await response.json();
-      return res.status(500).json({ error: err });
+    } else if (action === 'verify') {
+      // Vérifier le code
+      if (!code) return res.status(400).json({ error: 'Code requis' });
+      const response = await fetch(
+        `https://verify.twilio.com/v2/Services/${VERIFY_SID}/VerificationCheck`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Basic ${credentials}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            To: telephone,
+            Code: code
+          }).toString()
+        }
+      );
+      const data = await response.json();
+      if (data.status === 'approved') {
+        return res.status(200).json({ success: true, message: 'Téléphone vérifié !' });
+      } else {
+        return res.status(400).json({ error: 'Code incorrect ou expiré' });
+      }
+    } else {
+      return res.status(400).json({ error: 'Action invalide' });
     }
-
-    return res.status(200).json({ success: true });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
