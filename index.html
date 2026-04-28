@@ -61,7 +61,7 @@
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;max-width:480px;margin:0 auto;min-height:100vh;}
+body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;min-height:100vh;}
 
 /* [TON CSS EXISTANT - INCHANGÉ] */
 .hdr{background:#0A0A0A;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1A1A1A;position:sticky;top:0;z-index:50;}
@@ -228,6 +228,51 @@ body{background:#080808;font-family:'Segoe UI',sans-serif;color:#fff;max-width:4
 .stars-row{display:flex;gap:6px;margin:8px 0;}
 .star{font-size:24px;cursor:pointer;opacity:0.3;transition:opacity 0.15s;}
 .star.active{opacity:1;}
+
+/* ── RESPONSIVE DESKTOP ─────────────────── */
+.app-container{max-width:1200px;margin:0 auto;}
+.mobile-only{display:block;}
+
+@media(min-width:768px){
+  body{background:#0D0D0D;}
+  .hdr{max-width:100%;background:#0A0A0A;padding:12px 40px;}
+  .hero{padding:40px 40px 30px;max-width:100%;}
+  .hero h1{font-size:28px;}
+  .search-sec{padding:20px 40px;max-width:100%;}
+  .cats{padding:0 40px 16px;}
+  .results-bar{padding:0 40px 14px;}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:16px;
+    padding:0 40px 100px;
+    max-width:100%;
+  }
+  .card-img{height:160px !important;}
+  .card-img img{height:160px !important;}
+  .c-price{font-size:20px !important;}
+  .c-title{font-size:14px !important;}
+  .tab-bar{max-width:100%;padding:0 40px;}
+  .tab{font-size:11px;}
+  .screen{max-width:100%;}
+  .agent-panel{max-width:600px;margin:0 auto;}
+  .pub-panel{max-width:600px;margin:0 auto;}
+  .filters-grid{grid-template-columns:repeat(4,1fr);}
+  .price-row{max-width:400px;}
+  .alert-popup{max-width:600px;}
+}
+
+@media(min-width:1200px){
+  .grid{
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:20px;
+    padding:0 60px 100px;
+  }
+  .hdr{padding:12px 60px;}
+  .search-sec{padding:20px 60px;}
+  .cats{padding:0 60px 16px;}
+  .results-bar{padding:0 60px 14px;}
+}
 
 /* Toast notifications */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1A1A1A;border:1px solid #333;border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;color:#fff;z-index:200;display:none;white-space:nowrap;}
