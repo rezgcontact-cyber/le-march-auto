@@ -939,6 +939,7 @@ function renderProfil() {
     h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;overflow:hidden;">';
     h += '<div class="profil-menu-item" onclick="openPublish()"><span style="font-size:20px;">➕</span><span style="font-size:14px;color:#fff;font-weight:600;">Publier une annonce</span><span style="margin-left:auto;color:#555;">›</span></div>';
     h += '<div class="profil-menu-item" onclick="showMesAnnonces()"><span style="font-size:20px;">📋</span><span style="font-size:14px;color:#fff;font-weight:600;">Mes annonces</span><span style="margin-left:auto;color:#555;">›</span></div>';
+    h += '<div class="profil-menu-item" onclick="showDashboard()"><span style="font-size:20px;">📊</span><span style="font-size:14px;color:#fff;font-weight:600;">Tableau de bord</span><span style="margin-left:auto;color:#555;">›</span></div>';
     h += '<div class="profil-menu-item" onclick="showAlertes()"><span style="font-size:20px;">🔔</span><span style="font-size:14px;color:#fff;font-weight:600;">Mes alertes</span><span style="margin-left:auto;color:#555;">›</span></div>';
     h += '<div class="profil-menu-item" onclick="openAgent()"><span style="font-size:20px;">🛡️</span><span style="font-size:14px;color:#fff;font-weight:600;">Agent Anti-Fraude</span><span style="margin-left:auto;color:#555;">›</span></div>';
     h += '<div class="profil-menu-item" onclick="seDeconnecter()"><span style="font-size:20px;">🚪</span><span style="font-size:14px;color:#C0392B;font-weight:600;">Se déconnecter</span></div>';
@@ -1332,6 +1333,16 @@ function envoyerContact(){
 // INIT
 loadAnnonces();
 </script>
+<!-- TABLEAU DE BORD -->
+<div class="screen" id="dashboardScreen">
+<div class="s-hdr">
+<button class="back-btn" onclick="closeScreen('dashboardScreen')">← Retour</button>
+<span style="font-weight:800;font-size:15px;">📊 Tableau de bord</span>
+</div>
+<div style="padding:16px;" id="dashboardContent">
+<div class="loading">Chargement...</div>
+</div>
+</div>
 <!-- MES ANNONCES -->
 <div class="screen" id="mesAnnoncesScreen">
 <div class="s-hdr">
@@ -1790,5 +1801,108 @@ function partagerLien(id) {
   } else {
     showToast('🔗 ' + url, '');
   }
+}
+</script>
+<script>
+// TABLEAU DE BORD VENDEUR
+function showDashboard() {
+  document.getElementById("dashboardScreen").classList.add("open");
+  chargerDashboard();
+}
+
+function chargerDashboard() {
+  if(!currentUser) return;
+  var el = document.getElementById("dashboardContent");
+  el.innerHTML = '<div class="loading">Chargement...</div>';
+
+  sbGet("annonces", "vendeur_email=eq."+encodeURIComponent(currentUser.email))
+    .then(function(data) {
+      if(!Array.isArray(data)) data = [];
+      
+      var total = data.length;
+      var actives = data.filter(function(a){ return a.statut === "valide"; }).length;
+      var gratuites = Math.max(0, 10 - total);
+      var prixTotal = data.reduce(function(sum, a){ return sum + (a.prix||0); }, 0);
+      var moyennePrix = total > 0 ? Math.round(prixTotal / total) : 0;
+      var categories = {};
+      data.forEach(function(a) {
+        var c = a.categorie || "autre";
+        categories[c] = (categories[c] || 0) + 1;
+      });
+
+      var h = '';
+
+      // Stats principales
+      h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">';
+      h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:14px;text-align:center;">';
+      h += '<div style="font-size:28px;font-weight:900;color:#C0392B;">'+actives+'</div>';
+      h += '<div style="font-size:11px;color:#666;font-weight:700;text-transform:uppercase;margin-top:4px;">Annonces actives</div></div>';
+      
+      h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:14px;text-align:center;">';
+      h += '<div style="font-size:28px;font-weight:900;color:#27AE60;">'+gratuites+'</div>';
+      h += '<div style="font-size:11px;color:#666;font-weight:700;text-transform:uppercase;margin-top:4px;">Gratuites restantes</div></div>';
+      
+      h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:14px;text-align:center;">';
+      h += '<div style="font-size:28px;font-weight:900;color:#3498DB;">'+total+'</div>';
+      h += '<div style="font-size:11px;color:#666;font-weight:700;text-transform:uppercase;margin-top:4px;">Total publiées</div></div>';
+      
+      h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:14px;text-align:center;">';
+      h += '<div style="font-size:22px;font-weight:900;color:#E67E22;">'+(moyennePrix > 0 ? moyennePrix.toLocaleString("fr-FR")+"€" : "—")+'</div>';
+      h += '<div style="font-size:11px;color:#666;font-weight:700;text-transform:uppercase;margin-top:4px;">Prix moyen</div></div>';
+      h += '</div>';
+
+      // Statut abonnement
+      h += '<div style="background:'+(currentUser.abonnement_pro ? '#0D3D26' : '#1A0000')+';border:1px solid '+(currentUser.abonnement_pro ? '#27AE6044' : '#C0392B33')+';border-radius:12px;padding:14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">';
+      if(currentUser.abonnement_pro) {
+        h += '<div><div style="color:#27AE60;font-weight:700;font-size:13px;">⭐ Abonnement PRO actif</div>';
+        h += '<div style="color:#666;font-size:11px;margin-top:2px;">Annonces illimitées</div></div>';
+      } else {
+        h += '<div><div style="color:#C0392B;font-weight:700;font-size:13px;">👤 Compte Particulier</div>';
+        h += '<div style="color:#666;font-size:11px;margin-top:2px;">'+(gratuites > 0 ? gratuites+' annonces gratuites restantes' : 'Limite atteinte — 0,99€/annonce')+'</div></div>';
+        h += '<a href="https://www.paypal.com/paypalme/rezgcontact/19.99" target="_blank" style="background:#FFC439;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:800;color:#003087;text-decoration:none;white-space:nowrap;">Passer PRO</a>';
+      }
+      h += '</div>';
+
+      // Répartition par catégorie
+      if(total > 0) {
+        h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:14px;margin-bottom:16px;">';
+        h += '<div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:12px;">Répartition par catégorie</div>';
+        var icons = {voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"};
+        Object.keys(categories).forEach(function(cat) {
+          var pct = Math.round((categories[cat] / total) * 100);
+          h += '<div style="margin-bottom:10px;">';
+          h += '<div style="display:flex;justify-content:space-between;margin-bottom:4px;">';
+          h += '<span style="font-size:12px;color:#bbb;">'+(icons[cat]||"🚗")+" "+cat+'</span>';
+          h += '<span style="font-size:12px;color:#C0392B;font-weight:700;">'+categories[cat]+' ('+pct+'%)</span></div>';
+          h += '<div style="background:#1A1A1A;border-radius:4px;height:6px;">';
+          h += '<div style="background:#C0392B;border-radius:4px;height:6px;width:'+pct+'%;"></div></div>';
+          h += '</div>';
+        });
+        h += '</div>';
+      }
+
+      // Dernières annonces
+      if(data.length > 0) {
+        h += '<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">Mes dernières annonces</div>';
+        data.slice(0, 3).forEach(function(a) {
+          h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">';
+          h += '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+a.titre+'</div>';
+          h += '<div style="font-size:11px;color:#666;margin-top:2px;">'+(a.ville||'')+'</div></div>';
+          h += '<div style="text-align:right;flex-shrink:0;margin-left:10px;">';
+          h += '<div style="font-size:14px;font-weight:900;color:#C0392B;">'+(a.prix||0).toLocaleString("fr-FR")+'€</div>';
+          var sc = a.statut==="valide"?"#27AE60":"#E67E22";
+          h += '<div style="font-size:10px;color:'+sc+';font-weight:700;">'+(a.statut==="valide"?"✓ En ligne":"⏳ Attente")+'</div>';
+          h += '</div></div>';
+        });
+      } else {
+        h += '<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">📊</div><p>Publiez votre première annonce !</p></div>';
+      }
+
+      h += '<button onclick="closeScreen(\'dashboardScreen\');openPublish()" class="primary-btn" style="margin-top:10px;">➕ Nouvelle annonce</button>';
+      el.innerHTML = h;
+    })
+    .catch(function() {
+      el.innerHTML = '<div class="no-res"><p>Erreur de chargement.</p></div>';
+    });
 }
 </script>
