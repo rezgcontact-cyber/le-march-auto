@@ -1052,23 +1052,52 @@ function sInscrire() {
 
 function demanderVerifSMS() {
   if (!currentUser || !currentUser.telephone) { showToast("Téléphone non renseigné.", "error"); return; }
-  codeVerifAttendu = Math.floor(100000 + Math.random() * 900000).toString();
-  document.getElementById("verifyMsg").textContent = "Code envoyé au "+currentUser.telephone+" (mode test: "+codeVerifAttendu+")";
+  var tel = currentUser.telephone;
+  // Ajouter +33 si nécessaire
+  if (!tel.startsWith("+")) { tel = "+33" + tel.replace(/^0/, ""); }
+  document.getElementById("verifyMsg").textContent = "Envoi du SMS au " + tel + "...";
   document.getElementById("verifCode").value = "";
   document.getElementById("verifyScreen").classList.add("open");
+  fetch("/api/sms", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ action: "send", telephone: tel })
+  }).then(function(r){ return r.json(); }).then(function(d) {
+    if(d.success) {
+      document.getElementById("verifyMsg").textContent = "SMS envoyé au " + tel + " ! Entrez le code reçu.";
+      showToast("📱 SMS envoyé !", "success");
+    } else {
+      document.getElementById("verifyMsg").textContent = "Erreur : " + (d.error || "Réessayez");
+      showToast("❌ Erreur SMS : " + (d.error || ""), "error");
+    }
+  }).catch(function() {
+    document.getElementById("verifyMsg").textContent = "Erreur connexion. Réessayez.";
+    showToast("❌ Erreur connexion.", "error");
+  });
 }
 function validerCode() {
   var code = document.getElementById("verifCode").value.trim();
-  if (code === codeVerifAttendu) {
-    currentUser.tel_verifie = true;
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    if (currentUser.id) sbUpdate("utilisateurs", currentUser.id, { tel_verifie: true });
-    closeScreen("verifyScreen");
-    renderProfil();
-    showToast("✅ Téléphone vérifié !", "success");
-  } else {
-    showToast("❌ Code incorrect. Réessayez.", "error");
-  }
+  if (!code) { showToast("Entrez le code reçu.", "error"); return; }
+  var tel = currentUser.telephone;
+  if (!tel.startsWith("+")) { tel = "+33" + tel.replace(/^0/, ""); }
+  fetch("/api/sms", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ action: "verify", telephone: tel, code: code })
+  }).then(function(r){ return r.json(); }).then(function(d) {
+    if(d.success) {
+      currentUser.tel_verifie = true;
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      if (currentUser.id) sbUpdate("utilisateurs", currentUser.id, { tel_verifie: true });
+      closeScreen("verifyScreen");
+      renderProfil();
+      showToast("✅ Téléphone vérifié !", "success");
+    } else {
+      showToast("❌ " + (d.error || "Code incorrect."), "error");
+    }
+  }).catch(function() {
+    showToast("❌ Erreur connexion.", "error");
+  });
 }
 function renvoyerCode() { demanderVerifSMS(); }
 function seDeconnecter() {
