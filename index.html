@@ -820,6 +820,11 @@ function showDetail(id) {
   h += '<button style="flex:1;background:#141414;border:1px solid #2A2A2A;border-radius:14px;padding:16px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;" onclick="showToast(\'📞 '+(a.telephone||"Non renseigné")+'\', \'\')">📞 Appeler</button>';
   h += '<button style="flex:2;background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;border-radius:14px;padding:16px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;" onclick="ouvrirChat(\''+a.id+'\')">💬 Contacter</button>';
   h += '</div>';
+  h += '<div style="display:flex;gap:8px;margin-top:0;">';
+  h += '<button onclick="partagerWhatsApp(\'"+a.id+"\')" style="flex:1;background:#25D366;border:none;border-radius:12px;padding:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">WhatsApp</button>';
+  h += '<button onclick="partagerFacebook(\'"+a.id+"\')" style="flex:1;background:#1877F2;border:none;border-radius:12px;padding:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">Facebook</button>';
+  h += '<button onclick="partagerLien(\'"+a.id+"\')" style="flex:1;background:#141414;border:1px solid #333;border-radius:12px;padding:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">🔗 Copier</button>';
+  h += '</div>';
 
   document.getElementById("detailContent").innerHTML = h;
   document.getElementById("detailScreen").classList.add("open");
@@ -1756,5 +1761,34 @@ function showCGU() {
 }
 function showMentions() {
   document.getElementById("mentionsScreen").classList.add("open");
+}
+</script>
+<script>
+// PARTAGE ANNONCES
+function getAnnonceUrl(id) {
+  return 'https://le-march-auto.fr?annonce=' + id;
+}
+
+function partagerWhatsApp(id) {
+  var a = allAnnonces.find(function(x){ return x.id === id; });
+  if(!a) return;
+  var txt = encodeURIComponent('🚗 ' + a.titre + '\n💰 ' + (a.prix||0).toLocaleString('fr-FR') + ' €\n📍 ' + (a.ville||'') + '\n\n' + getAnnonceUrl(id));
+  window.open('https://wa.me/?text=' + txt, '_blank');
+}
+
+function partagerFacebook(id) {
+  var url = encodeURIComponent(getAnnonceUrl(id));
+  window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank');
+}
+
+function partagerLien(id) {
+  var url = getAnnonceUrl(id);
+  if(navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      showToast('✅ Lien copié !', 'success');
+    });
+  } else {
+    showToast('🔗 ' + url, '');
+  }
 }
 </script>
