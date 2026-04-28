@@ -924,6 +924,7 @@ function renderProfil() {
     h += '</div>';
     h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;overflow:hidden;">';
     h += '<div class="profil-menu-item" onclick="openPublish()"><span style="font-size:20px;">➕</span><span style="font-size:14px;color:#fff;font-weight:600;">Publier une annonce</span><span style="margin-left:auto;color:#555;">›</span></div>';
+    h += '<div class="profil-menu-item" onclick="showMesAnnonces()"><span style="font-size:20px;">📋</span><span style="font-size:14px;color:#fff;font-weight:600;">Mes annonces</span><span style="margin-left:auto;color:#555;">›</span></div>';
     h += '<div class="profil-menu-item" onclick="showAlertes()"><span style="font-size:20px;">🔔</span><span style="font-size:14px;color:#fff;font-weight:600;">Mes alertes</span><span style="margin-left:auto;color:#555;">›</span></div>';
     h += '<div class="profil-menu-item" onclick="openAgent()"><span style="font-size:20px;">🛡️</span><span style="font-size:14px;color:#fff;font-weight:600;">Agent Anti-Fraude</span><span style="margin-left:auto;color:#555;">›</span></div>';
     h += '<div class="profil-menu-item" onclick="seDeconnecter()"><span style="font-size:20px;">🚪</span><span style="font-size:14px;color:#C0392B;font-weight:600;">Se déconnecter</span></div>';
@@ -1272,6 +1273,16 @@ function envoyerContact(){
 // INIT
 loadAnnonces();
 </script>
+<!-- MES ANNONCES -->
+<div class="screen" id="mesAnnoncesScreen">
+<div class="s-hdr">
+<button class="back-btn" onclick="closeScreen('mesAnnoncesScreen')">← Retour</button>
+<span style="font-weight:800;font-size:15px;">📋 Mes annonces</span>
+</div>
+<div style="padding:16px;" id="mesAnnoncesContent">
+<div class="loading">Chargement...</div>
+</div>
+</div>
 <!-- CONTACT -->
 <div class="screen" id="contactScreen">
 <div class="s-hdr">
@@ -1373,5 +1384,126 @@ function afficherOffrePro() {
   document.getElementById("anMsg").innerHTML = 'Annonces illimitees pour les pros !<br><br><strong>19,99€/mois</strong><br><br><a href="https://www.paypal.com/paypalme/rezgcontact/19.99" target="_blank" style="display:block;background:#FFC439;border-radius:8px;padding:12px;text-align:center;font-weight:800;font-size:13px;color:#003087;text-decoration:none;margin-top:10px;">S\'abonner PRO via PayPal</a>';
   document.getElementById("pubRetour").style.display = "block";
   document.getElementById("pubConfirm").style.display = "none";
+}
+</script>
+<script>
+// MES ANNONCES
+function showMesAnnonces() {
+  document.getElementById("mesAnnoncesScreen").classList.add("open");
+  chargerMesAnnonces();
+}
+
+function chargerMesAnnonces() {
+  if(!currentUser) return;
+  var el = document.getElementById("mesAnnoncesContent");
+  el.innerHTML = '<div class="loading">Chargement...</div>';
+  sbGet("annonces", "vendeur_email=eq."+encodeURIComponent(currentUser.email))
+    .then(function(data) {
+      if(!Array.isArray(data) || data.length === 0) {
+        el.innerHTML = '<div class="no-res"><div style="font-size:40px;margin-bottom:10px;">📋</div><p>Aucune annonce publiée</p><button class="primary-btn" onclick="closePub();closeScreen(\'mesAnnoncesScreen\');openPublish()" style="margin-top:16px;">+ Publier une annonce</button></div>';
+        return;
+      }
+      var reste = 10 - data.length;
+      var h = '';
+      h += '<div style="background:#141414;border:1px solid #222;border-radius:12px;padding:12px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">';
+      h += '<div><div style="font-size:13px;font-weight:700;color:#fff;">'+data.length+' annonce(s)</div>';
+      h += '<div style="font-size:11px;color:#666;margin-top:2px;">'+(reste > 0 ? reste+' gratuite(s) restante(s)' : 'Limite gratuite atteinte')+'</div></div>';
+      h += '<button onclick="closeScreen(\'mesAnnoncesScreen\');openPublish()" style="background:#C0392B;border:none;border-radius:10px;padding:8px 14px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">+ Nouvelle</button>';
+      h += '</div>';
+      data.forEach(function(a) {
+        var ico = {voiture:"🚗",moto:"🏍️",velo:"🚲",pieces:"🔧"}[a.categorie]||"🚗";
+        h += '<div style="background:#111;border:1px solid #1A1A1A;border-radius:14px;padding:14px;margin-bottom:10px;">';
+        h += '<div style="display:flex;gap:12px;align-items:flex-start;">';
+        if(a.image_url) {
+          h += '<img src="'+a.image_url+'" style="width:70px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;"/>';
+        } else {
+          h += '<div style="width:70px;height:60px;background:#1A1A1A;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">'+ico+'</div>';
+        }
+        h += '<div style="flex:1;min-width:0;">';
+        h += '<div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+a.titre+'</div>';
+        h += '<div style="font-size:16px;font-weight:900;color:#C0392B;margin:3px 0;">'+(a.prix||0).toLocaleString("fr-FR")+' €</div>';
+        h += '<div style="font-size:11px;color:#666;">'+(a.ville||"")+(a.categorie?' · '+a.categorie:'')+'</div>';
+        var statutColor = a.statut==="valide"?"#27AE60":"#E67E22";
+        h += '<div style="display:inline-block;background:'+statutColor+'22;border:1px solid '+statutColor+'44;border-radius:6px;padding:2px 8px;font-size:10px;color:'+statutColor+';font-weight:700;margin-top:4px;">'+(a.statut==="valide"?"✓ En ligne":"⏳ En attente")+'</div>';
+        h += '</div></div>';
+        h += '<div style="display:flex;gap:8px;margin-top:12px;">';
+        h += '<button onclick="modifierAnnonce(\''+a.id+'\')" style="flex:1;background:#141414;border:1px solid #333;border-radius:10px;padding:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">✏️ Modifier</button>';
+        h += '<button onclick="supprimerAnnonce(\''+a.id+'\')" style="flex:1;background:#1A0000;border:1px solid #C0392B33;border-radius:10px;padding:10px;color:#C0392B;font-size:12px;font-weight:700;cursor:pointer;">🗑️ Supprimer</button>';
+        h += '</div></div>';
+      });
+      el.innerHTML = h;
+    })
+    .catch(function() {
+      el.innerHTML = '<div class="no-res"><p>Erreur de chargement.</p></div>';
+    });
+}
+
+function supprimerAnnonce(id) {
+  if(!confirm("Supprimer cette annonce définitivement ?")) return;
+  sbUpdate("annonces", id, { statut: "supprime" })
+    .then(function() {
+      showToast("✅ Annonce supprimée !", "success");
+      chargerMesAnnonces();
+      loadAnnonces();
+    })
+    .catch(function() { showToast("❌ Erreur suppression.", "error"); });
+}
+
+function modifierAnnonce(id) {
+  var a = allAnnonces.find(function(x){ return x.id === id; });
+  if(!a) {
+    showToast("Annonce introuvable.", "error"); return;
+  }
+  // Ouvrir le formulaire pré-rempli
+  closeScreen("mesAnnoncesScreen");
+  openPublish();
+  setTimeout(function() {
+    document.getElementById("pub-nom").value = a.vendeur_nom || "";
+    document.getElementById("pub-email").value = a.vendeur_email || "";
+    document.getElementById("pub-titre").value = a.titre || "";
+    document.getElementById("pub-prix").value = a.prix || "";
+    document.getElementById("pub-ville").value = a.ville || "";
+    document.getElementById("pub-marque").value = a.marque || "";
+    document.getElementById("pub-cat").value = a.categorie || "voiture";
+    document.getElementById("pub-km").value = a.kilometrage || "";
+    document.getElementById("pub-annee").value = a.annee || "";
+    document.getElementById("pub-carbu").value = a.carburant || "Essence";
+    document.getElementById("pub-etat").value = a.etat || "Bon etat";
+    document.getElementById("pub-equip").value = a.equipements || "";
+    document.getElementById("pub-desc").value = a.description || "";
+    document.getElementById("pub-tel").value = a.telephone || "";
+    // Changer le bouton confirmer pour mettre à jour
+    var btn = document.getElementById("pubConfirm");
+    if(btn) {
+      btn.textContent = "💾 Mettre à jour";
+      btn.onclick = function() { mettreAJourAnnonce(id); };
+    }
+  }, 300);
+}
+
+function mettreAJourAnnonce(id) {
+  var estElec = document.getElementById("pub-carbu").value === "Electrique";
+  var data = {
+    titre: document.getElementById("pub-titre").value,
+    marque: document.getElementById("pub-marque").value,
+    prix: parseFloat(document.getElementById("pub-prix").value)||0,
+    categorie: document.getElementById("pub-cat").value,
+    ville: document.getElementById("pub-ville").value,
+    kilometrage: parseFloat(document.getElementById("pub-km").value)||0,
+    annee: parseInt(document.getElementById("pub-annee").value)||null,
+    carburant: document.getElementById("pub-carbu").value,
+    etat: document.getElementById("pub-etat").value,
+    equipements: document.getElementById("pub-equip").value,
+    description: document.getElementById("pub-desc").value,
+    telephone: document.getElementById("pub-tel").value,
+    electrique: estElec
+  };
+  sbUpdate("annonces", id, data)
+    .then(function() {
+      closePub();
+      loadAnnonces();
+      showToast("✅ Annonce mise à jour !", "success");
+    })
+    .catch(function() { showToast("❌ Erreur mise à jour.", "error"); });
 }
 </script>
