@@ -1132,8 +1132,18 @@ function analyzeAndPublish() {
   });
 }
 
-function confirmerPub() {
+async function confirmerPub() {
+  var btn = document.getElementById("pubConfirm");
+  if(btn) { btn.textContent = "⏳ Publication..."; btn.disabled = true; }
   var estElec = document.getElementById("pub-carbu").value === "Electrique";
+  // Upload photos
+  var imageUrl = null;
+  var photosUrls = [];
+  if(photosSelectionnees && photosSelectionnees.length > 0) {
+    showToast("📸 Upload des photos...", "");
+    photosUrls = await uploaderPhotos(photosSelectionnees);
+    imageUrl = photosUrls[0] || null;
+  }
   var data = {
     titre: document.getElementById("pub-titre").value,
     marque: document.getElementById("pub-marque").value,
@@ -1153,14 +1163,19 @@ function confirmerPub() {
     statut: "valide",
     electrique: estElec,
     note: 5.0,
-    nb_avis: 0
+    nb_avis: 0,
+    image_url: imageUrl,
+    photos_urls: photosUrls.join(",")
   };
   sbInsert("annonces", data).then(function() {
+    photosSelectionnees = [];
     closePub();
     loadAnnonces();
-    showToast("🎉 Votre annonce est en ligne !", "success");
+    showToast("🎉 Annonce en ligne avec "+photosUrls.length+" photo(s) !", "success");
+    if(btn) { btn.textContent = "🚀 Publier maintenant"; btn.disabled = false; }
   }).catch(function(){
     showToast("❌ Erreur lors de la publication.", "error");
+    if(btn) { btn.textContent = "🚀 Publier maintenant"; btn.disabled = false; }
   });
 }
 
@@ -1596,5 +1611,34 @@ function reinitialiserMdp() {
       btn.textContent = "📧 Envoyer le nouveau mot de passe";
       btn.disabled = false;
     });
+}
+</script>
+<script>
+// UPLOAD PHOTOS SUPABASE STORAGE
+async function uploaderPhotos(files) {
+  var urls = [];
+  for(var i = 0; i < files.length; i++) {
+    var file = files[i];
+    var ext = file.name.split('.').pop();
+    var fileName = 'annonce_' + Date.now() + '_' + i + '.' + ext;
+    var response = await fetch(
+      SUPABASE_URL + '/storage/v1/object/annonces-photos/' + fileName,
+      {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': file.type,
+          'x-upsert': 'true'
+        },
+        body: file
+      }
+    );
+    if(response.ok) {
+      var url = SUPABASE_URL + '/storage/v1/object/public/annonces-photos/' + fileName;
+      urls.push(url);
+    }
+  }
+  return urls;
 }
 </script>
