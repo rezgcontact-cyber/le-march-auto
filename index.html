@@ -568,7 +568,18 @@ function showToast(msg, type) {
 <label class="f-label">Titre complet *</label>
 <input class="f-input" id="pub-titre" placeholder="Ex: Renault Clio V 2021 - 30 000 km"/>
 <label class="f-label">Prix (€) *</label>
+<div style="position:relative;">
 <input class="f-input" id="pub-prix" type="number" placeholder="Ex: 12500"/>
+<button type="button" onclick="estimerPrixIA()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:linear-gradient(135deg,#8B5CF6,#6D28D9);border:none;border-radius:8px;padding:6px 10px;color:#fff;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;">🤖 Estimer le prix</button>
+</div>
+<div id="estimation-box" style="display:none;background:linear-gradient(135deg,#1A0A2E,#0D0620);border:1px solid #8B5CF644;border-radius:12px;padding:14px;margin-bottom:12px;">
+<div style="font-size:11px;color:#8B5CF6;font-weight:700;margin-bottom:8px;">🤖 ESTIMATION IA — Le Marché Auto</div>
+<div id="estimation-content" style="font-size:13px;color:#bbb;line-height:1.6;"></div>
+<div style="display:flex;gap:8px;margin-top:10px;" id="estimation-btns" style="display:none;">
+<button type="button" id="btn-appliquer" onclick="appliquerPrix()" style="flex:1;background:#8B5CF6;border:none;border-radius:8px;padding:8px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">✅ Appliquer ce prix</button>
+<button type="button" onclick="document.getElementById('estimation-box').style.display='none'" style="flex:1;background:#141414;border:1px solid #333;border-radius:8px;padding:8px;color:#888;font-size:12px;cursor:pointer;">Garder le mien</button>
+</div>
+</div>
 <label class="f-label">Ville *</label>
 <input class="f-input" id="pub-ville" placeholder="Ex: Lyon"/>
 <button class="pri-btn" onclick="pubStep(2)">Continuer →</button>
@@ -1949,3 +1960,85 @@ function noterVendeur(annonceId, note) {
     });
 }
 </script>
+<script>
+// 🤖 ESTIMATION IA DU PRIX
+var prixEstime = null;
+
+function estimerPrixIA() {
+  var marque = document.getElementById("pub-marque").value;
+  var titre = document.getElementById("pub-titre").value;
+  var annee = document.getElementById("pub-annee") ? document.getElementById("pub-annee").value : "";
+  var km = document.getElementById("pub-km") ? document.getElementById("pub-km").value : "";
+  var carbu = document.getElementById("pub-carbu") ? document.getElementById("pub-carbu").value : "";
+  var etat = document.getElementById("pub-etat") ? document.getElementById("pub-etat").value : "";
+  var cat = document.getElementById("pub-cat").value;
+
+  if(!marque && !titre) { showToast("Remplissez d'abord la marque et le titre.", "error"); return; }
+
+  var box = document.getElementById("estimation-box");
+  var content = document.getElementById("estimation-content");
+  var btns = document.getElementById("estimation-btns");
+  box.style.display = "block";
+  content.innerHTML = '<div style="display:flex;align-items:center;gap:8px;"><div style="width:16px;height:16px;border:2px solid #8B5CF6;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></div> Analyse en cours...</div>';
+  btns.style.display = "none";
+
+  var prompt = "Tu es un expert en évaluation automobile en France en 2026. Analyse ce véhicule et donne une estimation de prix réaliste pour le marché français:\n\n";
+  prompt += "Catégorie: " + cat + "\n";
+  prompt += "Marque/Titre: " + (marque || titre) + "\n";
+  if(annee) prompt += "Année: " + annee + "\n";
+  if(km) prompt += "Kilométrage: " + km + " km\n";
+  if(carbu) prompt += "Carburant: " + carbu + "\n";
+  if(etat) prompt += "État: " + etat + "\n";
+  prompt += "\nRéponds en JSON uniquement: {\"prix_min\": number, \"prix_median\": number, \"prix_max\": number, \"conseil\": \"string\", \"facteurs\": [\"string\"]}";
+
+  fetch("/api/claude", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 400,
+      system: "Tu es un expert en évaluation de véhicules d'occasion en France. Réponds UNIQUEMENT en JSON valide sans markdown.",
+      messages: [{ role: "user", content: prompt }]
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    try {
+      var text = d.content && d.content[0] ? d.content[0].text : "{}";
+      text = text.replace(/```json|```/g, "").trim();
+      var res = JSON.parse(text);
+      prixEstime = res.prix_median;
+      var h = '';
+      h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">';
+      h += '<div style="background:rgba(139,92,246,0.1);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:#8B5CF6;font-weight:700;">MIN</div><div style="font-size:14px;font-weight:900;color:#fff;">'+(res.prix_min||0).toLocaleString("fr-FR")+'€</div></div>';
+      h += '<div style="background:rgba(139,92,246,0.2);border:1px solid #8B5CF644;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:#8B5CF6;font-weight:700;">IDÉAL</div><div style="font-size:16px;font-weight:900;color:#8B5CF6;">'+(res.prix_median||0).toLocaleString("fr-FR")+'€</div></div>';
+      h += '<div style="background:rgba(139,92,246,0.1);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:#8B5CF6;font-weight:700;">MAX</div><div style="font-size:14px;font-weight:900;color:#fff;">'+(res.prix_max||0).toLocaleString("fr-FR")+'€</div></div>';
+      h += '</div>';
+      if(res.conseil) h += '<div style="font-size:12px;color:#bbb;margin-bottom:8px;">💡 '+res.conseil+'</div>';
+      if(res.facteurs && res.facteurs.length) {
+        h += '<div style="font-size:11px;color:#666;margin-bottom:8px;">';
+        res.facteurs.forEach(function(f) { h += '• '+f+'<br>'; });
+        h += '</div>';
+      }
+      content.innerHTML = h;
+      btns.style.display = "flex";
+    } catch(e) {
+      content.innerHTML = '<div style="color:#E74C3C;">❌ Erreur analyse. Réessayez.</div>';
+    }
+  })
+  .catch(function() {
+    content.innerHTML = '<div style="color:#E74C3C;">❌ Connexion impossible.</div>';
+  });
+}
+
+function appliquerPrix() {
+  if(prixEstime) {
+    document.getElementById("pub-prix").value = prixEstime;
+    document.getElementById("estimation-box").style.display = "none";
+    showToast("✅ Prix estimé appliqué : "+prixEstime.toLocaleString("fr-FR")+"€", "success");
+  }
+}
+</script>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
