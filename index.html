@@ -504,6 +504,7 @@ function showToast(msg, type) {
 <button class="sugg" onclick="askQ('Aides electrique ?')">Aides ?</button>
 <button class="sugg" onclick="askQ('C est gratuit ?')">Gratuit ?</button>
 <button class="sugg" onclick="askQ('Comment créer une alerte ?')">Alertes ?</button>
+<button class="sugg" onclick="ouvrirContact()">📞 Nous contacter</button>
 </div>
 <div class="a-inp-row">
 <input class="a-inp" id="agentInp" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendMsg()"/>
@@ -588,6 +589,19 @@ function showToast(msg, type) {
 <textarea class="f-input" id="pub-desc" style="min-height:80px;resize:none;" placeholder="Décrivez votre véhicule..."></textarea>
 <label class="f-label">Téléphone *</label>
 <input class="f-input" id="pub-tel" placeholder="Ex: 06 12 34 56 78"/>
+
+<!-- PHOTOS -->
+<div style="margin-bottom:14px;">
+<label class="f-label">Photos (3 gratuites · +0,50€ par photo supp.)</label>
+<div id="photos-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;min-height:10px;"></div>
+<div id="photos-info" style="background:#0D2A0D;border:1px solid #27AE6033;border-radius:10px;padding:10px;margin-bottom:8px;font-size:12px;color:#27AE60;">3 photos gratuites incluses — <span id="photos-count">0</span>/3 utilisees</div>
+<div id="photos-payant" style="display:none;background:#1A0000;border:1px solid #C0392B33;border-radius:10px;padding:10px;margin-bottom:8px;">
+<div style="font-size:12px;color:#E74C3C;font-weight:700;margin-bottom:8px;">Photo supplementaire — 0,50€</div>
+<a id="paypal-photo-btn" href="https://www.paypal.com/paypalme/rezgcontact/0.50" target="_blank" style="display:block;background:#FFC439;border-radius:8px;padding:10px;text-align:center;font-weight:800;font-size:13px;color:#003087;text-decoration:none;">Payer 0,50€ via PayPal</a>
+</div>
+<input type="file" id="pub-photos" accept="image/*" multiple style="display:none;" onchange="gererPhotos(this)"/>
+<button type="button" onclick="document.getElementById('pub-photos').click()" style="width:100%;background:#141414;border:2px dashed #333;border-radius:10px;padding:14px;color:#888;font-size:13px;cursor:pointer;">Ajouter des photos</button>
+</div>
 <div style="display:flex;gap:8px;">
 <button class="sec-btn2" onclick="pubStep(1)" style="margin:0;flex:1;">← Retour</button>
 <button class="pri-btn" onclick="pubStep(3)" style="margin:0;flex:2;">🛡️ Analyser & Publier</button>
@@ -1011,6 +1025,7 @@ function sInscrire() {
           localStorage.setItem("currentUser", JSON.stringify(currentUser));
           showToast("✅ Compte créé avec succès !", "success");
           renderProfil();
+          fetch("/api/brevo", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"email",to:res[0].email,toName:res[0].nom,subject:"Bienvenue sur Le March Auto !",html:"<h2>Bienvenue "+res[0].nom+" !</h2><p>Votre compte est cree sur Le March Auto.</p><p><a href=https://le-march-auto.fr>Acceder au site</a></p>"})}).catch(function(e){console.log("email err",e);});
           demanderVerifSMS();
         } else {
           throw new Error("Réponse vide");
@@ -1219,8 +1234,144 @@ function showHome(){
 }
 function closeScreen(id){ document.getElementById(id).classList.remove("open"); }
 
+// CONTACT
+function ouvrirContact(){
+  closeAgent();
+  document.getElementById("contactScreen").classList.add("open");
+}
+function envoyerContact(){
+  var nom = document.getElementById("contact-nom").value.trim();
+  var email = document.getElementById("contact-email").value.trim();
+  var msg = document.getElementById("contact-msg").value.trim();
+  if(!nom || !email || !msg){ showToast("Remplissez tous les champs.", "error"); return; }
+  var btn = document.getElementById("btnContact");
+  btn.textContent = "Envoi en cours...";
+  btn.disabled = true;
+  fetch("/api/brevo",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      type:"email",
+      to:"rezg.contact@gmail.com",
+      toName:"Le Marche Auto Support",
+      subject:"[Contact] Message de "+nom,
+      html:"<h2>Message de "+nom+"</h2><p><strong>Email:</strong> "+email+"</p><p><strong>Message:</strong></p><p>"+msg+"</p>"
+    })
+  }).then(function(r){ return r.json(); }).then(function(){
+    showToast("✅ Message envoyé ! On vous répond sous 24h.", "success");
+    document.getElementById("contact-nom").value="";
+    document.getElementById("contact-email").value="";
+    document.getElementById("contact-msg").value="";
+    btn.textContent="📨 Envoyer le message";
+    btn.disabled=false;
+  }).catch(function(){
+    showToast("❌ Erreur envoi. Réessayez.", "error");
+    btn.textContent="📨 Envoyer le message";
+    btn.disabled=false;
+  });
+}
 // INIT
 loadAnnonces();
 </script>
+<!-- CONTACT -->
+<div class="screen" id="contactScreen">
+<div class="s-hdr">
+<button class="back-btn" onclick="closeScreen('contactScreen')">← Retour</button>
+<span style="font-weight:800;font-size:15px;">📞 Nous contacter</span>
+</div>
+<div style="padding:16px;">
+<div class="auth-box">
+<div style="text-align:center;margin-bottom:20px;">
+<div style="font-size:40px;">🛡️</div>
+<div style="font-size:16px;font-weight:800;color:#fff;margin-top:8px;">Support Le Marché Auto</div>
+<div style="font-size:12px;color:#666;margin-top:4px;">Nous répondons sous 24h</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+<a href="mailto:rezg.contact@gmail.com" style="display:flex;align-items:center;gap:14px;background:#141414;border:1px solid #222;border-radius:12px;padding:14px;text-decoration:none;">
+<span style="font-size:24px;">📧</span>
+<div><div style="color:#fff;font-weight:700;font-size:13px;">Email</div><div style="color:#666;font-size:11px;margin-top:2px;">rezg.contact@gmail.com</div></div>
+<span style="margin-left:auto;color:#555;font-size:18px;">›</span>
+</a>
+<a href="tel:+33626142322" style="display:flex;align-items:center;gap:14px;background:#141414;border:1px solid #222;border-radius:12px;padding:14px;text-decoration:none;">
+<span style="font-size:24px;">📞</span>
+<div><div style="color:#fff;font-weight:700;font-size:13px;">Téléphone</div><div style="color:#666;font-size:11px;margin-top:2px;">+33 6 26 14 23 22</div></div>
+<span style="margin-left:auto;color:#555;font-size:18px;">›</span>
+</a>
+</div>
+<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:12px;">✉️ Envoyer un message</div>
+<label class="f-label">Votre nom</label>
+<input class="f-input" id="contact-nom" placeholder="Ex: Marc Dupont"/>
+<label class="f-label">Votre email</label>
+<input class="f-input" id="contact-email" placeholder="votre@email.com" type="email"/>
+<label class="f-label">Votre message</label>
+<textarea class="f-input" id="contact-msg" style="min-height:100px;resize:none;" placeholder="Décrivez votre problème ou question..."></textarea>
+<button class="primary-btn" id="btnContact" onclick="envoyerContact()">📨 Envoyer le message</button>
+</div>
+</div>
+</div>
 </body>
 </html>
+<script>
+// PHOTOS
+var photosSelectionnees = [];
+function gererPhotos(input) {
+  var files = Array.from(input.files);
+  files.forEach(function(f) {
+    if(photosSelectionnees.length >= 10) return;
+    photosSelectionnees.push(f);
+  });
+  renderPhotos();
+}
+function renderPhotos() {
+  var preview = document.getElementById("photos-preview");
+  var info = document.getElementById("photos-info");
+  var payant = document.getElementById("photos-payant");
+  if(!preview) return;
+  var h = "";
+  photosSelectionnees.forEach(function(f, i) {
+    var url = URL.createObjectURL(f);
+    h += '<div style="position:relative;width:80px;height:80px;"><img src="'+url+'" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"/><button onclick="supprimerPhoto('+i+')" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);border:none;border-radius:50%;width:20px;height:20px;color:#fff;font-size:11px;cursor:pointer;">x</button></div>';
+  });
+  preview.innerHTML = h;
+  var n = photosSelectionnees.length;
+  if(info) info.textContent = Math.min(n,3)+"/3 photos gratuites"+(n>3?" · "+(n-3)+" payante(s)":"");
+  if(payant) payant.style.display = n >= 3 ? "block" : "none";
+}
+function supprimerPhoto(i) {
+  photosSelectionnees.splice(i, 1);
+  renderPhotos();
+}
+
+// LIMITE ANNONCES
+function verifierLimiteAnnonces(callback) {
+  if(!currentUser) { showProfil(); showToast("Connectez-vous pour publier.", "error"); return; }
+  var typeVendeur = document.getElementById("pub-type-vendeur") ? document.getElementById("pub-type-vendeur").value : "Particulier";
+  if(typeVendeur === "Professionnel" || typeVendeur === "Concessionnaire") {
+    if(currentUser.abonnement_pro) { callback(); return; }
+    afficherOffrePro(); return;
+  }
+  sbGet("annonces", "vendeur_email=eq."+encodeURIComponent(currentUser.email)+"&statut=eq.valide")
+    .then(function(data) {
+      var nb = Array.isArray(data) ? data.length : 0;
+      if(nb < 10) { callback(); }
+      else { afficherPaiementAnnonce(); }
+    }).catch(function() { callback(); });
+}
+
+function afficherPaiementAnnonce() {
+  document.getElementById("anIcon").textContent = "💳";
+  document.getElementById("anLabel").style.color = "#FFC439";
+  document.getElementById("anLabel").textContent = "Limite gratuite atteinte";
+  document.getElementById("anMsg").innerHTML = 'Vous avez utilise vos 10 annonces gratuites.<br><br><a href="https://www.paypal.com/paypalme/rezgcontact/0.99" target="_blank" style="display:block;background:#FFC439;border-radius:8px;padding:12px;text-align:center;font-weight:800;font-size:13px;color:#003087;text-decoration:none;margin-top:10px;">Payer 0,99€ via PayPal</a>';
+  document.getElementById("pubRetour").style.display = "block";
+  document.getElementById("pubConfirm").style.display = "none";
+}
+
+function afficherOffrePro() {
+  document.getElementById("anIcon").textContent = "⭐";
+  document.getElementById("anLabel").style.color = "#FFC439";
+  document.getElementById("anLabel").textContent = "Abonnement PRO requis";
+  document.getElementById("anMsg").innerHTML = 'Annonces illimitees pour les pros !<br><br><strong>19,99€/mois</strong><br><br><a href="https://www.paypal.com/paypalme/rezgcontact/19.99" target="_blank" style="display:block;background:#FFC439;border-radius:8px;padding:12px;text-align:center;font-weight:800;font-size:13px;color:#003087;text-decoration:none;margin-top:10px;">S\'abonner PRO via PayPal</a>';
+  document.getElementById("pubRetour").style.display = "block";
+  document.getElementById("pubConfirm").style.display = "none";
+}
+</script>
