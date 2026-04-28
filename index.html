@@ -1670,7 +1670,7 @@ function afficherPaiementAnnonce() {
   document.getElementById("anIcon").textContent = "💳";
   document.getElementById("anLabel").style.color = "#FFC439";
   document.getElementById("anLabel").textContent = "Limite gratuite atteinte";
-  document.getElementById("anMsg").innerHTML = 'Vous avez utilise vos 10 annonces gratuites.<br><br><a href="https://www.paypal.com/paypalme/rezgcontact/0.99" target="_blank" style="display:block;background:#FFC439;border-radius:8px;padding:12px;text-align:center;font-weight:800;font-size:13px;color:#003087;text-decoration:none;margin-top:10px;">Payer 0,99€ via PayPal</a>';
+  document.getElementById("anMsg").innerHTML = "Vous avez utilise vos 10 annonces gratuites.<br><br><button onclick='payerStripe(0.99,\"Annonce sup\")'  style='display:block;width:100%;background:#635BFF;border:none;border-radius:8px;padding:12px;text-align:center;font-weight:800;font-size:13px;color:#fff;cursor:pointer;margin-top:10px;'>💳 Payer 0,99€ par carte</button>";
   document.getElementById("pubRetour").style.display = "block";
   document.getElementById("pubConfirm").style.display = "none";
 }
@@ -1995,7 +1995,7 @@ function chargerDashboard() {
       } else {
         h += '<div><div style="color:#C0392B;font-weight:700;font-size:13px;">👤 Compte Particulier</div>';
         h += '<div style="color:#666;font-size:11px;margin-top:2px;">'+(gratuites > 0 ? gratuites+' annonces gratuites restantes' : 'Limite atteinte — 0,99€/annonce')+'</div></div>';
-        h += '<a href="https://www.paypal.com/paypalme/rezgcontact/19.99" target="_blank" style="background:#FFC439;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:800;color:#003087;text-decoration:none;white-space:nowrap;">Passer PRO</a>';
+        h += '<button onclick="payerStripe(19.99,\'PRO\',\'abonnement\')" style="background:#635BFF;border:none;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:800;color:#fff;cursor:pointer;white-space:nowrap;">💳 Passer PRO</button>';
       }
       h += '</div>';
 
@@ -2268,5 +2268,45 @@ function geocoderVilleAnnonce() {
       status.style.color = "#27AE60";
     }
   }, 800);
+}
+</script>
+<script>
+// STRIPE PAIEMENT
+async function payerStripe(montant, description, type) {
+  showToast("💳 Redirection vers le paiement sécurisé...", "");
+  try {
+    var response = await fetch('/api/stripe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: montant,
+        description: description,
+        type: type || 'payment',
+        successUrl: 'https://le-march-auto.fr?paiement=success',
+        cancelUrl: 'https://le-march-auto.fr?paiement=cancel'
+      })
+    });
+    var data = await response.json();
+    if(data.url) {
+      window.location.href = data.url;
+    } else {
+      showToast("❌ Erreur paiement : " + (data.error || "Réessayez"), "error");
+    }
+  } catch(e) {
+    showToast("❌ Erreur connexion.", "error");
+  }
+}
+
+// Gérer retour après paiement
+var urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('paiement') === 'success') {
+  setTimeout(function() {
+    showToast("✅ Paiement réussi ! Merci !", "success");
+  }, 500);
+}
+if(urlParams.get('paiement') === 'cancel') {
+  setTimeout(function() {
+    showToast("❌ Paiement annulé.", "error");
+  }, 500);
 }
 </script>
